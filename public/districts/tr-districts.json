@@ -1,0 +1,67 @@
+[
+  {
+    "il": "İstanbul",
+    "ilceler": [
+      {
+        "ilce": "Kadıköy",
+        "mahalleler": ["Acıbadem", "Bostancı", "Fenerbahçe", "Göztepe", "Moda", "Suadiye"]
+      },
+      {
+        "ilce": "Beşiktaş",
+        "mahalleler": ["Arnavutköy", "Bebek", "Etiler", "Levent", "Ortaköy", "Ulus"]
+      },
+      {
+        "ilce": "Şişli",
+        "mahalleler": ["Bozkurt", "Cumhuriyet", "Feriköy", "Gültepe", "Halaskargazi", "Mecidiyeköy"]
+      },
+      {
+        "ilce": "Üsküdar",
+        "mahalleler": ["Altunizade", "Bağlarbaşı", "Beylerbeyi", "Çengelköy", "Kuzguncuk", "Mimar Sinan"]
+      }
+    ]
+  },
+  {
+    "il": "Ankara",
+    "ilceler": [
+      {
+        "ilce": "Çankaya",
+        "mahalleler": ["Bahçelievler", "Balgat", "Çukurambar", "Gaziosmanpaşa", "Kavaklıdere", "Kızılay"]
+      },
+      {
+        "ilce": "Keçiören",
+        "mahalleler": ["Aktepe", "Bağlum", "Etlik", "Kalaba", "Pınarbaşı", "Subayevleri"]
+      }
+    ]
+  },
+  {
+    "il": "İzmir",
+    "ilceler": [
+      {
+        "ilce": "Konak",
+        "mahalleler": ["Alsancak", "Basmane", "Çankaya", "Kahramanlar", "Kordon", "Mithatpaşa"]
+      },
+      {
+        "ilce": "Bornova",
+        "mahalleler": ["Doğanlar", "Erzene", "Evka 1", "Işıkkent", "Kazımdirik", "Yeşilova"]
+      }
+    ]
+  },
+  {
+    "il": "Bursa",
+    "ilceler": [
+      {
+        "ilce": "Nilüfer",
+        "mahalleler": ["Beşevler", "Fethiye", "Görükle", "İhsaniye", "Özlüce", "Yunuseli"]
+      }
+    ]
+  },
+  {
+    "il": "Antalya",
+    "ilceler": [
+      {
+        "ilce": "Muratpaşa",
+        "mahalleler": ["Bahçelibahçe", "Demircikara", "Fener", "Güzeloba", "Kışla", "Şirinyalı"]
+      }
+    ]
+  }
+]

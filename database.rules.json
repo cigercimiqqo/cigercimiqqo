@@ -1,0 +1,18 @@
+{
+  "rules": {
+    "active_orders": {
+      ".read": true,
+      ".write": true
+    },
+    "notifications": {
+      "$visitorId": {
+        ".read": true,
+        ".write": true
+      }
+    },
+    "counter": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}
