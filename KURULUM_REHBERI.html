@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Miqqo — Kurulum Rehberi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --surface: #181818;
+    --border: #272727;
+    --orange: #f97316;
+    --orange-dim: rgba(249,115,22,.12);
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,.12);
+    --red: #ef4444;
+    --text: #e8e8e8;
+    --muted: #6b6b6b;
+    --sidebar-w: 280px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ── Sidebar ─────────────────────────────────── */
+  aside {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 10;
+  }
+
+  .sidebar-header {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--orange);
+    letter-spacing: -0.5px;
+  }
+
+  .logo span { color: var(--text); }
+
+  .sidebar-header p {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 0.3px;
+  }
+
+  /* Progress */
+  .progress-wrap {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  #progress-pct {
+    font-family: 'DM Mono', monospace;
+    color: var(--orange);
+    font-size: 12px;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--orange);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* Customer badge */
+  .customer-badge {
+    margin: 12px 24px;
+    padding: 10px 14px;
+    background: var(--orange-dim);
+    border: 1px solid rgba(249,115,22,.25);
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--orange);
+    display: none;
+  }
+
+  .customer-badge.visible { display: block; }
+  .customer-badge strong { display: block; font-size: 13px; }
+
+  /* Nav links */
+  nav { padding: 8px 12px; flex: 1; }
+
+  nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+
+  nav a:hover { background: var(--border); color: var(--text); }
+  nav a.done { color: var(--green); }
+  nav a.done .nav-num { background: var(--green-dim); color: var(--green); }
+  nav a.active { background: var(--orange-dim); color: var(--orange); }
+
+  .nav-num {
+    width: 22px; height: 22px;
+    background: var(--border);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .nav-check { font-size: 13px; flex-shrink: 0; }
+
+  nav .section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    padding: 12px 12px 4px;
+  }
+
+  /* Reset button */
+  .sidebar-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-reset {
+    width: 100%;
+    padding: 9px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn-reset:hover { border-color: var(--red); color: var(--red); }
+
+  /* ── Main Content ────────────────────────────── */
+  main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    max-width: 860px;
+    padding: 48px 56px;
+  }
+
+  /* Customer Setup Banner */
+  #setup-banner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 48px;
+  }
+
+  #setup-banner h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  #setup-banner p { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+
+  .customer-input-row {
+    display: flex;
+    gap: 12px;
+  }
+
+  .customer-input-row input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .customer-input-row input:focus { border-color: var(--orange); }
+  .customer-input-row input::placeholder { color: var(--muted); }
+
+  .btn-primary {
+    padding: 12px 24px;
+    background: var(--orange);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-primary:hover { background: #ea6c0e; }
+
+  /* Steps */
+  .step {
+    margin-bottom: 60px;
+    scroll-margin-top: 32px;
+  }
+
+  .step-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .step-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  .step-num {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    transition: all 0.3s;
+  }
+
+  .step.completed .step-num {
+    background: var(--green-dim);
+    border-color: rgba(34,197,94,.3);
+    color: var(--green);
+  }
+
+  .step-connector {
+    width: 1px;
+    height: 100%;
+    min-height: 16px;
+    background: var(--border);
+    margin-top: 4px;
+  }
+
+  .step-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+  }
+
+  .step-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .step-content {
+    padding-left: 52px;
+  }
+
+  /* Sub-steps */
+  .substep {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+
+  .substep:has(.substep-check:checked) {
+    border-color: rgba(34,197,94,.3);
+    background: rgba(34,197,94,.03);
+  }
+
+  .substep-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+  }
+
+  .substep-check {
+    width: 20px; height: 20px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    accent-color: var(--green);
+    flex-shrink: 0;
+  }
+
+  .substep-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .substep-body { padding-left: 32px; }
+
+  /* Instruction items */
+  .instruction-list {
+    list-style: none;
+    space-y: 8px;
+  }
+
+  .instruction-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 14px;
+    line-height: 1.6;
+    border-bottom: 1px solid rgba(255,255,255,.03);
+  }
+
+  .instruction-list li:last-child { border-bottom: none; }
+
+  .step-arrow {
+    color: var(--orange);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  kbd {
+    display: inline-block;
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 5px;
+    padding: 1px 7px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: #ccc;
+    white-space: nowrap;
+  }
+
+  a { color: var(--orange); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Code blocks */
+  .code-wrap {
+    position: relative;
+    margin: 16px 0;
+  }
+
+  .code-lang {
+    position: absolute;
+    top: 10px; left: 14px;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-copy {
+    position: absolute;
+    top: 8px; right: 10px;
+    padding: 5px 12px;
+    background: var(--border);
+    border: 1px solid #333;
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+
+  .btn-copy:hover { background: #333; color: var(--text); }
+  .btn-copy.copied { background: var(--green-dim); border-color: rgba(34,197,94,.3); color: var(--green); }
+
+  pre {
+    background: #141414;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px 16px 16px;
+    overflow-x: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #cdd6f4;
+  }
+
+  .token-key { color: #89b4fa; }
+  .token-str { color: #a6e3a1; }
+  .token-comment { color: #585b70; font-style: italic; }
+
+  /* Info / warning boxes */
+  .info-box {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin: 12px 0;
+  }
+
+  .info-box.orange { background: var(--orange-dim); border: 1px solid rgba(249,115,22,.2); }
+  .info-box.green { background: var(--green-dim); border: 1px solid rgba(34,197,94,.2); }
+  .info-box.red { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.2); }
+  .info-box .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin: 16px 0;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  th {
+    background: #1e1e1e;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,.02); }
+
+  td code, th code {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    background: #2a2a2a;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #89b4fa;
+  }
+
+  /* Section dividers */
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin: 32px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Troubleshooting */
+  .trouble-item {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .trouble-q {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    background: var(--surface);
+    user-select: none;
+  }
+
+  .trouble-q .err-icon { color: var(--red); font-size: 16px; }
+
+  .trouble-a {
+    padding: 14px 18px;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: #bbb;
+    background: #141414;
+    border-top: 1px solid var(--border);
+    display: none;
+  }
+
+  .trouble-item.open .trouble-a { display: block; }
+  .trouble-chevron { margin-left: auto; transition: transform 0.2s; color: var(--muted); }
+  .trouble-item.open .trouble-chevron { transform: rotate(180deg); }
+
+  /* Final checklist */
+  .final-check-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .final-check-item:hover { border-color: #333; }
+  .final-check-item.done { border-color: rgba(34,197,94,.3); background: rgba(34,197,94,.04); }
+  .final-check-item.done .fc-label { color: var(--muted); text-decoration: line-through; }
+
+  .fc-check {
+    width: 22px; height: 22px;
+    border-radius: 7px;
+    border: 2px solid var(--border);
+    accent-color: var(--green);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .fc-label { font-size: 14px; line-height: 1.4; flex: 1; }
+
+  /* Delivery card */
+  .delivery-card {
+    background: #141414;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 2;
+    margin: 16px 0;
+  }
+
+  .delivery-card .dc-line { display: flex; gap: 8px; }
+  .delivery-card .dc-key { color: var(--muted); min-width: 120px; }
+  .delivery-card .dc-val { color: var(--text); }
+
+  /* Congrats */
+  .congrats {
+    text-align: center;
+    padding: 48px 32px;
+    background: var(--surface);
+    border: 1px solid rgba(34,197,94,.2);
+    border-radius: 20px;
+    margin-top: 32px;
+  }
+
+  .congrats h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .congrats p { color: var(--muted); font-size: 15px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+</style>
+</head>
+<body>
+
+<!-- ── Sidebar ─────────────────────────────────────── -->
+<aside id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">miqqo<span>.</span></div>
+    <p>Restoran SaaS · Kurulum Rehberi</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>İlerleme</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <div class="customer-badge" id="customer-badge">
+    <small>Aktif müşteri</small>
+    <strong id="badge-name">—</strong>
+  </div>
+
+  <nav>
+    <div class="section-label">Kurulum Adımları</div>
+    <a href="#step1" id="nav-1"><span class="nav-num">01</span> Firebase Projesi</a>
+    <a href="#step2" id="nav-2"><span class="nav-num">02</span> Servisleri Aç</a>
+    <a href="#step3" id="nav-3"><span class="nav-num">03</span> Firestore Kuralları</a>
+    <a href="#step4" id="nav-4"><span class="nav-num">04</span> Realtime DB Kuralları</a>
+    <a href="#step5" id="nav-5"><span class="nav-num">05</span> Admin Kullanıcısı</a>
+    <a href="#step6" id="nav-6"><span class="nav-num">06</span> Bağlantı Bilgileri</a>
+    <a href="#step7" id="nav-7"><span class="nav-num">07</span> Görsel Yükleme</a>
+    <a href="#step8" id="nav-8"><span class="nav-num">08</span> Cloudflare Pages</a>
+    <a href="#step9" id="nav-9"><span class="nav-num">09</span> Env Değişkenleri</a>
+    <a href="#step10" id="nav-10"><span class="nav-num">10</span> Domain Bağla</a>
+    <a href="#step11" id="nav-11"><span class="nav-num">11</span> Test Et</a>
+    <div class="section-label">Diğer</div>
+    <a href="#final-checklist"><span class="nav-num">✓</span> Kontrol Listesi</a>
+    <a href="#trouble"><span class="nav-num">!</span> Sorun Giderme</a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="btn-reset" onclick="resetAll()">↺ Sıfırla (yeni müşteri)</button>
+  </div>
+</aside>
+
+<!-- ── Main ────────────────────────────────────────── -->
+<main>
+
+  <!-- Customer Setup -->
+  <div id="setup-banner">
+    <h2>Hangi müşteri için kurulum yapıyorsun?</h2>
+    <p>İlerlemeni kaydetmek için müşteri adını gir. Her müşteri için ayrı ilerleme kaydedilir.</p>
+    <div class="customer-input-row">
+      <input type="text" id="customer-input" placeholder="Müşteri adı (örn: Pizza Mondo)" />
+      <button class="btn-primary" onclick="setCustomer()">Başla →</button>
+    </div>
+  </div>
+
+  <!-- ADIM 1 -->
+  <section class="step" id="step1">
+    <div class="step-header">
+      <div class="step-badge">
+        <div class="step-num" id="snum-1">01</div>
+        <div class="step-connector"></div>
+      </div>
+      <div>
+        <div class="step-title">Firebase Projesi Aç</div>
+        <div class="step-subtitle">Tarayıcıdan yap, terminal yok</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="substep" data-key="s1a">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s1a" />
+          <span class="substep-title">Firebase Console'a gir ve proje oluştur</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> <span><a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> adresine git, Google hesabınla giriş yap</span></li>
+            <li><span class="step-arrow">→</span> <span><kbd>Add project</kbd> butonuna bas</span></li>
+            <li><span class="step-arrow">→</span> <span>Proje adı: <kbd>miqqo-musteri-adi</kbd> yaz (örn: <kbd>miqqo-pizza-mondo</kbd>)</span></li>
+            <li><span class="step-arrow">→</span> <span>Google Analytics: Kapalı bırakabilirsin</span></li>
+            <li><span class="step-arrow">→</span> <span><kbd>Create project</kbd> → bitmesini bekle</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADIM 2 -->
+  <section class="step" id="step2">
+    <div class="step-header">
+      <div class="step-badge">
+        <div class="step-num" id="snum-2">02</div>
+        <div class="step-connector"></div>
+      </div>
+      <div>
+        <div class="step-title">Firebase Servislerini Aç</div>
+        <div class="step-subtitle">Proje açılınca sol menüden sırasıyla</div>
+      </div>
+    </div>
+    <div class="step-content">
+
+      <div class="substep" data-key="s2a">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s2a" />
+          <span class="substep-title">Authentication</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Sol menü → <kbd>Authentication</kbd> → <kbd>Get started</kbd></li>
+            <li><span class="step-arrow">→</span> <kbd>Sign-in method</kbd> sekmesi → <kbd>Email/Password</kbd> → Enable → <kbd>Save</kbd></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="substep" data-key="s2b">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s2b" />
+          <span class="substep-title">Firestore Database</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Sol menü → <kbd>Firestore Database</kbd> → <kbd>Create database</kbd></li>
+            <li><span class="step-arrow">→</span> <kbd>Production mode</kbd> seç → <kbd>Next</kbd></li>
+            <li><span class="step-arrow">→</span> Bölge: <kbd>europe-west1 (Belgium)</kbd> → <kbd>Enable</kbd></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="substep" data-key="s2c">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s2c" />
+          <span class="substep-title">Realtime Database</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Sol menü → <kbd>Realtime Database</kbd> → <kbd>Create database</kbd></li>
+            <li><span class="step-arrow">→</span> Bölge: <kbd>europe-west1 (Belgium)</kbd> → <kbd>Next</kbd></li>
+            <li><span class="step-arrow">→</span> <kbd>Locked mode</kbd> → <kbd>Enable</kbd></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="substep" data-key="s2d">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s2d" />
+          <span class="substep-title">Storage <small style="color:var(--muted);font-weight:400">(opsiyonel)</small></span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Sol menü → <kbd>Storage</kbd> → <kbd>Get started</kbd> → <kbd>Next</kbd> → <kbd>Done</kbd></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADIM 3 -->
+  <section class="step" id="step3">
+    <div class="step-header">
+      <div class="step-badge">
+        <div class="step-num" id="snum-3">03</div>
+        <div class="step-connector"></div>
+      </div>
+      <div>
+        <div class="step-title">Firestore Güvenlik Kuralları</div>
+        <div class="step-subtitle">Aşağıdaki kodu kopyalayıp Firebase'e yapıştır</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="substep" data-key="s3a">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s3a" />
+          <span class="substep-title">Firestore Kurallarını Yapıştır ve Yayınla</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Firebase → Sol menü → <kbd>Firestore Database</kbd> → <kbd>Rules</kbd> sekmesi</li>
+            <li><span class="step-arrow">→</span> Mevcut tüm içeriği sil, aşağıdaki kodu yapıştır</li>
+            <li><span class="step-arrow">→</span> <kbd>Publish</kbd> butonuna bas</li>
+          </ul>
+          <div class="code-wrap">
+            <span class="code-lang">Firestore Rules</span>
+            <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
+            <pre>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    <span class="token-comment">// Ayarlar, kategoriler, ürünler, blog — herkese okunabilir</span>
+    match /settings/{doc}    { allow read: if true; allow write: if request.auth != null; }
+    match /categories/{doc}  { allow read: if true; allow write: if request.auth != null; }
+    match /products/{doc}    { allow read: if true; allow write: if request.auth != null; }
+    match /blog_posts/{doc}  { allow read: if true; allow write: if request.auth != null; }
+    match /pages/{doc}       { allow read: if true; allow write: if request.auth != null; }
+
+    <span class="token-comment">// Siparişler — herkes yazabilir, sadece admin okuyabilir</span>
+    match /orders/{doc} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+
+    <span class="token-comment">// Yorumlar — herkes ekleyebilir, admin yönetebilir</span>
+    match /reviews/{doc} {
+      allow create: if true;
+      allow read: if true;
+      allow update, delete: if request.auth != null;
+    }
+
+    <span class="token-comment">// Ziyaretçiler, kuponlar — sadece admin</span>
+    match /visitors/{doc} { allow read, write: if request.auth != null; }
+    match /coupons/{doc}  { allow read: if true; allow write: if request.auth != null; }
+  }
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADIM 4 -->
+  <section class="step" id="step4">
+    <div class="step-header">
+      <div class="step-badge">
+        <div class="step-num" id="snum-4">04</div>
+        <div class="step-connector"></div>
+      </div>
+      <div>
+        <div class="step-title">Realtime Database Kuralları</div>
+        <div class="step-subtitle">Aynı şekilde yapıştır ve yayınla</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="substep" data-key="s4a">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s4a" />
+          <span class="substep-title">Realtime DB Kurallarını Yapıştır ve Yayınla</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Firebase → Sol menü → <kbd>Realtime Database</kbd> → <kbd>Rules</kbd> sekmesi</li>
+            <li><span class="step-arrow">→</span> Mevcut içeriği tamamen sil, aşağıdaki kodu yapıştır</li>
+            <li><span class="step-arrow">→</span> <kbd>Publish</kbd> butonuna bas</li>
+          </ul>
+          <div class="code-wrap">
+            <span class="code-lang">JSON</span>
+            <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
+            <pre>{
+  <span class="token-key">"rules"</span>: {
+    <span class="token-key">"orders"</span>: {
+      <span class="token-key">".read"</span>: <span class="token-str">"auth != null"</span>,
+      <span class="token-key">".write"</span>: <span class="token-str">"auth != null"</span>
+    },
+    <span class="token-key">"notifications"</span>: {
+      <span class="token-key">".read"</span>: <span class="token-str">"auth != null"</span>,
+      <span class="token-key">".write"</span>: <span class="token-str">"auth != null"</span>
+    },
+    <span class="token-key">"visitor_count"</span>: {
+      <span class="token-key">".read"</span>: <span class="token-str">true</span>,
+      <span class="token-key">".write"</span>: <span class="token-str">true</span>
+    }
+  }
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADIM 5 -->
+  <section class="step" id="step5">
+    <div class="step-header">
+      <div class="step-badge">
+        <div class="step-num" id="snum-5">05</div>
+        <div class="step-connector"></div>
+      </div>
+      <div>
+        <div class="step-title">İlk Admin Kullanıcısı Oluştur</div>
+        <div class="step-subtitle">Müşteriye verecek olduğun giriş bilgileri</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="substep" data-key="s5a">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s5a" />
+          <span class="substep-title">Admin kullanıcısını Firebase'de oluştur</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Firebase → Sol menü → <kbd>Authentication</kbd> → <kbd>Users</kbd> sekmesi</li>
+            <li><span class="step-arrow">→</span> <kbd>Add user</kbd> butonuna bas</li>
+            <li><span class="step-arrow">→</span> Email: <kbd>admin@musteriadi.com</kbd> → Güçlü bir şifre gir → <kbd>Add user</kbd></li>
+            <li><span class="step-arrow">→</span> Bu email ve şifreyi bir kenara not al — müşteriye vereceksin</li>
+          </ul>
+          <div class="info-box orange">
+            <span class="icon">💡</span>
+            <span>Müşteri bu bilgilerle <strong>/admin/login</strong> sayfasına giriş yapacak. Güçlü bir şifre seç (en az 12 karakter, büyük/küçük/rakam/sembol).</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADIM 6 -->
+  <section class="step" id="step6">
+    <div class="step-header">
+      <div class="step-badge">
+        <div class="step-num" id="snum-6">06</div>
+        <div class="step-connector"></div>
+      </div>
+      <div>
+        <div class="step-title">Firebase Bağlantı Bilgilerini Al</div>
+        <div class="step-subtitle">Bu değerleri Cloudflare'e gireceksin — not al</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="substep" data-key="s6a">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s6a" />
+          <span class="substep-title">Web uygulamasını kaydet ve config değerlerini al</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Firebase → Sol üstte ⚙️ → <kbd>Project settings</kbd></li>
+            <li><span class="step-arrow">→</span> Aşağı kaydır → <kbd>Your apps</kbd> → <kbd>&lt;/&gt;</kbd> ikonuna tıkla (web app)</li>
+            <li><span class="step-arrow">→</span> App nickname: <kbd>miqqo-web</kbd> → <kbd>Register app</kbd></li>
+            <li><span class="step-arrow">→</span> Karşına çıkan config değerlerini bir metin belgesine kopyala</li>
+          </ul>
+          <table>
+            <thead><tr><th>Config Anahtarı</th><th>Cloudflare'deki Adı</th></tr></thead>
+            <tbody>
+              <tr><td><code>apiKey</code></td><td><code>NEXT_PUBLIC_FIREBASE_API_KEY</code></td></tr>
+              <tr><td><code>authDomain</code></td><td><code>NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN</code></td></tr>
+              <tr><td><code>projectId</code></td><td><code>NEXT_PUBLIC_FIREBASE_PROJECT_ID</code></td></tr>
+              <tr><td><code>storageBucket</code></td><td><code>NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET</code></td></tr>
+              <tr><td><code>messagingSenderId</code></td><td><code>NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID</code></td></tr>
+              <tr><td><code>appId</code></td><td><code>NEXT_PUBLIC_FIREBASE_APP_ID</code></td></tr>
+            </tbody>
+          </table>
+          <ul class="instruction-list" style="margin-top:12px">
+            <li><span class="step-arrow">→</span> Aynı sayfayı kaydırıp <strong>Realtime Database</strong> bölümünde şöyle bir URL bul:<br/><kbd>https://proje-adi-default-rtdb.europe-west1.firebasedatabase.app</kbd></li>
+            <li><span class="step-arrow">→</span> Bu URL → <code>NEXT_PUBLIC_FIREBASE_DATABASE_URL</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADIM 7 -->
+  <section class="step" id="step7">
+    <div class="step-header">
+      <div class="step-badge">
+        <div class="step-num" id="snum-7">07</div>
+        <div class="step-connector"></div>
+      </div>
+      <div>
+        <div class="step-title">Görsel Yükleme Hesabı Aç</div>
+        <div class="step-subtitle">Cloudinary (önerilen) veya ImgBB (alternatif)</div>
+      </div>
+    </div>
+    <div class="step-content">
+
+      <div class="substep" data-key="s7a">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s7a" />
+          <span class="substep-title">Cloudinary — Önerilen <small style="color:var(--green);font-weight:400">(video desteği var)</small></span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> <a href="https://cloudinary.com/users/register/free" target="_blank">cloudinary.com/users/register/free</a> → Ücretsiz kayıt ol</li>
+            <li><span class="step-arrow">→</span> Dashboard açılınca sol üstteki <strong>Cloud Name</strong>'i not al (örn: <kbd>dxyz123abc</kbd>)</li>
+            <li><span class="step-arrow">→</span> Sağ üst ⚙️ → <kbd>Settings</kbd> → <kbd>Upload</kbd> sekmesi</li>
+            <li><span class="step-arrow">→</span> Sayfanın altına kaydır → <kbd>Add upload preset</kbd></li>
+            <li><span class="step-arrow">→</span> <strong>Signing mode:</strong> <kbd>Unsigned</kbd> seç → <kbd>Save</kbd></li>
+            <li><span class="step-arrow">→</span> Preset adını not al (örn: <kbd>miqqo_unsigned</kbd>)</li>
+          </ul>
+          <table style="margin-top:12px">
+            <thead><tr><th>Not Alınacak</th><th>Cloudflare'deki Adı</th></tr></thead>
+            <tbody>
+              <tr><td>Cloud Name</td><td><code>NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME</code></td></tr>
+              <tr><td>Upload Preset Adı</td><td><code>NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="substep" data-key="s7b">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s7b" />
+          <span class="substep-title">ImgBB — Alternatif <small style="color:var(--muted);font-weight:400">(Cloudinary yoksa, sadece görsel)</small></span>
+        </label>
+        <div class="substep-body">
+          <div class="info-box orange">
+            <span class="icon">ℹ️</span>
+            <span>Cloudinary kurduğunda bu adımı atlayabilirsin. İkisi birlikte olmaz, biri seçilir.</span>
+          </div>
+          <ul class="instruction-list" style="margin-top:8px">
+            <li><span class="step-arrow">→</span> <a href="https://imgbb.com" target="_blank">imgbb.com</a> → ücretsiz kayıt</li>
+            <li><span class="step-arrow">→</span> Kullanıcı adına tıkla → <kbd>About</kbd> → <kbd>API</kbd></li>
+            <li><span class="step-arrow">→</span> API Key'i not al → Cloudflare'de <code>NEXT_PUBLIC_IMGBB_API_KEY</code> olarak gir</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADIM 8 -->
+  <section class="step" id="step8">
+    <div class="step-header">
+      <div class="step-badge">
+        <div class="step-num" id="snum-8">08</div>
+        <div class="step-connector"></div>
+      </div>
+      <div>
+        <div class="step-title">Cloudflare Pages Projesi Oluştur</div>
+        <div class="step-subtitle">GitHub gerekmez — direkt upload yapacağız</div>
+      </div>
+    </div>
+    <div class="step-content">
+
+      <div class="substep" data-key="s8a">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s8a" />
+          <span class="substep-title">Cloudflare hesabı aç</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> <a href="https://dash.cloudflare.com" target="_blank">dash.cloudflare.com</a> → ücretsiz kayıt ol</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="substep" data-key="s8b">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s8b" />
+          <span class="substep-title">Pages projesi oluştur</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Sol menü → <kbd>Workers &amp; Pages</kbd> → <kbd>Pages</kbd></li>
+            <li><span class="step-arrow">→</span> <kbd>Create a project</kbd> butonuna bas</li>
+            <li><span class="step-arrow">→</span> <strong>"Connect to Git"</strong> değil, <kbd>Upload assets</kbd> seçeneğini seç</li>
+            <li><span class="step-arrow">→</span> Project name: <kbd>miqqo-musteri-adi</kbd> gir</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="substep" data-key="s8c">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s8c" />
+          <span class="substep-title">Projeyi derle (tek seferlik terminal komutu)</span>
+        </label>
+        <div class="substep-body">
+          <div class="info-box orange">
+            <span class="icon">⚡</span>
+            <span>Bu tek komut tek seferlik çalıştırılır. Terminal'i aç, proje klasörüne git ve şunu çalıştır:</span>
+          </div>
+          <div class="code-wrap">
+            <span class="code-lang">Terminal</span>
+            <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
+            <pre>npm run build</pre>
+          </div>
+          <ul class="instruction-list" style="margin-top:8px">
+            <li><span class="step-arrow">→</span> Komut bittikten sonra proje klasöründe <kbd>.next</kbd> adlı bir klasör oluşur</li>
+            <li><span class="step-arrow">→</span> Cloudflare'deki <strong>Upload assets</strong> ekranına bu <kbd>.next</kbd> klasörünü sürükle-bırak</li>
+            <li><span class="step-arrow">→</span> <kbd>Deploy site</kbd> butonuna bas — ilk deploy başlar</li>
+          </ul>
+          <div class="info-box green">
+            <span class="icon">✅</span>
+            <span>İlk deploy sonrası env değişkenleri eksik olduğu için site hata verebilir. Bu normal — bir sonraki adımda gireceksin.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADIM 9 -->
+  <section class="step" id="step9">
+    <div class="step-header">
+      <div class="step-badge">
+        <div class="step-num" id="snum-9">09</div>
+        <div class="step-connector"></div>
+      </div>
+      <div>
+        <div class="step-title">Ortam Değişkenlerini Cloudflare'e Gir</div>
+        <div class="step-subtitle">Tüm secret key'ler sadece burada saklanır — .env.local yok!</div>
+      </div>
+    </div>
+    <div class="step-content">
+
+      <div class="info-box red" style="margin-bottom:16px">
+        <span class="icon">🔐</span>
+        <span>Bu değerleri asla kod içine veya başka bir dosyaya yazma. Sadece Cloudflare Pages Environment variables bölümüne gir.</span>
+      </div>
+
+      <div class="substep" data-key="s9a">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s9a" />
+          <span class="substep-title">Firebase değişkenlerini gir</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Cloudflare Pages → Projen → <kbd>Settings</kbd> → <kbd>Environment variables</kbd></li>
+            <li><span class="step-arrow">→</span> <kbd>Production</kbd> sekmesi → <kbd>Add variable</kbd> butonuna bas</li>
+            <li><span class="step-arrow">→</span> Aşağıdaki 7 değeri tek tek ekle:</li>
+          </ul>
+          <table style="margin-top:12px">
+            <thead><tr><th>Değişken Adı</th><th>Değeri</th></tr></thead>
+            <tbody>
+              <tr><td><code>NEXT_PUBLIC_FIREBASE_API_KEY</code></td><td>Firebase apiKey</td></tr>
+              <tr><td><code>NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN</code></td><td>Firebase authDomain</td></tr>
+              <tr><td><code>NEXT_PUBLIC_FIREBASE_PROJECT_ID</code></td><td>Firebase projectId</td></tr>
+              <tr><td><code>NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET</code></td><td>Firebase storageBucket</td></tr>
+              <tr><td><code>NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID</code></td><td>Firebase messagingSenderId</td></tr>
+              <tr><td><code>NEXT_PUBLIC_FIREBASE_APP_ID</code></td><td>Firebase appId</td></tr>
+              <tr><td><code>NEXT_PUBLIC_FIREBASE_DATABASE_URL</code></td><td>Realtime DB URL'si</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="substep" data-key="s9b">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s9b" />
+          <span class="substep-title">Cloudinary (veya ImgBB) değişkenini gir</span>
+        </label>
+        <div class="substep-body">
+          <table>
+            <thead><tr><th>Cloudinary Kullanıyorsan</th><th>Değeri</th></tr></thead>
+            <tbody>
+              <tr><td><code>NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME</code></td><td>Cloud name (örn: dxyz123)</td></tr>
+              <tr><td><code>NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET</code></td><td>Preset adı (örn: miqqo_unsigned)</td></tr>
+            </tbody>
+          </table>
+          <table style="margin-top:12px">
+            <thead><tr><th>ImgBB Kullanıyorsan</th><th>Değeri</th></tr></thead>
+            <tbody>
+              <tr><td><code>NEXT_PUBLIC_IMGBB_API_KEY</code></td><td>ImgBB API key</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="substep" data-key="s9c">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s9c" />
+          <span class="substep-title">Kaydet ve yeniden deploy et</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Tüm değerleri girdikten sonra <kbd>Save</kbd> butonuna bas</li>
+            <li><span class="step-arrow">→</span> <kbd>Deployments</kbd> sekmesi → en üstteki deploy → <kbd>Retry deployment</kbd></li>
+            <li><span class="step-arrow">→</span> Deploy bitmesini bekle (1-3 dakika)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADIM 10 -->
+  <section class="step" id="step10">
+    <div class="step-header">
+      <div class="step-badge">
+        <div class="step-num" id="snum-10">10</div>
+        <div class="step-connector"></div>
+      </div>
+      <div>
+        <div class="step-title">Müşteri Domainini Bağla</div>
+        <div class="step-subtitle">Domaine göre farklı yöntem</div>
+      </div>
+    </div>
+    <div class="step-content">
+
+      <div class="substep" data-key="s10a">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s10a" />
+          <span class="substep-title">Domain Cloudflare'de kayıtlıysa (en kolay)</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Cloudflare Pages → Projen → <kbd>Custom domains</kbd> → <kbd>Set up a custom domain</kbd></li>
+            <li><span class="step-arrow">→</span> Domain adını yaz → <kbd>Continue</kbd> → Otomatik ayarlanır → Bitti!</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="substep" data-key="s10b">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s10b" />
+          <span class="substep-title">Domain başka yerde (GoDaddy, Natro, İsimtescil vb.)</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Cloudflare Pages → Projen → <kbd>Custom domains</kbd> → <kbd>Set up a custom domain</kbd></li>
+            <li><span class="step-arrow">→</span> Domain adını yaz → Sana bir hedef URL gösterir, örn: <kbd>miqqo-pizza-mondo.pages.dev</kbd></li>
+            <li><span class="step-arrow">→</span> Domain sağlayıcına gir → DNS yönetimi → CNAME kaydı ekle:</li>
+          </ul>
+          <div class="code-wrap">
+            <span class="code-lang">DNS CNAME Kaydı</span>
+            <pre>Type:   CNAME
+Name:   @  (veya www)
+Value:  miqqo-musteri-adi.pages.dev
+TTL:    Auto</pre>
+          </div>
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> DNS yayılımı 1-24 saat sürebilir</li>
+            <li><span class="step-arrow">→</span> Kontrol için: <a href="https://dnschecker.org" target="_blank">dnschecker.org</a> → domain gir → CNAME kayıtlarını gör</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADIM 11 -->
+  <section class="step" id="step11">
+    <div class="step-header">
+      <div class="step-badge">
+        <div class="step-num" id="snum-11">11</div>
+      </div>
+      <div>
+        <div class="step-title">Test Et 🎉</div>
+        <div class="step-subtitle">Her şey çalışıyor mu kontrol et</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="substep" data-key="s11a">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s11a" />
+          <span class="substep-title">Admin login çalışıyor mu?</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Tarayıcıda <kbd>https://[proje-adi].pages.dev/admin/login</kbd> adresini aç</li>
+            <li><span class="step-arrow">→</span> Adım 5'te oluşturduğun email + şifreyle giriş yap</li>
+            <li><span class="step-arrow">→</span> Dashboard açıldıysa kurulum tamamdır ✅</li>
+          </ul>
+          <div class="info-box green" style="margin-top:12px">
+            <span class="icon">✅</span>
+            <span>Giriş başarılıysa artık müşteriye teslim etmeye hazırsın!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Final Checklist ─────────────────── -->
+  <div id="final-checklist" style="scroll-margin-top:32px; margin-bottom:60px">
+    <div class="section-title">Teslim Kontrol Listesi</div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:20px">Müşteriye teslim etmeden önce hepsini tikle.</p>
+
+    <div class="final-check-item" id="fc-1" onclick="toggleFC('fc-1')">
+      <input type="checkbox" class="fc-check" id="fc-1-cb" /><span class="fc-label">Firebase projesi oluşturuldu</span>
+    </div>
+    <div class="final-check-item" id="fc-2" onclick="toggleFC('fc-2')">
+      <input type="checkbox" class="fc-check" id="fc-2-cb" /><span class="fc-label">Authentication → Email/Password açıldı</span>
+    </div>
+    <div class="final-check-item" id="fc-3" onclick="toggleFC('fc-3')">
+      <input type="checkbox" class="fc-check" id="fc-3-cb" /><span class="fc-label">Firestore oluşturuldu (europe-west1) + güvenlik kuralları yapıştırıldı ve Publish edildi</span>
+    </div>
+    <div class="final-check-item" id="fc-4" onclick="toggleFC('fc-4')">
+      <input type="checkbox" class="fc-check" id="fc-4-cb" /><span class="fc-label">Realtime Database oluşturuldu + kurallar yapıştırıldı ve Publish edildi</span>
+    </div>
+    <div class="final-check-item" id="fc-5" onclick="toggleFC('fc-5')">
+      <input type="checkbox" class="fc-check" id="fc-5-cb" /><span class="fc-label">Firebase bağlantı bilgileri (apiKey vb.) not alındı</span>
+    </div>
+    <div class="final-check-item" id="fc-6" onclick="toggleFC('fc-6')">
+      <input type="checkbox" class="fc-check" id="fc-6-cb" /><span class="fc-label">Admin kullanıcısı oluşturuldu ve bilgiler not alındı</span>
+    </div>
+    <div class="final-check-item" id="fc-7" onclick="toggleFC('fc-7')">
+      <input type="checkbox" class="fc-check" id="fc-7-cb" /><span class="fc-label">Cloudinary veya ImgBB hesabı açıldı, bilgiler not alındı</span>
+    </div>
+    <div class="final-check-item" id="fc-8" onclick="toggleFC('fc-8')">
+      <input type="checkbox" class="fc-check" id="fc-8-cb" /><span class="fc-label">npm run build çalıştırıldı, .next klasörü oluştu</span>
+    </div>
+    <div class="final-check-item" id="fc-9" onclick="toggleFC('fc-9')">
+      <input type="checkbox" class="fc-check" id="fc-9-cb" /><span class="fc-label">Cloudflare Pages projesi oluşturuldu ve ilk deploy yapıldı</span>
+    </div>
+    <div class="final-check-item" id="fc-10" onclick="toggleFC('fc-10')">
+      <input type="checkbox" class="fc-check" id="fc-10-cb" /><span class="fc-label">Tüm env değişkenleri Cloudflare'e girildi ve redeploy yapıldı</span>
+    </div>
+    <div class="final-check-item" id="fc-11" onclick="toggleFC('fc-11')">
+      <input type="checkbox" class="fc-check" id="fc-11-cb" /><span class="fc-label">Admin login başarıyla test edildi</span>
+    </div>
+    <div class="final-check-item" id="fc-12" onclick="toggleFC('fc-12')">
+      <input type="checkbox" class="fc-check" id="fc-12-cb" /><span class="fc-label">Müşteri domaini bağlandı</span>
+    </div>
+    <div class="final-check-item" id="fc-13" onclick="toggleFC('fc-13')">
+      <input type="checkbox" class="fc-check" id="fc-13-cb" /><span class="fc-label">Müşteriye teslim bilgileri gönderildi</span>
+    </div>
+
+    <div class="section-title" style="margin-top:32px">Müşteriye Verilecek Bilgiler</div>
+    <div class="delivery-card">
+      <div class="dc-line"><span class="dc-key">🌐 Web sitesi:</span><span class="dc-val">https://pizzamondo.com</span></div>
+      <div class="dc-line"><span class="dc-key">🔧 Admin panel:</span><span class="dc-val">https://pizzamondo.com/admin/login</span></div>
+      <div class="dc-line"><span class="dc-key">📧 Admin email:</span><span class="dc-val">admin@pizzamondo.com</span></div>
+      <div class="dc-line"><span class="dc-key">🔑 Admin şifre:</span><span class="dc-val">[oluşturduğun güçlü şifre]</span></div>
+    </div>
+  </div>
+
+  <!-- ── Troubleshooting ─────────────────── -->
+  <div id="trouble" style="scroll-margin-top:32px; margin-bottom:60px">
+    <div class="section-title">Sık Karşılaşılan Sorunlar</div>
+
+    <div class="trouble-item" onclick="toggleTrouble(this)">
+      <div class="trouble-q">
+        <span class="err-icon">❌</span>
+        Admin login çalışmıyor
+        <span class="trouble-chevron">▾</span>
+      </div>
+      <div class="trouble-a">
+        <strong>Sebep:</strong> Firestore Rules yanlış yapıştırılmış veya Publish edilmemiş.<br/><br/>
+        <strong>Çözüm:</strong> Firebase Console → Firestore Database → Rules sekmesi → Adım 3'teki kodu tekrar yapıştır → Publish butonuna bas.
+      </div>
+    </div>
+
+    <div class="trouble-item" onclick="toggleTrouble(this)">
+      <div class="trouble-q">
+        <span class="err-icon">❌</span>
+        Görseller yüklenmiyor
+        <span class="trouble-chevron">▾</span>
+      </div>
+      <div class="trouble-a">
+        <strong>Sebep:</strong> Cloudinary preset "Signed" modunda ayarlı.<br/><br/>
+        <strong>Çözüm:</strong> Cloudinary → Settings (⚙️) → Upload sekmesi → Upload preset'in üstüne tıkla → Signing mode: <strong>Unsigned</strong> yap → Save.
+      </div>
+    </div>
+
+    <div class="trouble-item" onclick="toggleTrouble(this)">
+      <div class="trouble-q">
+        <span class="err-icon">❌</span>
+        Site açılıyor ama veri gelmiyor / boş
+        <span class="trouble-chevron">▾</span>
+      </div>
+      <div class="trouble-a">
+        <strong>Sebep:</strong> Cloudflare'deki env değişkenleri eksik veya yanlış girilmiş.<br/><br/>
+        <strong>Çözüm:</strong> Cloudflare Pages → Projen → Settings → Environment variables → tüm değerleri kontrol et → Save → Deployments → Retry deployment.
+      </div>
+    </div>
+
+    <div class="trouble-item" onclick="toggleTrouble(this)">
+      <div class="trouble-q">
+        <span class="err-icon">❌</span>
+        Domain bağlanmıyor / sitenin eski hali geliyor
+        <span class="trouble-chevron">▾</span>
+      </div>
+      <div class="trouble-a">
+        <strong>Sebep:</strong> DNS yayılımı henüz tamamlanmamış (24 saate kadar sürebilir).<br/><br/>
+        <strong>Çözüm:</strong> <a href="https://dnschecker.org" target="_blank">dnschecker.org</a> adresine git → domain adını yaz → CNAME kaydının yayıldığını gör → bekle.
+      </div>
+    </div>
+
+    <div class="trouble-item" onclick="toggleTrouble(this)">
+      <div class="trouble-q">
+        <span class="err-icon">❌</span>
+        npm run build komutu hata veriyor
+        <span class="trouble-chevron">▾</span>
+      </div>
+      <div class="trouble-a">
+        <strong>Sebep:</strong> Node modülleri eksik veya bozuk.<br/><br/>
+        <strong>Çözüm:</strong> Terminalde şu komutu çalıştır, ardından tekrar build et:
+        <div class="code-wrap" style="margin-top:8px">
+          <button class="btn-copy" onclick="event.stopPropagation(); copyCode(this)">Kopyala</button>
+          <pre>npm install</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Congrats -->
+  <div class="congrats" id="congrats-box" style="display:none">
+    <div style="font-size:56px;margin-bottom:12px">🎉</div>
+    <h2>Kurulum Tamamlandı!</h2>
+    <p id="congrats-customer" style="margin-top:8px">Müşteri başarıyla kuruldu.</p>
+    <button class="btn-primary" style="margin-top:24px" onclick="resetAll()">Yeni Müşteri Kur →</button>
+  </div>
+
+</main>
+
+<script>
+  // ── State ────────────────────────────────────────
+  let customerKey = null;
+
+  const SUBSTEP_KEYS = [
+    's1a','s2a','s2b','s2c','s2d',
+    's3a','s4a','s5a','s6a',
+    's7a','s7b','s8a','s8b','s8c',
+    's9a','s9b','s9c','s10a','s10b','s11a'
+  ];
+
+  const STEP_SUBSTEPS = {
+    1: ['s1a'],
+    2: ['s2a','s2b','s2c','s2d'],
+    3: ['s3a'],
+    4: ['s4a'],
+    5: ['s5a'],
+    6: ['s6a'],
+    7: ['s7a','s7b'],
+    8: ['s8a','s8b','s8c'],
+    9: ['s9a','s9b','s9c'],
+    10: ['s10a','s10b'],
+    11: ['s11a'],
+  };
+
+  const FC_KEYS = Array.from({length:13}, (_,i) => `fc-${i+1}`);
+
+  // ── Init ─────────────────────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    // Try to restore last customer
+    const last = localStorage.getItem('miqqo_last_customer');
+    if (last) {
+      customerKey = last;
+      document.getElementById('customer-input').value = last;
+      activateCustomer(last);
+    }
+
+    bindCheckboxes();
+    loadState();
+    updateProgress();
+
+    // Handle enter key on input
+    document.getElementById('customer-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') setCustomer();
+    });
+  });
+
+  function setCustomer() {
+    const name = document.getElementById('customer-input').value.trim();
+    if (!name) { alert('Müşteri adı gir lütfen.'); return; }
+    customerKey = name;
+    localStorage.setItem('miqqo_last_customer', name);
+    activateCustomer(name);
+    loadState();
+    updateProgress();
+  }
+
+  function activateCustomer(name) {
+    const badge = document.getElementById('customer-badge');
+    document.getElementById('badge-name').textContent = name;
+    badge.classList.add('visible');
+    document.getElementById('setup-banner').style.opacity = '0.5';
+  }
+
+  // ── Checkbox binding ──────────────────────────────
+  function bindCheckboxes() {
+    // Substeps
+    document.querySelectorAll('.substep-check').forEach(cb => {
+      cb.addEventListener('change', () => {
+        saveState();
+        updateProgress();
+        updateStepStates();
+      });
+    });
+
+    // Final checklist
+    document.querySelectorAll('.fc-check').forEach(cb => {
+      cb.addEventListener('change', () => {
+        saveState();
+        updateProgress();
+        updateFCStates();
+        checkCongrats();
+      });
+    });
+  }
+
+  // ── Save / Load ───────────────────────────────────
+  function saveState() {
+    if (!customerKey) return;
+    const state = {};
+    SUBSTEP_KEYS.forEach(k => {
+      const el = document.querySelector(`.substep-check[data-key="${k}"]`);
+      if (el) state[k] = el.checked;
+    });
+    FC_KEYS.forEach(k => {
+      const el = document.getElementById(`${k}-cb`);
+      if (el) state[k] = el.checked;
+    });
+    localStorage.setItem(`miqqo_state_${customerKey}`, JSON.stringify(state));
+  }
+
+  function loadState() {
+    if (!customerKey) return;
+    const raw = localStorage.getItem(`miqqo_state_${customerKey}`);
+    if (!raw) return;
+    const state = JSON.parse(raw);
+    SUBSTEP_KEYS.forEach(k => {
+      const el = document.querySelector(`.substep-check[data-key="${k}"]`);
+      if (el && state[k]) { el.checked = true; }
+    });
+    FC_KEYS.forEach(k => {
+      const el = document.getElementById(`${k}-cb`);
+      if (el && state[k]) { el.checked = true; }
+    });
+    updateStepStates();
+    updateFCStates();
+    checkCongrats();
+  }
+
+  // ── Progress ──────────────────────────────────────
+  function updateProgress() {
+    const total = SUBSTEP_KEYS.length + FC_KEYS.length;
+    let done = 0;
+    SUBSTEP_KEYS.forEach(k => {
+      const el = document.querySelector(`.substep-check[data-key="${k}"]`);
+      if (el && el.checked) done++;
+    });
+    FC_KEYS.forEach(k => {
+      const el = document.getElementById(`${k}-cb`);
+      if (el && el.checked) done++;
+    });
+    const pct = Math.round((done / total) * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+  }
+
+  // ── Step completion highlights ────────────────────
+  function updateStepStates() {
+    for (const [stepNum, keys] of Object.entries(STEP_SUBSTEPS)) {
+      const allDone = keys.every(k => {
+        const el = document.querySelector(`.substep-check[data-key="${k}"]`);
+        return el && el.checked;
+      });
+      const stepEl = document.getElementById(`step${stepNum}`);
+      const navEl = document.getElementById(`nav-${stepNum}`);
+      const snumEl = document.getElementById(`snum-${stepNum}`);
+
+      if (stepEl) stepEl.classList.toggle('completed', allDone);
+      if (navEl) {
+        navEl.classList.toggle('done', allDone);
+        const numSpan = navEl.querySelector('.nav-num');
+        if (numSpan) numSpan.textContent = allDone ? '✓' : String(stepNum).padStart(2, '0');
+      }
+    }
+  }
+
+  function updateFCStates() {
+    FC_KEYS.forEach(k => {
+      const item = document.getElementById(k);
+      const cb = document.getElementById(`${k}-cb`);
+      if (item && cb) item.classList.toggle('done', cb.checked);
+    });
+  }
+
+  function toggleFC(id) {
+    const cb = document.getElementById(`${id}-cb`);
+    if (cb) {
+      cb.checked = !cb.checked;
+      saveState();
+      updateProgress();
+      updateFCStates();
+      checkCongrats();
+    }
+  }
+
+  function checkCongrats() {
+    const allFCDone = FC_KEYS.every(k => {
+      const el = document.getElementById(`${k}-cb`);
+      return el && el.checked;
+    });
+    const allSubDone = SUBSTEP_KEYS.every(k => {
+      const el = document.querySelector(`.substep-check[data-key="${k}"]`);
+      return el && el.checked;
+    });
+    const congrats = document.getElementById('congrats-box');
+    if (allFCDone && allSubDone) {
+      congrats.style.display = 'block';
+      document.getElementById('congrats-customer').textContent =
+        customerKey ? `"${customerKey}" başarıyla kuruldu!` : 'Müşteri başarıyla kuruldu!';
+    } else {
+      congrats.style.display = 'none';
+    }
+  }
+
+  // ── Troubleshooting accordion ─────────────────────
+  function toggleTrouble(el) {
+    const isOpen = el.classList.contains('open');
+    document.querySelectorAll('.trouble-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) el.classList.add('open');
+  }
+
+  // ── Copy to clipboard ─────────────────────────────
+  function copyCode(btn) {
+    const pre = btn.closest('.code-wrap').querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Kopyalandı';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Kopyala';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // ── Reset ─────────────────────────────────────────
+  function resetAll() {
+    if (!confirm('Tüm ilerleme silinecek. Yeni müşteri için başlamak istiyor musun?')) return;
+    if (customerKey) localStorage.removeItem(`miqqo_state_${customerKey}`);
+    localStorage.removeItem('miqqo_last_customer');
+    location.reload();
+  }
+</script>
+</body>
+</html>
