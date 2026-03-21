@@ -9,7 +9,8 @@ import {
   updateProduct,
   deleteProduct,
 } from '@/lib/firebase/firestore';
-import { uploadMultiple, type UploadProgress } from '@/lib/cloudinary';
+import { uploadMultipleFiles } from '@/lib/upload';
+import { parseVideoUrl } from '@/lib/video';
 import { slugify, formatPrice, getEffectivePrice } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
@@ -53,6 +54,7 @@ interface ProductForm {
   stock: string;
   allergens: string[];
   images: string[];
+  videoUrl: string;
   variants: { name: string; options: { label: string; priceModifier: string }[] }[];
 }
 
@@ -71,6 +73,7 @@ const defaultForm: ProductForm = {
   stock: '',
   allergens: [],
   images: [],
+  videoUrl: '',
   variants: [],
 };
 
@@ -154,12 +157,14 @@ export function ProductsManager() {
     if (!fileArr.length) return;
 
     try {
-      const results = await uploadMultiple(fileArr, 'products', (idx, progress) => {
-        setUploadProgress((prev) => ({ ...prev, [idx]: progress.percent }));
+      const results = await uploadMultipleFiles(fileArr, 'products', {
+        onProgress: (idx, progress) => {
+          setUploadProgress((prev) => ({ ...prev, [idx]: progress.percent }));
+        },
       });
       setForm((prev) => ({
         ...prev,
-        images: [...prev.images, ...results.map((r) => r.secure_url)].slice(0, 5),
+        images: [...prev.images, ...results.map((r) => r.url)].slice(0, 5),
       }));
       setUploadProgress({});
     } catch {
@@ -177,12 +182,13 @@ export function ProductsManager() {
     setIsSubmitting(true);
 
     try {
-      const data: Omit<Product, 'id' | 'createdAt'> = {
+      const data: Omit<Product, 'id' | 'createdAt'> & { videoUrl?: string } = {
         categoryId: form.categoryId,
         name: form.name,
         slug: slugify(form.name),
         description: form.description,
         images: form.images,
+        ...(form.videoUrl ? { videoUrl: form.videoUrl } : {}),
         price: parseFloat(form.price),
         comparePrice: form.comparePrice ? parseFloat(form.comparePrice) : null,
         discountType: form.discountType,
@@ -239,6 +245,7 @@ export function ProductsManager() {
       stock: product.stock?.toString() || '',
       allergens: product.allergens,
       images: product.images,
+      videoUrl: (product as Product & { videoUrl?: string }).videoUrl ?? '',
       variants: product.variants.map((v) => ({
         name: v.name,
         options: v.options.map((o) => ({ label: o.label, priceModifier: o.priceModifier.toString() })),
@@ -452,6 +459,31 @@ export function ProductsManager() {
                 </label>
               )}
             </div>
+          </div>
+
+          {/* Video URL */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              Video URL
+              <span className="ml-2 text-xs text-gray-400 font-normal">YouTube, Vimeo veya MP4 linki</span>
+            </label>
+            <input
+              type="url"
+              value={form.videoUrl}
+              onChange={(e) => update('videoUrl', e.target.value)}
+              placeholder="https://youtube.com/watch?v=..."
+              className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-orange-500/30"
+            />
+            {form.videoUrl && (() => {
+              const parsed = parseVideoUrl(form.videoUrl);
+              return parsed ? (
+                <p className="text-xs text-green-600 mt-1.5 flex items-center gap-1">
+                  ✓ {parsed.provider === 'youtube' ? 'YouTube' : parsed.provider === 'vimeo' ? 'Vimeo' : 'Video'} linki tanındı
+                </p>
+              ) : (
+                <p className="text-xs text-red-500 mt-1.5">Geçersiz video URL&apos;si</p>
+              );
+            })()}
           </div>
 
           {/* Badges */}
