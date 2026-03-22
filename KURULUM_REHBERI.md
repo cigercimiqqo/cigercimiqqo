@@ -1,79 +1,75 @@
 # Miqqo — Restoran SaaS Kurulum Rehberi
 
-> **Kime göre:** Yazılımcı (sen) — terminal bilgisi gerekmez  
-> **Nerede test ederiz:** Direkt Cloudflare Pages'te (`.env.local` gerekmez)  
-> **Veriler nerede saklanır:** Cloudflare Pages ortam değişkenlerinde (secret güvende)
+> **Kime göre:** Yazılımcı (sen)  
+> **Nerede test ederiz:** Cloudflare Pages canlı URL’sinde (production secret’ları Cloudflare’de)  
+> **Veriler nerede saklanır:** Cloudflare Pages ortam değişkenlerinde — `.env.local` zorunlu değil, kodda tutma
 
 ---
 
-## Yeni Müşteri Eklerken Yapacakların (Sırasıyla)
+## Yeni müşteri eklerken yapılacaklar (sırasıyla)
+
+### ADIM 1 — Firebase projesi aç
+
+**Tarayıcıdan; terminal şart değil.**
+
+1. [console.firebase.google.com](https://console.firebase.google.com) → giriş yap  
+2. **Add project** → Proje adı: `miqqo-musteri-adi` (örn. `miqqo-pizza-mondo`)  
+3. Google Analytics: isteğe bağlı → **Create project**
 
 ---
 
-### ADIM 1 — Firebase Projesi Aç
-
-**Tarayıcıdan yap, terminal yok.**
-
-1. [console.firebase.google.com](https://console.firebase.google.com) → Google hesabıyla giriş
-2. **"Add project"** → Proje adı: `miqqo-[musteri-adi]` (örn: `miqqo-pizza-mondo`)
-3. Google Analytics: kapalı bırakabilirsin → **Create project**
-
----
-
-### ADIM 2 — Firebase Servislerini Aç
-
-Proje açılınca sol menüden sırasıyla:
+### ADIM 2 — Firebase servislerini aç
 
 #### Authentication
-1. Sol menü → **Authentication** → **Get started**
-2. **Sign-in method** sekmesi → **Email/Password** → Enable → **Save**
+
+1. **Authentication** → **Get started**  
+2. **Sign-in method** → **Email/Password** → Enable → **Save**
 
 #### Firestore
-1. Sol menü → **Firestore Database** → **Create database**
-2. **Production mode** → **Next**
+
+1. **Firestore Database** → **Create database**  
+2. **Production mode** → **Next**  
 3. Bölge: `europe-west1 (Belgium)` → **Enable**
 
 #### Realtime Database
-1. Sol menü → **Realtime Database** → **Create database**
-2. Bölge: `europe-west1 (Belgium)` → **Next**
+
+1. **Realtime Database** → **Create database**  
+2. Bölge: `europe-west1 (Belgium)` → **Next**  
 3. **Locked mode** → **Enable**
 
-#### Storage (opsiyonel, genelde Cloudinary kullanırız)
-1. Sol menü → **Storage** → **Get started** → **Next** → **Done**
+#### Storage (opsiyonel)
+
+1. **Storage** → **Get started** → **Next** → **Done**
 
 ---
 
-### ADIM 3 — Firestore Güvenlik Kurallarını Yapıştır
+### ADIM 3 — Firestore güvenlik kuralları
 
-1. Sol menü → **Firestore Database** → **Rules** sekmesi
-2. Mevcut kuralları sil, aşağıdakini yapıştır → **Publish**
+1. **Firestore Database** → **Rules**  
+2. Aşağıdakini yapıştır → **Publish**
 
 ```javascript
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Ayarlar, kategoriler, ürünler, blog, sayfalar — herkese okunabilir
     match /settings/{doc} { allow read: if true; allow write: if request.auth != null; }
     match /categories/{doc} { allow read: if true; allow write: if request.auth != null; }
     match /products/{doc} { allow read: if true; allow write: if request.auth != null; }
     match /blog_posts/{doc} { allow read: if true; allow write: if request.auth != null; }
     match /pages/{doc} { allow read: if true; allow write: if request.auth != null; }
 
-    // Siparişler — herkes yazabilir (müşteri), sadece admin okuyabilir
     match /orders/{doc} {
       allow create: if true;
       allow read, update, delete: if request.auth != null;
     }
 
-    // Yorumlar — herkes ekleyebilir, sadece admin yönetebilir
     match /reviews/{doc} {
       allow create: if true;
       allow read: if true;
       allow update, delete: if request.auth != null;
     }
 
-    // Ziyaretçiler, kuponlar — sadece admin
     match /visitors/{doc} { allow read, write: if request.auth != null; }
     match /coupons/{doc} { allow read: if true; allow write: if request.auth != null; }
   }
@@ -82,10 +78,10 @@ service cloud.firestore {
 
 ---
 
-### ADIM 4 — Realtime Database Kurallarını Yapıştır
+### ADIM 4 — Realtime Database kuralları
 
-1. Sol menü → **Realtime Database** → **Rules** sekmesi
-2. Mevcut içeriği sil, aşağıdakini yapıştır → **Publish**
+1. **Realtime Database** → **Rules**  
+2. Aşağıdakini yapıştır → **Publish**
 
 ```json
 {
@@ -108,218 +104,207 @@ service cloud.firestore {
 
 ---
 
-### ADIM 5 — İlk Admin Kullanıcısı Oluştur
+### ADIM 5 — İlk admin kullanıcısı
 
-1. Sol menü → **Authentication** → **Users** sekmesi
-2. **Add user** → Email + şifre gir → **Add user**
-3. Bu bilgileri bir yere not al (müşteriye vereceksin)
-
----
-
-### ADIM 6 — Firebase Bağlantı Bilgilerini Al
-
-1. Sol menü → **Project settings** (⚙️ ikonu)
-2. Aşağı kaydır → **Your apps** → Web uygulaması yok ise: **</>** ikonuna tıkla
-3. App nickname: `miqqo-web` → **Register app**
-4. Şu değerleri kopyala/not al:
-
-```
-apiKey:               → FIREBASE_API_KEY
-authDomain:           → FIREBASE_AUTH_DOMAIN
-projectId:            → FIREBASE_PROJECT_ID
-storageBucket:        → FIREBASE_STORAGE_BUCKET
-messagingSenderId:    → FIREBASE_MESSAGING_SENDER_ID
-appId:                → FIREBASE_APP_ID
-```
-
-5. Aynı sayfada biraz aşağıda **Realtime Database** URL'sini bul:
-```
-https://miqqo-pizza-mondo-default-rtdb.europe-west1.firebasedatabase.app
-→ FIREBASE_DATABASE_URL
-```
+1. **Authentication** → **Users** → **Add user**  
+2. Email + şifre → kaydet, bilgileri not al
 
 ---
 
-### ADIM 7 — Görsel Yükleme Hesabı Aç
+### ADIM 6 — Firebase bağlantı bilgileri
 
-**Cloudinary (önerilen — video da destekler):**
+1. **Project settings** (⚙️) → **Your apps** → Web uygulaması yoksa **&lt;/&gt;** ile ekle  
+2. `miqqo-web` gibi bir isim → **Register app**  
+3. Şu alanları Cloudflare’de kullanacağın isimlerle eşleştir:
 
-1. [cloudinary.com/users/register/free](https://cloudinary.com/users/register/free) → Ücretsiz kayıt
-2. Dashboard → Sol üstteki **Cloud Name**'i not al (örn: `dxyz123abc`)
-3. Sağ üst ⚙️ → **Settings** → **Upload** sekmesi
-4. Sayfanın altına kaydır → **Add upload preset**
-5. **Signing mode:** `Unsigned` seç → **Save**
-6. Preset adını not al (örn: `miqqo_unsigned`)
+| Firebase alanı | Cloudflare’deki key |
+|----------------|---------------------|
+| apiKey | `NEXT_PUBLIC_FIREBASE_API_KEY` |
+| authDomain | `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` |
+| projectId | `NEXT_PUBLIC_FIREBASE_PROJECT_ID` |
+| storageBucket | `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` |
+| messagingSenderId | `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` |
+| appId | `NEXT_PUBLIC_FIREBASE_APP_ID` |
 
-**ImgBB (alternatif — sadece görsel, sınırsız ücretsiz):**
-
-1. [imgbb.com](https://imgbb.com) → Sign up
-2. Kullanıcı adına tıkla → **About** → **API**
-3. API Key'i not al
+4. **Realtime Database** URL’sini bul → `NEXT_PUBLIC_FIREBASE_DATABASE_URL`
 
 ---
 
-### ADIM 8 — Cloudflare Pages Projesi Oluştur
+### ADIM 7 — Görsel yükleme (Cloudinary veya ImgBB)
 
-> **GitHub gerekmez.** Kodun kendi bilgisayarındaki klasörden build yapıp Cloudflare'e direkt gönderebilirsin.
+**Cloudinary (önerilen — video da var):**
 
-#### 8a — Cloudflare Hesabı Aç
+1. [cloudinary.com/users/register/free](https://cloudinary.com/users/register/free)  
+2. **Cloud Name** ve **Upload preset** (Signing: **Unsigned**) not al  
+3. Cloudflare’de: `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`, `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET`
 
-1. [dash.cloudflare.com](https://dash.cloudflare.com) → ücretsiz kayıt
+**ImgBB (sadece görsel):**
 
-#### 8b — Pages Projesi Oluştur
+1. [imgbb.com](https://imgbb.com) → API key  
+2. Cloudflare’de: `NEXT_PUBLIC_IMGBB_API_KEY`
 
-1. Sol menü → **Workers & Pages** → **Pages** → **Create a project**
-2. **"Connect to Git"** yerine → **"Upload assets"** seç
+---
 
-#### 8c — Projeyi Build Et ve Yükle
+### ADIM 8 — Terminalden build ve Cloudflare’e deploy
 
-Projeni derlemek için **tek seferlik** şunları yap:
+GitHub zorunlu değil. Proje klasöründe terminal açıp ilerle.
+
+#### 8a — Bağımlılıkları yükle
+
+- Terminali **proje klasörünün içinde** aç (Finder’da sağ tık / Windows’ta klasörde cmd veya PowerShell / `cd` ile gir).  
+- Tam yol yazmana gerek yok; klasördeyken:
 
 ```bash
-# Projenin bulunduğu klasörde terminali aç ve çalıştır:
-npm run build
+npm install
 ```
 
-> Sonuç: `.next` klasörü oluşur — bunu Cloudflare'e yükleyeceğiz.
-
-Cloudflare'de **Upload assets** ekranında:
-- Project name: `miqqo-pizza-mondo`
-- `.next` klasörünü sürükle-bırak veya seç → **Deploy site**
-
----
-
-### ADIM 9 — Ortam Değişkenlerini Cloudflare'e Gir
-
-> Burası en kritik adım. Tüm secret key'ler **sadece burada** saklanır.  
-> Hiçbir şeyi kod içine veya `.env.local` dosyasına yazmana gerek yok.
-
-1. Cloudflare Pages → Projen → **Settings** → **Environment variables**
-2. **Production** sekmesinde **Add variable** butonuna bas
-3. Aşağıdaki değerleri tek tek ekle:
-
-| Değişken Adı | Değeri |
-|---|---|
-| `NEXT_PUBLIC_FIREBASE_API_KEY` | Firebase'den kopyaladığın apiKey |
-| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Firebase authDomain |
-| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Firebase projectId |
-| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Firebase storageBucket |
-| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Firebase messagingSenderId |
-| `NEXT_PUBLIC_FIREBASE_APP_ID` | Firebase appId |
-| `NEXT_PUBLIC_FIREBASE_DATABASE_URL` | Realtime DB URL'si |
-| `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name |
-| `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` | Cloudinary preset adı |
-
-ImgBB kullanıyorsan sadece bunu ekle:
-
-| `NEXT_PUBLIC_IMGBB_API_KEY` | ImgBB API key |
-
-4. Tüm değerleri girdikten sonra → **Save**
-5. Siteyi tekrar deploy et: **Deployments** sekmesi → **Retry deployment**
-
----
-
-### ADIM 10 — Müşteri Domainini Bağla
-
-#### Domain Cloudflare'de Kayıtlıysa (en kolay):
-
-1. Cloudflare Pages → Projen → **Custom domains** → **Set up a custom domain**
-2. Domain adını yaz → **Continue** → Otomatik ayarlanır
-
-#### Domain Başka Yerde (GoDaddy, Natro, İsimtescil vb.):
-
-1. Cloudflare Pages → Projen → **Custom domains** → **Set up a custom domain**
-2. Domain adını yaz → Sana bir CNAME değeri gösterecek, örn:
-   ```
-   miqqo-pizza-mondo.pages.dev
-   ```
-3. Domain sağlayıcısına git → DNS yönetimi → CNAME kaydı ekle:
-   ```
-   Type:   CNAME
-   Name:   @ (veya www)
-   Value:  miqqo-pizza-mondo.pages.dev
-   ```
-4. 1-24 saat içinde aktif olur
-
----
-
-### ADIM 11 — Test Et
-
-1. `https://[proje-adi].pages.dev/admin/login` adresine git
-2. Adım 5'te oluşturduğun email+şifre ile giriş yap
-3. Giriş olduysa kurulum tamamdır 🎉
-
----
-
-## Müşteriye Teslim Listesi
-
-Her müşteri kurulumunda bunları müşteriye ilet:
-
-```
-🌐 Web sitesi:  https://pizzamondo.com
-🔧 Admin panel: https://pizzamondo.com/admin/login
-📧 Admin email: admin@pizzamondo.com
-🔑 Admin şifre: [oluşturduğun güçlü şifre]
-```
-
----
-
-## Kontrol Listesi (Her Müşteri İçin)
-
-```
-[ ] Firebase projesi oluşturuldu
-[ ] Authentication → Email/Password açıldı
-[ ] Firestore oluşturuldu (europe-west1) + güvenlik kuralları yapıştırıldı
-[ ] Realtime Database oluşturuldu (europe-west1) + kurallar yapıştırıldı
-[ ] Firebase bağlantı bilgileri (apiKey vb.) not alındı
-[ ] Admin kullanıcısı oluşturuldu
-[ ] Cloudinary veya ImgBB hesabı açıldı, bilgiler not alındı
-[ ] Cloudflare Pages projesi oluşturuldu
-[ ] Tüm env değişkenleri Cloudflare Pages'e girildi
-[ ] Redeploy yapıldı
-[ ] Admin login test edildi
-[ ] Müşteri domaini bağlandı
-[ ] Müşteriye teslim yapıldı
-```
-
----
-
-## Sık Karşılaşılan Sorunlar
-
-### ❌ Admin login çalışmıyor
-
-Firestore Rules yanlış yapıştırılmış olabilir.  
-→ Firebase Console → Firestore → Rules → tekrar yapıştır → Publish
-
-### ❌ Görseller yüklenmiyor
-
-Cloudinary preset "Signed" modunda.  
-→ Cloudinary → Settings → Upload → preset → Signing mode: **Unsigned** yap
-
-### ❌ Site açılıyor ama veri gelmiyor
-
-Cloudflare'deki env değişkenleri eksik veya yanlış girilmiş.  
-→ Cloudflare Pages → Settings → Environment variables → kontrol et → redeploy
-
-### ❌ Domain bağlanmıyor
-
-DNS yayılımı henüz tamamlanmamış.  
-→ [dnschecker.org](https://dnschecker.org) → domain gir → CNAME'in yayıldığını gör → 24 saat bekle
-
----
-
-## Güvenli ZIP Arşivi (Kaynak Kodu Yedekle)
+#### 8b — Cloudflare için build
 
 ```bash
-cd /Users/furkangunduz/CursorProjects
+npm run cf:build
+```
+
+Bu komut projeyi Cloudflare Pages formatına derler ve kökte **`cloudflare-pages-dist/`** klasörünü oluşturur (deploy edeceğin çıktı burası).
+
+#### 8c — Deploy — Terminal (Wrangler)
+
+`miqqo-musteri-adi` kısmını kendi proje adınla değiştir:
+
+```bash
+npx wrangler pages deploy cloudflare-pages-dist --project-name miqqo-musteri-adi
+```
+
+- İlk seferde Cloudflare hesabına tarayıcıdan giriş isteyebilir.  
+- Proje yoksa oluşturur; varsa günceller.  
+- Örnek URL: `https://miqqo-musteri-adi.pages.dev`
+
+**Sonraki güncellemeler:**
+
+```bash
+npm run cf:build
+npx wrangler pages deploy cloudflare-pages-dist --project-name miqqo-musteri-adi
+```
+
+#### 8d — Deploy — Manuel (Dashboard, Wrangler kullanmadan)
+
+1. Yukarıdaki gibi `npm run cf:build` ile `cloudflare-pages-dist/` oluşsun.  
+2. Bu klasörü **ZIP**le (macOS: sağ tık → Sıkıştır; Windows: Sıkıştırılmış klasöre gönder).  
+3. [dash.cloudflare.com](https://dash.cloudflare.com) → **Workers & Pages** → **Create** → **Pages** → **Upload assets** / **Direct upload**.  
+4. ZIP’i yükle, proje adını gir → **Deploy site**.  
+5. Güncellemede: aynı projede **Deployments** üzerinden yeni sürüm / upload (arayüz ifadesi değişebilir; mantık: yeni build ZIP’i).
+
+---
+
+### ADIM 9 — Cloudflare’de `nodejs_compat` (Firebase için)
+
+1. **Workers & Pages** → projen → **Settings** → **Functions**  
+2. **Compatibility flags** → **Add** → `nodejs_compat` → **Save**  
+3. **Compatibility date** en az `2024-09-23` olsun.  
+4. **Deployments** → **Retry deployment**
+
+---
+
+### ADIM 10 — Ortam değişkenleri (Cloudflare)
+
+Tüm secret’lar **sadece** Cloudflare’de; koda ve repoya yazma.
+
+1. Proje → **Settings** → **Environment variables** → **Production**  
+2. Aşağıdakileri **Add variable** ile tek tek ekle → **Save**
+
+| Key | Value |
+|-----|--------|
+| `NEXT_PUBLIC_FIREBASE_API_KEY` | Firebase apiKey |
+| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | authDomain |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | projectId |
+| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | storageBucket |
+| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | messagingSenderId |
+| `NEXT_PUBLIC_FIREBASE_APP_ID` | appId |
+| `NEXT_PUBLIC_FIREBASE_DATABASE_URL` | Realtime DB URL |
+| `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | Cloudinary (ImgBB kullanıyorsan atla) |
+| `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` | Preset adı |
+| `NEXT_PUBLIC_IMGBB_API_KEY` | Sadece ImgBB kullanıyorsan |
+
+3. **Deployments** → **Retry deployment**
+
+---
+
+### ADIM 11 — Müşteri domaini
+
+**Domain Cloudflare’deyse:**  
+**Custom domains** → domain ekle → yönlendirme otomatik; SSL Cloudflare’den gelir.
+
+**Domain başka sağlayıcıdaysa:**  
+**Custom domains** ile verilen hedefe (örn. `proje-adi.pages.dev`) göre DNS’te **CNAME** ekle; yayılım 1–24 saat sürebilir. Kontrol: [dnschecker.org](https://dnschecker.org)
+
+---
+
+### ADIM 12 — Test
+
+1. `https://[proje-adi].pages.dev/admin/login`  
+2. Adım 5’teki admin ile giriş  
+3. Çalışıyorsa kurulum tamam
+
+---
+
+## Müşteriye teslim örneği
+
+```
+Web:     https://ornek.com
+Admin:   https://ornek.com/admin/login
+E-posta: admin@ornek.com
+Şifre:   [güçlü şifre]
+```
+
+---
+
+## Kontrol listesi
+
+- [ ] Firebase projesi + Auth + Firestore + Realtime DB  
+- [ ] Firestore ve Realtime kuralları yayınlandı  
+- [ ] Admin kullanıcı oluşturuldu  
+- [ ] Firebase + medya bilgileri not alındı  
+- [ ] `npm install` ve `npm run cf:build` çalıştı  
+- [ ] Deploy: Wrangler **veya** Dashboard ZIP  
+- [ ] `nodejs_compat` + uygun compatibility date  
+- [ ] Tüm env değişkenleri Cloudflare’de + redeploy  
+- [ ] Domain bağlandı  
+- [ ] Admin login test edildi  
+- [ ] Müşteriye bilgiler verildi  
+
+---
+
+## Sık sorunlar
+
+**Admin login olmuyor**  
+→ Firestore **Rules** tekrar yapıştır → **Publish**
+
+**Görseller yüklenmiyor**  
+→ Cloudinary preset **Unsigned** olmalı
+
+**Sayfa açılıyor, veri yok**  
+→ Cloudflare **Environment variables** eksik/yanlış → düzelt → **Retry deployment**
+
+**Domain bağlanmıyor**  
+→ DNS yayılımı; dnschecker ile CNAME kontrolü
+
+**`npm run cf:build` hata veriyor**  
+→ Önce `npm install`; Node sürümü 20.x önerilir. Hâlâ hata varsa proje `README.md` ve güncel bağımlılıklara bak.
+
+---
+
+## Güvenli ZIP yedek (kaynak kod)
+
+`node_modules`, build çıktıları ve `.env.local` dışarıda kalsın:
+
+```bash
+# Kendi üst klasörüne göre düzenle
 zip -r MiqqoSite_backup_$(date +%Y%m%d).zip MiqqoSite \
   --exclude "MiqqoSite/node_modules/*" \
   --exclude "MiqqoSite/.next/*" \
+  --exclude "MiqqoSite/cloudflare-pages-dist/*" \
   --exclude "MiqqoSite/.env.local"
 ```
 
-> `.env.local` kasıtlı hariç tutulur — içinde key olursa paylaşma.
-
 ---
 
-*Bu rehber Miqqo SaaS platformu için hazırlanmıştır.*
+*Miqqo SaaS — Cloudflare Pages + Firebase.*
