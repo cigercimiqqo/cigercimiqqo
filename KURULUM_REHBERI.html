@@ -1128,20 +1128,17 @@ service cloud.firestore {
       <div class="substep" data-key="s8d">
         <label class="substep-header">
           <input type="checkbox" class="substep-check" data-key="s8d" />
-          <span class="substep-title">Cloudflare'e deploy et — Manuel (tarayıcıdan, Wrangler istemezsen)</span>
+          <span class="substep-title">Neden ZIP ile yükleyemiyorum? (önemli)</span>
         </label>
         <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Önce yukarıda <kbd>npm run cf:build</kbd> ile <kbd>cloudflare-pages-dist/</kbd> klasörünü oluştur.</li>
-            <li><span class="step-arrow">→</span> Bu klasörü <strong>ZIP</strong> yap: Finder'da klasöre sağ tık → <kbd>Sıkıştır</kbd> / Windows'ta <kbd>İndir</kbd> → <kbd>Sıkıştırılmış klasöre gönder</kbd>.</li>
-            <li><span class="step-arrow">→</span> <a href="https://dash.cloudflare.com" target="_blank">dash.cloudflare.com</a> → <kbd>Workers &amp; Pages</kbd> → <kbd>Create</kbd> → <kbd>Pages</kbd> → <strong>Upload assets</strong> veya <strong>Direct upload</strong> seçeneğini seç.</li>
-            <li><span class="step-arrow">→</span> ZIP dosyasını sürükle-bırak veya seç → Proje adı gir (<kbd>miqqo-musteri-adi</kbd>) → <kbd>Deploy site</kbd>.</li>
-            <li><span class="step-arrow">→</span> <strong>Var olan projeyi güncelliyorsan:</strong> Aynı sayfada projen → <kbd>Deployments</kbd> → <kbd>Upload assets</kbd> / yeni sürüm yükle (arayüzdeki adım biraz değişebilir; ana fikir: yeni build ZIP'ini yükle).</li>
-          </ul>
-          <div class="info-box green" style="margin-top:12px">
-            <span class="icon">✅</span>
-            <span>İlk kurulumda proje yoksa "Create" ile oluştur; sonrasında aynı projeye yeni ZIP ile güncelleme atarsın.</span>
+          <div class="info-box red" style="margin-bottom:12px">
+            <span class="icon">⛔</span>
+            <span><strong>Dashboard'dan ZIP yüklemeyi bu projede kullanma.</strong> Build çıktısında <code>_routes.json</code> ve edge fonksiyonları var; Cloudflare'in "Upload assets" akışı bunu desteklemiyor ve <strong>«Pages _routes.json is not supported»</strong> hatası veriyor. Bu normal — senin hatan değil.</span>
           </div>
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> <strong>Doğru yöntem:</strong> Yukarıdaki <strong>Wrangler</strong> komutu (<kbd>npx wrangler pages deploy cloudflare-pages-dist ...</kbd>). Müşteri kurulumunda da terminalden bunu çalıştır.</li>
+            <li><span class="step-arrow">→</span> <strong>Alternatif (ZIP istemiyorsan):</strong> GitHub'a private repo atıp Cloudflare Pages'te <strong>Connect to Git</strong> ile bağla; build komutu olarak <kbd>npm run cf:build</kbd>, çıktı klasörü <kbd>cloudflare-pages-dist</kbd> (proje ayarlarında tanımlanır). Bu da ZIP hatasını yaşatmaz.</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -1400,7 +1397,7 @@ TTL:    Auto</pre>
       <input type="checkbox" class="fc-check" id="fc-7-cb" /><span class="fc-label">Cloudinary veya ImgBB hesabı açıldı, bilgiler not alındı</span>
     </div>
     <div class="final-check-item" id="fc-8" onclick="toggleFC('fc-8')">
-      <input type="checkbox" class="fc-check" id="fc-8-cb" /><span class="fc-label">npm install → npm run cf:build → Cloudflare'e deploy (Wrangler veya Dashboard ZIP) tamamlandı</span>
+      <input type="checkbox" class="fc-check" id="fc-8-cb" /><span class="fc-label">npm install → npm run cf:build → Wrangler ile deploy (veya Git ile otomatik build) tamamlandı</span>
     </div>
     <div class="final-check-item" id="fc-9" onclick="toggleFC('fc-9')">
       <input type="checkbox" class="fc-check" id="fc-9-cb" /><span class="fc-label">Cloudflare Dashboard'dan nodejs_compat flag eklendi ve Retry deployment yapıldı</span>
@@ -1476,6 +1473,18 @@ TTL:    Auto</pre>
       <div class="trouble-a">
         <strong>Sebep:</strong> DNS yayılımı henüz tamamlanmamış (24 saate kadar sürebilir).<br/><br/>
         <strong>Çözüm:</strong> <a href="https://dnschecker.org" target="_blank">dnschecker.org</a> adresine git → domain adını yaz → CNAME kaydının yayıldığını gör → bekle. Cloudflare Pages → Custom domains → yeşil ✓ bekliyorsun.
+      </div>
+    </div>
+
+    <div class="trouble-item" onclick="toggleTrouble(this)">
+      <div class="trouble-q">
+        <span class="err-icon">❌</span>
+        «Pages _routes.json is not supported» (ZIP yüklerken)
+        <span class="trouble-chevron">▾</span>
+      </div>
+      <div class="trouble-a">
+        <strong>Sebep:</strong> Bu Next.js build'i <code>_routes.json</code> ve edge worker içerir. Cloudflare Dashboard'daki <strong>Upload assets / ZIP</strong> akışı bunu kabul etmiyor.<br/><br/>
+        <strong>Çözüm:</strong> ZIP'i unut. Terminalde: <kbd>npm run cf:build</kbd> sonra <kbd>npx wrangler pages deploy cloudflare-pages-dist --project-name PROJE_ADI</kbd>. Alternatif: GitHub'a bağla, Cloudflare'de <strong>Connect to Git</strong> ile otomatik build.
       </div>
     </div>
 

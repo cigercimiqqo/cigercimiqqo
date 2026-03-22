@@ -185,13 +185,14 @@ npm run cf:build
 npx wrangler pages deploy cloudflare-pages-dist --project-name miqqo-musteri-adi
 ```
 
-#### 8d — Deploy — Manuel (Dashboard, Wrangler kullanmadan)
+#### 8d — ZIP ile Dashboard’dan yükleme (bu projede kullanma)
 
-1. Yukarıdaki gibi `npm run cf:build` ile `cloudflare-pages-dist/` oluşsun.  
-2. Bu klasörü **ZIP**le (macOS: sağ tık → Sıkıştır; Windows: Sıkıştırılmış klasöre gönder).  
-3. [dash.cloudflare.com](https://dash.cloudflare.com) → **Workers & Pages** → **Create** → **Pages** → **Upload assets** / **Direct upload**.  
-4. ZIP’i yükle, proje adını gir → **Deploy site**.  
-5. Güncellemede: aynı projede **Deployments** üzerinden yeni sürüm / upload (arayüz ifadesi değişebilir; mantık: yeni build ZIP’i).
+Cloudflare’in **Upload assets / ZIP** ekranı, bu Next.js çıktısındaki **`_routes.json`** ve edge dosyalarını desteklemiyor; **`Pages _routes.json is not supported`** hatası alırsın — bu beklenen bir kısıt.
+
+**Ne yapmalısın:**
+
+- **Wrangler** ile deploy et (yukarıdaki `npx wrangler pages deploy ...`) — doğru yöntem bu.  
+- **Alternatif:** Kodu private GitHub’a at → Cloudflare Pages’te **Connect to Git** → build: `npm run cf:build`, çıktı klasörü: `cloudflare-pages-dist` (proje ayarlarından tanımla).
 
 ---
 
@@ -264,7 +265,7 @@ E-posta: admin@ornek.com
 - [ ] Admin kullanıcı oluşturuldu  
 - [ ] Firebase + medya bilgileri not alındı  
 - [ ] `npm install` ve `npm run cf:build` çalıştı  
-- [ ] Deploy: Wrangler **veya** Dashboard ZIP  
+- [ ] Deploy: **Wrangler** veya **Git ile otomatik build** (Dashboard ZIP bu Next.js build’i için uygun değil)  
 - [ ] `nodejs_compat` + uygun compatibility date  
 - [ ] Tüm env değişkenleri Cloudflare’de + redeploy  
 - [ ] Domain bağlandı  
@@ -289,6 +290,9 @@ E-posta: admin@ornek.com
 
 **`npm run cf:build` hata veriyor**  
 → Önce `npm install`; Node sürümü 20.x önerilir. Hâlâ hata varsa proje `README.md` ve güncel bağımlılıklara bak.
+
+**«Pages _routes.json is not supported» (ZIP yüklerken)**  
+→ Dashboard ZIP bu projeyi taşıyamaz. **Wrangler** ile deploy et veya **Git + Connect to Git** kullan.
 
 ---
 
