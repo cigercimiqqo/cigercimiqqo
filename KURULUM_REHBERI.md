@@ -168,7 +168,7 @@ Bu komut projeyi Cloudflare Pages formatına derler ve kökte **`cloudflare-page
 
 #### 8c — Deploy — Terminal (Wrangler)
 
-`miqqo-musteri-adi` kısmını kendi proje adınla değiştir:
+`--project-name` **ne yazılır?** Bilgisayardaki klasör adı değil; **Cloudflare’de bu müşteriye vereceğin site adı** (sen seçersin). Örnek: `miqqo-kofteci-ahmet`, `miqqo-pizza-mondo`. Dashboard’da ve `https://BU-AD.pages.dev` adresinde böyle görünür. Boşluk yok, küçük harf, tire; Türkçe karakter kullanma. İlk seferde Cloudflare bu isimle projeyi yoksa oluşturur. Firebase proje adıyla aynı olmak zorunda değil (istersen aynı tutabilirsin).
 
 ```bash
 npx wrangler pages deploy cloudflare-pages-dist --project-name miqqo-musteri-adi

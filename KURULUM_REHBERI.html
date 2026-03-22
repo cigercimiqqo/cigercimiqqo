@@ -1103,6 +1103,10 @@ service cloud.firestore {
             <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
             <pre>npx wrangler pages deploy cloudflare-pages-dist --project-name miqqo-musteri-adi</pre>
           </div>
+          <div class="info-box orange" style="margin-top:12px">
+            <span class="icon">❓</span>
+            <span><strong><code>--project-name</code> ne?</strong> Bilgisayarındaki klasör adı <strong>değil</strong>. Firebase proje ID’si <strong>zorunlu değil</strong> — sadece <strong>Cloudflare’de bu müşteri sitesine vereceğin isim</strong>. Dashboard → Workers &amp; Pages’te öyle görünür; URL de <code>https://BU-AD.pages.dev</code> olur. Sen uydurursun: örn. <code>miqqo-kofteci-ahmet</code>, <code>miqqo-pizza-mondo</code>. Boşluk yok, Türkçe karakter yok, tire kullan. İlk deploy’da böyle bir proje yoksa Cloudflare <strong>otomatik oluşturur</strong>.</span>
+          </div>
           <ul class="instruction-list" style="margin-top:8px">
             <li><span class="step-arrow">→</span> İlk çalıştırmada Cloudflare hesabıyla giriş isteyecek — tarayıcı açılır, onayla</li>
             <li><span class="step-arrow">→</span> Proje yoksa otomatik oluşturur, varsa günceller</li>
