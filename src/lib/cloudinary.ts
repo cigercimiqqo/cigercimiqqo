@@ -89,13 +89,7 @@ export function getCloudinaryResizedUrl(url: string, width: number): string {
   return url.replace('/upload/', `/upload/w_${width},q_auto,f_auto/`);
 }
 
-export function deleteFromCloudinary(publicId: string): Promise<void> {
-  // Silme işlemi server-side yapılmalı — API route üzerinden
-  return fetch('/api/cloudinary/delete', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ publicId }),
-  }).then((res) => {
-    if (!res.ok) throw new Error('Silme başarısız');
-  });
+export function deleteFromCloudinary(_publicId: string): Promise<void> {
+  console.warn('Cloudinary silme işlemi sunucu taraflı API gerektirir. Dashboard üzerinden silin.');
+  return Promise.resolve();
 }

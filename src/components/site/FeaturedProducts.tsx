@@ -1,8 +1,17 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { getFeaturedProducts } from '@/lib/firebase/firestore';
 import { ProductCard } from './ProductCard';
+import type { Product } from '@/types';
 
-export async function FeaturedProducts() {
-  const products = await getFeaturedProducts().catch(() => []);
+export function FeaturedProducts() {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    getFeaturedProducts().then(setProducts).catch(() => {});
+  }, []);
+
   if (!products.length) return null;
 
   return (
@@ -14,8 +23,8 @@ export async function FeaturedProducts() {
         </div>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+        {products.map((p) => (
+          <ProductCard key={p.id} product={p} />
         ))}
       </div>
     </section>

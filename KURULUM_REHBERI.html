@@ -68,7 +68,6 @@
     letter-spacing: 0.3px;
   }
 
-  /* Progress */
   .progress-wrap {
     padding: 16px 24px;
     border-bottom: 1px solid var(--border);
@@ -106,22 +105,6 @@
     width: 0%;
   }
 
-  /* Customer badge */
-  .customer-badge {
-    margin: 12px 24px;
-    padding: 10px 14px;
-    background: var(--orange-dim);
-    border: 1px solid rgba(249,115,22,.25);
-    border-radius: 10px;
-    font-size: 12px;
-    color: var(--orange);
-    display: none;
-  }
-
-  .customer-badge.visible { display: block; }
-  .customer-badge strong { display: block; font-size: 13px; }
-
-  /* Nav links */
   nav { padding: 8px 12px; flex: 1; }
 
   nav a {
@@ -153,8 +136,6 @@
     flex-shrink: 0;
   }
 
-  .nav-check { font-size: 13px; flex-shrink: 0; }
-
   nav .section-label {
     font-size: 10px;
     text-transform: uppercase;
@@ -163,7 +144,6 @@
     padding: 12px 12px 4px;
   }
 
-  /* Reset button */
   .sidebar-footer {
     padding: 16px 24px;
     border-top: 1px solid var(--border);
@@ -192,62 +172,6 @@
     padding: 48px 56px;
   }
 
-  /* Customer Setup Banner */
-  #setup-banner {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px 32px;
-    margin-bottom: 48px;
-  }
-
-  #setup-banner h2 {
-    font-family: 'Syne', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-
-  #setup-banner p { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
-
-  .customer-input-row {
-    display: flex;
-    gap: 12px;
-  }
-
-  .customer-input-row input {
-    flex: 1;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 16px;
-    color: var(--text);
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-
-  .customer-input-row input:focus { border-color: var(--orange); }
-  .customer-input-row input::placeholder { color: var(--muted); }
-
-  .btn-primary {
-    padding: 12px 24px;
-    background: var(--orange);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    transition: background 0.15s;
-    white-space: nowrap;
-  }
-
-  .btn-primary:hover { background: #ea6c0e; }
-
-  /* Steps */
   .step {
     margin-bottom: 60px;
     scroll-margin-top: 32px;
@@ -287,343 +211,354 @@
     color: var(--green);
   }
 
-  .step-connector {
-    width: 1px;
-    height: 100%;
-    min-height: 16px;
-    background: var(--border);
-    margin-top: 4px;
-  }
-
   .step-title {
     font-family: 'Syne', sans-serif;
-    font-size: 22px;
     font-weight: 700;
-    line-height: 1.2;
+    font-size: 22px;
     letter-spacing: -0.3px;
   }
 
-  .step-subtitle {
-    font-size: 13px;
+  .step-desc {
+    font-size: 14px;
     color: var(--muted);
     margin-top: 4px;
+    line-height: 1.5;
   }
 
-  .step-content {
+  .step-body {
     padding-left: 52px;
   }
 
-  /* Sub-steps */
-  .substep {
+  .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 20px 24px;
+    padding: 24px 28px;
     margin-bottom: 16px;
-    transition: border-color 0.2s;
   }
 
-  .substep:has(.substep-check:checked) {
-    border-color: rgba(34,197,94,.3);
-    background: rgba(34,197,94,.03);
-  }
-
-  .substep-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-    cursor: pointer;
-  }
-
-  .substep-check {
-    width: 20px; height: 20px;
-    border-radius: 6px;
-    border: 2px solid var(--border);
-    cursor: pointer;
-    accent-color: var(--green);
-    flex-shrink: 0;
-  }
-
-  .substep-title {
+  .card h4 {
     font-family: 'Syne', sans-serif;
-    font-weight: 600;
     font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text);
   }
 
-  .substep-body { padding-left: 32px; }
-
-  /* Instruction items */
-  .instruction-list {
-    list-style: none;
-    space-y: 8px;
-  }
-
-  .instruction-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 8px 0;
+  .card p, .card li {
     font-size: 14px;
-    line-height: 1.6;
-    border-bottom: 1px solid rgba(255,255,255,.03);
+    line-height: 1.7;
+    color: #b0b0b0;
   }
 
-  .instruction-list li:last-child { border-bottom: none; }
+  .card ul, .card ol {
+    padding-left: 20px;
+    margin-bottom: 12px;
+  }
 
-  .step-arrow {
+  .card li { margin-bottom: 6px; }
+
+  .card a {
     color: var(--orange);
-    font-weight: 700;
-    flex-shrink: 0;
-    margin-top: 1px;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(249,115,22,.3);
+    transition: border-color 0.15s;
   }
 
-  kbd {
-    display: inline-block;
-    background: #2a2a2a;
-    border: 1px solid #3a3a3a;
+  .card a:hover { border-color: var(--orange); }
+
+  .highlight {
+    background: var(--orange-dim);
+    color: var(--orange);
+    padding: 2px 8px;
     border-radius: 5px;
-    padding: 1px 7px;
+    font-size: 13px;
     font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: #ccc;
-    white-space: nowrap;
   }
 
-  a { color: var(--orange); text-decoration: none; }
-  a:hover { text-decoration: underline; }
+  .warn-box {
+    background: rgba(234,179,8,.08);
+    border: 1px solid rgba(234,179,8,.2);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 13px;
+    color: #eab308;
+    line-height: 1.6;
+  }
+
+  .info-box {
+    background: rgba(59,130,246,.08);
+    border: 1px solid rgba(59,130,246,.2);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 13px;
+    color: #60a5fa;
+    line-height: 1.6;
+  }
+
+  .success-box {
+    background: var(--green-dim);
+    border: 1px solid rgba(34,197,94,.2);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 13px;
+    color: var(--green);
+    line-height: 1.6;
+  }
 
   /* Code blocks */
   .code-wrap {
     position: relative;
+    margin: 14px 0;
+  }
+
+  .code-wrap pre {
+    background: #0a0a0a;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.65;
+    color: #c5c5c5;
+    tab-size: 2;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: var(--border);
+    border: none;
+    border-radius: 6px;
+    padding: 5px 10px;
+    color: var(--muted);
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    transition: all 0.15s;
+    z-index: 2;
+  }
+
+  .copy-btn:hover { background: #333; color: var(--text); }
+  .copy-btn.copied { background: var(--green-dim); color: var(--green); }
+
+  /* Checkboxes */
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .check-item:last-child { border-bottom: none; }
+
+  .check-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .check-item input[type="checkbox"]:checked {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .check-item input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .check-item label {
+    font-size: 14px;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+
+  .check-item label small {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  /* Sub-step */
+  .sub-step {
+    margin: 20px 0;
+    padding: 20px 24px;
+    background: rgba(255,255,255,.02);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 10px 10px 0;
+  }
+
+  .sub-step h5 {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--orange);
+  }
+
+  /* Tabs */
+  .tab-group {
     margin: 16px 0;
   }
 
-  .code-lang {
-    position: absolute;
-    top: 10px; left: 14px;
-    font-size: 10px;
-    font-family: 'DM Mono', monospace;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+  .tab-buttons {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 0;
   }
 
-  .btn-copy {
-    position: absolute;
-    top: 8px; right: 10px;
-    padding: 5px 12px;
+  .tab-btn {
+    padding: 8px 18px;
     background: var(--border);
-    border: 1px solid #333;
-    border-radius: 6px;
+    border: none;
+    border-radius: 8px 8px 0 0;
     color: var(--muted);
-    font-size: 11px;
+    font-size: 13px;
     cursor: pointer;
     font-family: 'DM Sans', sans-serif;
     transition: all 0.15s;
   }
 
-  .btn-copy:hover { background: #333; color: var(--text); }
-  .btn-copy.copied { background: var(--green-dim); border-color: rgba(34,197,94,.3); color: var(--green); }
+  .tab-btn.active {
+    background: #0a0a0a;
+    color: var(--orange);
+  }
 
-  pre {
-    background: #141414;
+  .tab-content {
+    display: none;
+    background: #0a0a0a;
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 40px 16px 16px;
-    overflow-x: auto;
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    line-height: 1.7;
-    color: #cdd6f4;
+    border-radius: 0 10px 10px 10px;
+    padding: 20px 24px;
   }
 
-  .token-key { color: #89b4fa; }
-  .token-str { color: #a6e3a1; }
-  .token-comment { color: #585b70; font-style: italic; }
-
-  /* Info / warning boxes */
-  .info-box {
-    display: flex;
-    gap: 12px;
-    padding: 14px 16px;
-    border-radius: 10px;
-    font-size: 13.5px;
-    line-height: 1.6;
-    margin: 12px 0;
-  }
-
-  .info-box.orange { background: var(--orange-dim); border: 1px solid rgba(249,115,22,.2); }
-  .info-box.green { background: var(--green-dim); border: 1px solid rgba(34,197,94,.2); }
-  .info-box.red { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.2); }
-  .info-box .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-
-  /* Table */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13.5px;
-    margin: 16px 0;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-  th {
-    background: #1e1e1e;
-    padding: 10px 14px;
-    text-align: left;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--muted);
-    font-weight: 600;
-  }
-
-  td {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-  }
-
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(255,255,255,.02); }
-
-  td code, th code {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    background: #2a2a2a;
-    padding: 2px 6px;
-    border-radius: 4px;
-    color: #89b4fa;
-  }
-
-  /* Section dividers */
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--muted);
-    margin: 32px 0 16px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
+  .tab-content.active { display: block; }
+  .tab-content p, .tab-content li { font-size: 13px; color: #b0b0b0; line-height: 1.7; }
+  .tab-content ul, .tab-content ol { padding-left: 20px; margin: 8px 0; }
+  .tab-content li { margin-bottom: 4px; }
 
   /* Troubleshooting */
-  .trouble-item {
+  .faq-item {
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
     overflow: hidden;
-    margin-bottom: 12px;
   }
 
-  .trouble-q {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  .faq-q {
     padding: 14px 18px;
+    background: var(--surface);
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    background: var(--surface);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     user-select: none;
+    transition: background 0.15s;
   }
 
-  .trouble-q .err-icon { color: var(--red); font-size: 16px; }
+  .faq-q:hover { background: #1e1e1e; }
+  .faq-q::after { content: '▸'; transition: transform 0.2s; color: var(--muted); }
+  .faq-item.open .faq-q::after { transform: rotate(90deg); }
 
-  .trouble-a {
-    padding: 14px 18px;
-    font-size: 13.5px;
-    line-height: 1.7;
-    color: #bbb;
-    background: #141414;
-    border-top: 1px solid var(--border);
+  .faq-a {
     display: none;
+    padding: 16px 18px;
+    font-size: 13px;
+    color: #b0b0b0;
+    line-height: 1.7;
+    border-top: 1px solid var(--border);
   }
 
-  .trouble-item.open .trouble-a { display: block; }
-  .trouble-chevron { margin-left: auto; transition: transform 0.2s; color: var(--muted); }
-  .trouble-item.open .trouble-chevron { transform: rotate(180deg); }
+  .faq-item.open .faq-a { display: block; }
 
-  /* Final checklist */
-  .final-check-item {
+  /* Summary checklist */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .summary-item {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    margin-bottom: 8px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-
-  .final-check-item:hover { border-color: #333; }
-  .final-check-item.done { border-color: rgba(34,197,94,.3); background: rgba(34,197,94,.04); }
-  .final-check-item.done .fc-label { color: var(--muted); text-decoration: line-through; }
-
-  .fc-check {
-    width: 22px; height: 22px;
-    border-radius: 7px;
-    border: 2px solid var(--border);
-    accent-color: var(--green);
-    cursor: pointer;
-    flex-shrink: 0;
-  }
-
-  .fc-label { font-size: 14px; line-height: 1.4; flex: 1; }
-
-  /* Delivery card */
-  .delivery-card {
-    background: #141414;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px 24px;
-    font-family: 'DM Mono', monospace;
     font-size: 13px;
-    line-height: 2;
-    margin: 16px 0;
+    transition: all 0.2s;
   }
 
-  .delivery-card .dc-line { display: flex; gap: 8px; }
-  .delivery-card .dc-key { color: var(--muted); min-width: 120px; }
-  .delivery-card .dc-val { color: var(--text); }
+  .summary-item.done {
+    border-color: rgba(34,197,94,.3);
+    background: rgba(34,197,94,.05);
+  }
 
-  /* Congrats */
-  .congrats {
-    text-align: center;
-    padding: 48px 32px;
+  .summary-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+
+  .summary-item.done .summary-dot { background: var(--green); }
+
+  /* Mobile hamburger */
+  .hamburger {
+    display: none;
+    position: fixed;
+    top: 16px; left: 16px;
+    z-index: 20;
     background: var(--surface);
-    border: 1px solid rgba(34,197,94,.2);
-    border-radius: 20px;
-    margin-top: 32px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    color: var(--text);
+    font-size: 18px;
+    cursor: pointer;
   }
 
-  .congrats h2 {
-    font-family: 'Syne', sans-serif;
-    font-size: 28px;
-    font-weight: 800;
-    margin-bottom: 8px;
+  @media (max-width: 860px) {
+    aside { transform: translateX(-100%); transition: transform 0.3s; }
+    aside.open { transform: translateX(0); }
+    .hamburger { display: block; }
+    main { margin-left: 0; padding: 60px 20px 40px; }
+    .step-body { padding-left: 0; }
+    .summary-grid { grid-template-columns: 1fr; }
   }
-
-  .congrats p { color: var(--muted); font-size: 15px; }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
 </style>
 </head>
 <body>
 
-<!-- ── Sidebar ─────────────────────────────────────── -->
-<aside id="sidebar">
+<button class="hamburger" onclick="document.querySelector('aside').classList.toggle('open')">☰</button>
+
+<aside>
   <div class="sidebar-header">
-    <div class="logo">miqqo<span>.</span></div>
-    <p>Restoran SaaS · Kurulum Rehberi</p>
+    <div class="logo">Miqqo<span> Site</span></div>
+    <p>Müşteri Kurulum Rehberi</p>
   </div>
 
   <div class="progress-wrap">
@@ -636,1117 +571,845 @@
     </div>
   </div>
 
-  <div class="customer-badge" id="customer-badge">
-    <small>Aktif müşteri</small>
-    <strong id="badge-name">—</strong>
-  </div>
-
   <nav>
     <div class="section-label">Kurulum Adımları</div>
-    <a href="#step1" id="nav-1"><span class="nav-num">01</span> Firebase Projesi</a>
-    <a href="#step2" id="nav-2"><span class="nav-num">02</span> Servisleri Aç</a>
-    <a href="#step3" id="nav-3"><span class="nav-num">03</span> Firestore Kuralları</a>
-    <a href="#step4" id="nav-4"><span class="nav-num">04</span> Realtime DB Kuralları</a>
-    <a href="#step5" id="nav-5"><span class="nav-num">05</span> Admin Kullanıcısı</a>
-    <a href="#step6" id="nav-6"><span class="nav-num">06</span> Bağlantı Bilgileri</a>
-    <a href="#step7" id="nav-7"><span class="nav-num">07</span> Görsel Yükleme</a>
-    <a href="#step8" id="nav-8"><span class="nav-num">08</span> Build &amp; Deploy</a>
-    <a href="#step9" id="nav-9"><span class="nav-num">09</span> Cloudflare Pages Oluştur</a>
-    <a href="#step10" id="nav-10"><span class="nav-num">10</span> Env Değişkenleri</a>
-    <a href="#step11b" id="nav-11b"><span class="nav-num">11</span> Domain Bağla</a>
-    <a href="#step12" id="nav-12"><span class="nav-num">12</span> Test Et</a>
-    <div class="section-label">Diğer</div>
-    <a href="#final-checklist"><span class="nav-num">✓</span> Kontrol Listesi</a>
-    <a href="#trouble"><span class="nav-num">!</span> Sorun Giderme</a>
+    <a href="#step-1" data-step="1"><span class="nav-num">1</span> Firebase Projesi</a>
+    <a href="#step-2" data-step="2"><span class="nav-num">2</span> Proje Dosyaları</a>
+    <a href="#step-3" data-step="3"><span class="nav-num">3</span> Görsel Ayarları</a>
+    <a href="#step-4" data-step="4"><span class="nav-num">4</span> Local Test</a>
+    <a href="#step-5" data-step="5"><span class="nav-num">5</span> GitHub Repo</a>
+    <a href="#step-6" data-step="6"><span class="nav-num">6</span> GitHub Pages Deploy</a>
+    <a href="#step-7" data-step="7"><span class="nav-num">7</span> Custom Domain</a>
+    <a href="#step-8" data-step="8"><span class="nav-num">8</span> Firebase Auth</a>
+    <div class="section-label" style="margin-top:8px">Ek</div>
+    <a href="#troubleshooting" data-step="t"><span class="nav-num">?</span> Sorun Giderme</a>
+    <a href="#summary" data-step="s"><span class="nav-num">✓</span> Özet</a>
   </nav>
 
   <div class="sidebar-footer">
-    <button class="btn-reset" onclick="resetAll()">↺ Sıfırla (yeni müşteri)</button>
+    <button class="btn-reset" onclick="resetProgress()">İlerlemeyi Sıfırla</button>
   </div>
 </aside>
 
-<!-- ── Main ────────────────────────────────────────── -->
 <main>
 
-  <!-- Customer Setup -->
-  <div id="setup-banner">
-    <h2>Hangi müşteri için kurulum yapıyorsun?</h2>
-    <p>İlerlemeni kaydetmek için müşteri adını gir. Her müşteri için ayrı ilerleme kaydedilir.</p>
-    <div class="customer-input-row">
-      <input type="text" id="customer-input" placeholder="Müşteri adı (örn: Pizza Mondo)" />
-      <button class="btn-primary" onclick="setCustomer()">Başla →</button>
-    </div>
-  </div>
-
-  <!-- ADIM 1 -->
-  <section class="step" id="step1">
+  <!-- ═══════════════ STEP 1 ═══════════════ -->
+  <section class="step" id="step-1">
     <div class="step-header">
-      <div class="step-badge">
-        <div class="step-num" id="snum-1">01</div>
-        <div class="step-connector"></div>
-      </div>
+      <div class="step-badge"><div class="step-num">1</div></div>
       <div>
-        <div class="step-title">Firebase Projesi Aç</div>
-        <div class="step-subtitle">Tarayıcıdan yap, terminal yok</div>
+        <div class="step-title">Firebase Projesi Oluştur</div>
+        <div class="step-desc">Firestore, Realtime Database, Authentication ve Web App yapılandırmasını tamamlayın.</div>
       </div>
     </div>
-    <div class="step-content">
-      <div class="substep" data-key="s1a">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s1a" />
-          <span class="substep-title">Firebase Console'a gir ve proje oluştur</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> <span><a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> adresine git, Google hesabınla giriş yap</span></li>
-            <li><span class="step-arrow">→</span> <span><kbd>Add project</kbd> butonuna bas</span></li>
-            <li><span class="step-arrow">→</span> <span>Proje adı: <kbd>miqqo-musteri-adi</kbd> yaz (örn: <kbd>miqqo-pizza-mondo</kbd>)</span></li>
-            <li><span class="step-arrow">→</span> <span>Google Analytics: Kapalı bırakabilirsin</span></li>
-            <li><span class="step-arrow">→</span> <span><kbd>Create project</kbd> → bitmesini bekle</span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
+    <div class="step-body">
 
-  <!-- ADIM 2 -->
-  <section class="step" id="step2">
-    <div class="step-header">
-      <div class="step-badge">
-        <div class="step-num" id="snum-2">02</div>
-        <div class="step-connector"></div>
-      </div>
-      <div>
-        <div class="step-title">Firebase Servislerini Aç</div>
-        <div class="step-subtitle">Proje açılınca sol menüden sırasıyla</div>
-      </div>
-    </div>
-    <div class="step-content">
-
-      <div class="substep" data-key="s2a">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s2a" />
-          <span class="substep-title">Authentication</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Sol menü → <kbd>Authentication</kbd> → <kbd>Get started</kbd></li>
-            <li><span class="step-arrow">→</span> <kbd>Sign-in method</kbd> sekmesi → <kbd>Email/Password</kbd> → Enable → <kbd>Save</kbd></li>
-          </ul>
+      <div class="sub-step">
+        <h5>1a — Proje Oluşturma</h5>
+        <div class="card">
+          <ol>
+            <li><a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a>'a gidin ve <strong>Proje Ekle</strong>'ye tıklayın.</li>
+            <li>Proje adını girin (ör: <span class="highlight">miqqo-musteri-adi</span>).</li>
+            <li>Google Analytics'i isteğe bağlı olarak etkinleştirin, ardından <strong>Proje Oluştur</strong>'a tıklayın.</li>
+          </ol>
         </div>
       </div>
 
-      <div class="substep" data-key="s2b">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s2b" />
-          <span class="substep-title">Firestore Database</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Sol menü → <kbd>Firestore Database</kbd> → <kbd>Create database</kbd></li>
-            <li><span class="step-arrow">→</span> <kbd>Production mode</kbd> seç → <kbd>Next</kbd></li>
-            <li><span class="step-arrow">→</span> Bölge: <kbd>europe-west1 (Belgium)</kbd> → <kbd>Enable</kbd></li>
-          </ul>
+      <div class="sub-step">
+        <h5>1b — Firestore Database</h5>
+        <div class="card">
+          <ol>
+            <li>Sol menüden <strong>Firestore Database</strong> → <strong>Veritabanı oluştur</strong>'a tıklayın.</li>
+            <li>Konum olarak <span class="highlight">europe-west1</span> (Belçika) seçin.</li>
+            <li><strong>Test modunda başlat</strong>'ı seçip oluşturun.</li>
+          </ol>
+          <div class="warn-box">⚠️ Production'a geçmeden önce güvenlik kurallarını mutlaka güncelleyin.</div>
         </div>
       </div>
 
-      <div class="substep" data-key="s2c">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s2c" />
-          <span class="substep-title">Realtime Database</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Sol menü → <kbd>Realtime Database</kbd> → <kbd>Create database</kbd></li>
-            <li><span class="step-arrow">→</span> Bölge: <kbd>europe-west1 (Belgium)</kbd> → <kbd>Next</kbd></li>
-            <li><span class="step-arrow">→</span> <kbd>Locked mode</kbd> → <kbd>Enable</kbd></li>
-          </ul>
+      <div class="sub-step">
+        <h5>1c — Realtime Database</h5>
+        <div class="card">
+          <ol>
+            <li>Sol menüden <strong>Realtime Database</strong> → <strong>Veritabanı oluştur</strong>'a tıklayın.</li>
+            <li>Konum olarak <span class="highlight">europe-west1</span> seçin.</li>
+            <li>Test modunda başlatın. URL'yi not alın (ör: <span class="highlight">https://proje-adi-default-rtdb.europe-west1.firebasedatabase.app</span>).</li>
+          </ol>
         </div>
       </div>
 
-      <div class="substep" data-key="s2d">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s2d" />
-          <span class="substep-title">Storage <small style="color:var(--muted);font-weight:400">(opsiyonel)</small></span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Sol menü → <kbd>Storage</kbd> → <kbd>Get started</kbd> → <kbd>Next</kbd> → <kbd>Done</kbd></li>
-          </ul>
+      <div class="sub-step">
+        <h5>1d — Authentication</h5>
+        <div class="card">
+          <ol>
+            <li>Sol menüden <strong>Authentication</strong> → <strong>Başlayın</strong>'a tıklayın.</li>
+            <li><strong>E-posta/Şifre</strong> sağlayıcısını etkinleştirin.</li>
+            <li><strong>Users</strong> sekmesinden ilk admin kullanıcıyı oluşturun.</li>
+          </ol>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ADIM 3 -->
-  <section class="step" id="step3">
-    <div class="step-header">
-      <div class="step-badge">
-        <div class="step-num" id="snum-3">03</div>
-        <div class="step-connector"></div>
-      </div>
-      <div>
-        <div class="step-title">Firestore Güvenlik Kuralları</div>
-        <div class="step-subtitle">Aşağıdaki kodu kopyalayıp Firebase'e yapıştır</div>
-      </div>
-    </div>
-    <div class="step-content">
-      <div class="substep" data-key="s3a">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s3a" />
-          <span class="substep-title">Firestore Kurallarını Yapıştır ve Yayınla</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Firebase → Sol menü → <kbd>Firestore Database</kbd> → <kbd>Rules</kbd> sekmesi</li>
-            <li><span class="step-arrow">→</span> Mevcut tüm içeriği sil, aşağıdaki kodu yapıştır</li>
-            <li><span class="step-arrow">→</span> <kbd>Publish</kbd> butonuna bas</li>
-          </ul>
+      <div class="sub-step">
+        <h5>1e — Web App Oluşturma</h5>
+        <div class="card">
+          <ol>
+            <li><strong>Proje Ayarları</strong> → <strong>Uygulamalarınız</strong> bölümüne gidin.</li>
+            <li>Web simgesine (<strong>&lt;/&gt;</strong>) tıklayıp uygulama adı girin.</li>
+            <li>Firebase config değerlerini kopyalayın — bunları <code>.env.local</code> dosyasında kullanacaksınız:</li>
+          </ol>
           <div class="code-wrap">
-            <span class="code-lang">Firestore Rules</span>
-            <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
-            <pre>rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
+            <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>apiKey: "AIza..."
+authDomain: "proje-adi.firebaseapp.com"
+projectId: "proje-adi"
+storageBucket: "proje-adi.appspot.com"
+messagingSenderId: "123..."
+appId: "1:123..."
+databaseURL: "https://proje-adi-default-rtdb.europe-west1.firebasedatabase.app"</pre>
+          </div>
+        </div>
+      </div>
 
-    <span class="token-comment">// Ayarlar, kategoriler, ürünler, blog — herkese okunabilir</span>
-    match /settings/{doc}    { allow read: if true; allow write: if request.auth != null; }
-    match /categories/{doc}  { allow read: if true; allow write: if request.auth != null; }
-    match /products/{doc}    { allow read: if true; allow write: if request.auth != null; }
-    match /blog_posts/{doc}  { allow read: if true; allow write: if request.auth != null; }
-    match /pages/{doc}       { allow read: if true; allow write: if request.auth != null; }
+      <div class="card">
+        <div class="check-item">
+          <input type="checkbox" id="c1" data-step="1" onchange="saveCheck(this)">
+          <label for="c1">Firebase projesi oluşturuldu, Firestore + Realtime DB + Auth ayarlandı<small>Config değerleri not alındı</small></label>
+        </div>
+      </div>
 
-    <span class="token-comment">// Siparişler — herkes yazabilir, sadece admin okuyabilir</span>
-    match /orders/{doc} {
-      allow create: if true;
-      allow read, update, delete: if request.auth != null;
-    }
+    </div>
+  </section>
 
-    <span class="token-comment">// Yorumlar — herkes ekleyebilir, admin yönetebilir</span>
-    match /reviews/{doc} {
-      allow create: if true;
-      allow read: if true;
-      allow update, delete: if request.auth != null;
-    }
+  <!-- ═══════════════ STEP 2 ═══════════════ -->
+  <section class="step" id="step-2">
+    <div class="step-header">
+      <div class="step-badge"><div class="step-num">2</div></div>
+      <div>
+        <div class="step-title">Proje Dosyalarını Hazırla</div>
+        <div class="step-desc">Bağımlılıkları yükleyin ve ortam değişkenlerini ayarlayın.</div>
+      </div>
+    </div>
+    <div class="step-body">
 
-    <span class="token-comment">// Ziyaretçiler, kuponlar — sadece admin</span>
-    match /visitors/{doc} { allow read, write: if request.auth != null; }
-    match /coupons/{doc}  { allow read: if true; allow write: if request.auth != null; }
-  }
+      <div class="card">
+        <h4>Bağımlılıkları Yükleme</h4>
+        <p>Proje klasöründe terminali açın ve çalıştırın:</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>npm install</pre>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Ortam Değişkenleri (.env.local)</h4>
+        <p>Proje kök dizinine <span class="highlight">.env.local</span> dosyası oluşturun ve Firebase config değerlerini yapıştırın:</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSy...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=proje-adi.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=proje-adi
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=proje-adi.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
+NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abc123
+NEXT_PUBLIC_FIREBASE_DATABASE_URL=https://proje-adi-default-rtdb.europe-west1.firebasedatabase.app
+
+NEXT_PUBLIC_RESTAURANT_ID=ana-restoran
+
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=
+NEXT_PUBLIC_IMGBB_API_KEY=</pre>
+        </div>
+        <div class="warn-box">⚠️ <strong>.env.local</strong> dosyası <code>.gitignore</code>'da olmalı — asla commit etmeyin!</div>
+      </div>
+
+      <div class="card">
+        <div class="check-item">
+          <input type="checkbox" id="c2" data-step="2" onchange="saveCheck(this)">
+          <label for="c2">npm install çalıştırıldı ve .env.local dosyası oluşturuldu<small>Tüm Firebase değerleri girildi</small></label>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════ STEP 3 ═══════════════ -->
+  <section class="step" id="step-3">
+    <div class="step-header">
+      <div class="step-badge"><div class="step-num">3</div></div>
+      <div>
+        <div class="step-title">Görsel Yükleme Ayarları</div>
+        <div class="step-desc">Cloudinary veya ImgBB üzerinden görsel barındırma servisini yapılandırın.</div>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="tab-group">
+        <div class="tab-buttons">
+          <button class="tab-btn active" onclick="switchTab(this, 'tab-cloudinary')">Cloudinary (Önerilen)</button>
+          <button class="tab-btn" onclick="switchTab(this, 'tab-imgbb')">ImgBB</button>
+        </div>
+
+        <div class="tab-content active" id="tab-cloudinary">
+          <ol>
+            <li><a href="https://cloudinary.com/" target="_blank">cloudinary.com</a>'da ücretsiz hesap oluşturun.</li>
+            <li>Dashboard'dan <strong>Cloud Name</strong>'i kopyalayın.</li>
+            <li><strong>Settings → Upload</strong> bölümünde <strong>Upload Preset</strong> oluşturun:
+              <ul>
+                <li>Signing Mode: <strong>Unsigned</strong></li>
+                <li>Folder: <span class="highlight">miqqo</span></li>
+              </ul>
+            </li>
+            <li><code>.env.local</code> dosyasına ekleyin:</li>
+          </ol>
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your-cloud-name
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your-preset-name</pre>
+          </div>
+        </div>
+
+        <div class="tab-content" id="tab-imgbb">
+          <ol>
+            <li><a href="https://imgbb.com/" target="_blank">imgbb.com</a>'da hesap oluşturun.</li>
+            <li><a href="https://api.imgbb.com/" target="_blank">api.imgbb.com</a>'dan API anahtarı alın.</li>
+            <li><code>.env.local</code> dosyasına ekleyin:</li>
+          </ol>
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>NEXT_PUBLIC_IMGBB_API_KEY=your-api-key</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="check-item">
+          <input type="checkbox" id="c3" data-step="3" onchange="saveCheck(this)">
+          <label for="c3">Görsel yükleme servisi ayarlandı<small>Cloudinary veya ImgBB yapılandırıldı</small></label>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════ STEP 4 ═══════════════ -->
+  <section class="step" id="step-4">
+    <div class="step-header">
+      <div class="step-badge"><div class="step-num">4</div></div>
+      <div>
+        <div class="step-title">Local Test</div>
+        <div class="step-desc">Projeyi lokalde çalıştırıp her şeyin düzgün çalıştığını doğrulayın.</div>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="card">
+        <h4>Geliştirme Sunucusunu Başlatın</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>npm run dev</pre>
+        </div>
+        <p>Tarayıcıda <a href="http://localhost:3000" target="_blank">localhost:3000</a> adresini açın.</p>
+      </div>
+
+      <div class="card">
+        <h4>Kontrol Listesi</h4>
+        <ul>
+          <li>✅ Ana sayfa düzgün yükleniyor</li>
+          <li>✅ Admin paneline giriş yapılabiliyor</li>
+          <li>✅ Menü öğeleri listeleniyor / eklenebiliyor</li>
+          <li>✅ Görsel yükleme çalışıyor</li>
+          <li>✅ QR menü sayfası açılıyor</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="check-item">
+          <input type="checkbox" id="c4" data-step="4" onchange="saveCheck(this)">
+          <label for="c4">Local test başarılı<small>Tüm özellikler çalışıyor</small></label>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════ STEP 5 ═══════════════ -->
+  <section class="step" id="step-5">
+    <div class="step-header">
+      <div class="step-badge"><div class="step-num">5</div></div>
+      <div>
+        <div class="step-title">GitHub Repository Oluştur</div>
+        <div class="step-desc">Projeyi GitHub'a yükleyin.</div>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="card">
+        <h4>Yeni Repository</h4>
+        <ol>
+          <li><a href="https://github.com/new" target="_blank">github.com/new</a> adresine gidin.</li>
+          <li>Repository adı: <span class="highlight">miqqo-musteri-adi</span></li>
+          <li><strong>Private</strong> olarak oluşturun (isteğe bağlı).</li>
+          <li><strong>.gitignore</strong> ve <strong>README</strong> eklemeyin — proje zaten içeriyor.</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h4>Projeyi Push Edin</h4>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>git init
+git add .
+git commit -m "🚀 initial commit"
+git branch -M main
+git remote add origin https://github.com/KULLANICI/REPO-ADI.git
+git push -u origin main</pre>
+        </div>
+        <div class="info-box">ℹ️ <code>KULLANICI</code> ve <code>REPO-ADI</code> kısımlarını kendi bilgilerinizle değiştirin.</div>
+      </div>
+
+      <div class="card">
+        <div class="check-item">
+          <input type="checkbox" id="c5" data-step="5" onchange="saveCheck(this)">
+          <label for="c5">GitHub repository oluşturuldu ve kod push edildi<small>main branch'e başarılı push</small></label>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════ STEP 6 ═══════════════ -->
+  <section class="step" id="step-6">
+    <div class="step-header">
+      <div class="step-badge"><div class="step-num">6</div></div>
+      <div>
+        <div class="step-title">GitHub Pages Deploy</div>
+        <div class="step-desc">GitHub Actions ile otomatik deploy veya manuel gh-pages ile yayınlayın.</div>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="tab-group">
+        <div class="tab-buttons">
+          <button class="tab-btn active" onclick="switchTab(this, 'tab-actions')">GitHub Actions (Önerilen)</button>
+          <button class="tab-btn" onclick="switchTab(this, 'tab-manual')">Manuel (gh-pages)</button>
+        </div>
+
+        <div class="tab-content active" id="tab-actions">
+          <h4 style="font-family:'Syne',sans-serif;margin-bottom:14px;color:var(--text)">Adım A — Workflow Dosyası</h4>
+          <p>Aşağıdaki dosyayı oluşturun: <span class="highlight">.github/workflows/deploy.yml</span></p>
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
+          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+          NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
+          NEXT_PUBLIC_FIREBASE_DATABASE_URL: ${{ secrets.NEXT_PUBLIC_FIREBASE_DATABASE_URL }}
+          NEXT_PUBLIC_RESTAURANT_ID: ${{ secrets.NEXT_PUBLIC_RESTAURANT_ID }}
+          NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
+          NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET: ${{ secrets.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET }}
+          NEXT_PUBLIC_IMGBB_API_KEY: ${{ secrets.NEXT_PUBLIC_IMGBB_API_KEY }}
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4</pre>
+          </div>
+
+          <h4 style="font-family:'Syne',sans-serif;margin:20px 0 14px;color:var(--text)">Adım B — next.config Ayarı</h4>
+          <p><code>next.config.js</code> (veya <code>next.config.ts</code>) dosyasında <strong>output: 'export'</strong> olduğundan emin olun:</p>
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export',
+  images: {
+    unoptimized: true,
+  },
+};
+
+module.exports = nextConfig;</pre>
+          </div>
+
+          <h4 style="font-family:'Syne',sans-serif;margin:20px 0 14px;color:var(--text)">Adım C — GitHub Secrets</h4>
+          <p>Repository → <strong>Settings</strong> → <strong>Secrets and variables</strong> → <strong>Actions</strong> bölümüne gidin.</p>
+          <p style="margin-top:8px"><strong>New repository secret</strong> ile her bir ortam değişkenini ekleyin:</p>
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>NEXT_PUBLIC_FIREBASE_API_KEY
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+NEXT_PUBLIC_FIREBASE_PROJECT_ID
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+NEXT_PUBLIC_FIREBASE_APP_ID
+NEXT_PUBLIC_FIREBASE_DATABASE_URL
+NEXT_PUBLIC_RESTAURANT_ID
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+NEXT_PUBLIC_IMGBB_API_KEY</pre>
+          </div>
+          <div class="warn-box">⚠️ Secret adları birebir aynı olmalı — büyük/küçük harf duyarlıdır.</div>
+
+          <h4 style="font-family:'Syne',sans-serif;margin:20px 0 14px;color:var(--text)">Adım D — GitHub Pages Kaynağını Ayarlayın</h4>
+          <ol>
+            <li>Repository → <strong>Settings</strong> → <strong>Pages</strong>'e gidin.</li>
+            <li><strong>Source</strong> olarak <strong>GitHub Actions</strong>'ı seçin.</li>
+            <li>Değişiklikleri commit & push edin — deploy otomatik başlayacak.</li>
+          </ol>
+          <div class="success-box">✅ Deploy tamamlandığında siteniz <span class="highlight">https://KULLANICI.github.io/REPO-ADI/</span> adresinde yayınlanacak.</div>
+        </div>
+
+        <div class="tab-content" id="tab-manual">
+          <h4 style="font-family:'Syne',sans-serif;margin-bottom:14px;color:var(--text)">Manuel Deploy (Alternatif)</h4>
+          <p>Bu yöntemde <code>gh-pages</code> paketi ile build çıktısını doğrudan deploy edersiniz.</p>
+
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>npm install --save-dev gh-pages</pre>
+          </div>
+
+          <p style="margin-top:14px"><code>package.json</code>'a deploy scripti ekleyin:</p>
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>"scripts": {
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d out"
 }</pre>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- ADIM 4 -->
-  <section class="step" id="step4">
-    <div class="step-header">
-      <div class="step-badge">
-        <div class="step-num" id="snum-4">04</div>
-        <div class="step-connector"></div>
-      </div>
-      <div>
-        <div class="step-title">Realtime Database Kuralları</div>
-        <div class="step-subtitle">Aynı şekilde yapıştır ve yayınla</div>
-      </div>
-    </div>
-    <div class="step-content">
-      <div class="substep" data-key="s4a">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s4a" />
-          <span class="substep-title">Realtime DB Kurallarını Yapıştır ve Yayınla</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Firebase → Sol menü → <kbd>Realtime Database</kbd> → <kbd>Rules</kbd> sekmesi</li>
-            <li><span class="step-arrow">→</span> Mevcut içeriği tamamen sil, aşağıdaki kodu yapıştır</li>
-            <li><span class="step-arrow">→</span> <kbd>Publish</kbd> butonuna bas</li>
-          </ul>
+          <p style="margin-top:14px">Deploy komutu:</p>
           <div class="code-wrap">
-            <span class="code-lang">JSON</span>
-            <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
-            <pre>{
-  <span class="token-key">"rules"</span>: {
-    <span class="token-key">"orders"</span>: {
-      <span class="token-key">".read"</span>: <span class="token-str">"auth != null"</span>,
-      <span class="token-key">".write"</span>: <span class="token-str">"auth != null"</span>
-    },
-    <span class="token-key">"notifications"</span>: {
-      <span class="token-key">".read"</span>: <span class="token-str">"auth != null"</span>,
-      <span class="token-key">".write"</span>: <span class="token-str">"auth != null"</span>
-    },
-    <span class="token-key">"visitor_count"</span>: {
-      <span class="token-key">".read"</span>: <span class="token-str">true</span>,
-      <span class="token-key">".write"</span>: <span class="token-str">true</span>
-    }
-  }
-}</pre>
+            <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>npm run deploy</pre>
           </div>
+
+          <p style="margin-top:14px">GitHub → <strong>Settings</strong> → <strong>Pages</strong> → Source: <strong>Deploy from a branch</strong> → Branch: <strong>gh-pages</strong> / <strong>root</strong> seçin.</p>
+          <div class="info-box">ℹ️ Bu yöntemde her değişiklikte <code>npm run deploy</code> komutunu manuel çalıştırmanız gerekir.</div>
         </div>
       </div>
+
+      <div class="card">
+        <div class="check-item">
+          <input type="checkbox" id="c6" data-step="6" onchange="saveCheck(this)">
+          <label for="c6">GitHub Pages deploy başarılı<small>Site canlı olarak erişilebilir</small></label>
+        </div>
+      </div>
+
     </div>
   </section>
 
-  <!-- ADIM 5 -->
-  <section class="step" id="step5">
+  <!-- ═══════════════ STEP 7 ═══════════════ -->
+  <section class="step" id="step-7">
     <div class="step-header">
-      <div class="step-badge">
-        <div class="step-num" id="snum-5">05</div>
-        <div class="step-connector"></div>
-      </div>
+      <div class="step-badge"><div class="step-num">7</div></div>
       <div>
-        <div class="step-title">İlk Admin Kullanıcısı Oluştur</div>
-        <div class="step-subtitle">Müşteriye verecek olduğun giriş bilgileri</div>
+        <div class="step-title">Custom Domain Bağlama</div>
+        <div class="step-desc">Kendi alan adınızı GitHub Pages'e bağlayın (isteğe bağlı).</div>
       </div>
     </div>
-    <div class="step-content">
-      <div class="substep" data-key="s5a">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s5a" />
-          <span class="substep-title">Admin kullanıcısını Firebase'de oluştur</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Firebase → Sol menü → <kbd>Authentication</kbd> → <kbd>Users</kbd> sekmesi</li>
-            <li><span class="step-arrow">→</span> <kbd>Add user</kbd> butonuna bas</li>
-            <li><span class="step-arrow">→</span> Email: <kbd>admin@musteriadi.com</kbd> → Güçlü bir şifre gir → <kbd>Add user</kbd></li>
-            <li><span class="step-arrow">→</span> Bu email ve şifreyi bir kenara not al — müşteriye vereceksin</li>
-          </ul>
-          <div class="info-box orange">
-            <span class="icon">💡</span>
-            <span>Müşteri bu bilgilerle <strong>/admin/login</strong> sayfasına giriş yapacak. Güçlü bir şifre seç (en az 12 karakter, büyük/küçük/rakam/sembol).</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    <div class="step-body">
 
-  <!-- ADIM 6 -->
-  <section class="step" id="step6">
-    <div class="step-header">
-      <div class="step-badge">
-        <div class="step-num" id="snum-6">06</div>
-        <div class="step-connector"></div>
-      </div>
-      <div>
-        <div class="step-title">Firebase Bağlantı Bilgilerini Al</div>
-        <div class="step-subtitle">Bu değerleri Cloudflare'e gireceksin — not al</div>
-      </div>
-    </div>
-    <div class="step-content">
-      <div class="substep" data-key="s6a">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s6a" />
-          <span class="substep-title">Web uygulamasını kaydet ve config değerlerini al</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Firebase → Sol üstte ⚙️ → <kbd>Project settings</kbd></li>
-            <li><span class="step-arrow">→</span> Aşağı kaydır → <kbd>Your apps</kbd> → <kbd>&lt;/&gt;</kbd> ikonuna tıkla (web app)</li>
-            <li><span class="step-arrow">→</span> App nickname: <kbd>miqqo-web</kbd> → <kbd>Register app</kbd></li>
-            <li><span class="step-arrow">→</span> Karşına çıkan config değerlerini bir metin belgesine kopyala</li>
-          </ul>
-          <table>
-            <thead><tr><th>Config Anahtarı</th><th>Cloudflare'deki Adı</th></tr></thead>
-            <tbody>
-              <tr><td><code>apiKey</code></td><td><code>NEXT_PUBLIC_FIREBASE_API_KEY</code></td></tr>
-              <tr><td><code>authDomain</code></td><td><code>NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN</code></td></tr>
-              <tr><td><code>projectId</code></td><td><code>NEXT_PUBLIC_FIREBASE_PROJECT_ID</code></td></tr>
-              <tr><td><code>storageBucket</code></td><td><code>NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET</code></td></tr>
-              <tr><td><code>messagingSenderId</code></td><td><code>NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID</code></td></tr>
-              <tr><td><code>appId</code></td><td><code>NEXT_PUBLIC_FIREBASE_APP_ID</code></td></tr>
-            </tbody>
-          </table>
-          <ul class="instruction-list" style="margin-top:12px">
-            <li><span class="step-arrow">→</span> Aynı sayfayı kaydırıp <strong>Realtime Database</strong> bölümünde şöyle bir URL bul:<br/><kbd>https://proje-adi-default-rtdb.europe-west1.firebasedatabase.app</kbd></li>
-            <li><span class="step-arrow">→</span> Bu URL → <code>NEXT_PUBLIC_FIREBASE_DATABASE_URL</code></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ADIM 7 -->
-  <section class="step" id="step7">
-    <div class="step-header">
-      <div class="step-badge">
-        <div class="step-num" id="snum-7">07</div>
-        <div class="step-connector"></div>
-      </div>
-      <div>
-        <div class="step-title">Görsel Yükleme Hesabı Aç</div>
-        <div class="step-subtitle">Cloudinary (önerilen) veya ImgBB (alternatif)</div>
-      </div>
-    </div>
-    <div class="step-content">
-
-      <div class="substep" data-key="s7a">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s7a" />
-          <span class="substep-title">Cloudinary — Önerilen <small style="color:var(--green);font-weight:400">(video desteği var)</small></span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> <a href="https://cloudinary.com/users/register/free" target="_blank">cloudinary.com/users/register/free</a> → Ücretsiz kayıt ol</li>
-            <li><span class="step-arrow">→</span> Dashboard açılınca sol üstteki <strong>Cloud Name</strong>'i not al (örn: <kbd>dxyz123abc</kbd>)</li>
-            <li><span class="step-arrow">→</span> Sağ üst ⚙️ → <kbd>Settings</kbd> → <kbd>Upload</kbd> sekmesi</li>
-            <li><span class="step-arrow">→</span> Sayfanın altına kaydır → <kbd>Add upload preset</kbd></li>
-            <li><span class="step-arrow">→</span> <strong>Signing mode:</strong> <kbd>Unsigned</kbd> seç → <kbd>Save</kbd></li>
-            <li><span class="step-arrow">→</span> Preset adını not al (örn: <kbd>miqqo_unsigned</kbd>)</li>
-          </ul>
-          <table style="margin-top:12px">
-            <thead><tr><th>Not Alınacak</th><th>Cloudflare'deki Adı</th></tr></thead>
-            <tbody>
-              <tr><td>Cloud Name</td><td><code>NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME</code></td></tr>
-              <tr><td>Upload Preset Adı</td><td><code>NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET</code></td></tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="card">
+        <h4>GitHub Pages Domain Ayarı</h4>
+        <ol>
+          <li>Repository → <strong>Settings</strong> → <strong>Pages</strong> → <strong>Custom domain</strong> alanına domain girin (ör: <span class="highlight">menu.restoranadi.com</span>).</li>
+          <li><strong>Enforce HTTPS</strong>'i aktifleştirin.</li>
+        </ol>
       </div>
 
-      <div class="substep" data-key="s7b">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s7b" />
-          <span class="substep-title">ImgBB — Alternatif <small style="color:var(--muted);font-weight:400">(Cloudinary yoksa, sadece görsel)</small></span>
-        </label>
-        <div class="substep-body">
-          <div class="info-box orange">
-            <span class="icon">ℹ️</span>
-            <span>Cloudinary kurduğunda bu adımı atlayabilirsin. İkisi birlikte olmaz, biri seçilir.</span>
-          </div>
-          <ul class="instruction-list" style="margin-top:8px">
-            <li><span class="step-arrow">→</span> <a href="https://imgbb.com" target="_blank">imgbb.com</a> → ücretsiz kayıt</li>
-            <li><span class="step-arrow">→</span> Kullanıcı adına tıkla → <kbd>About</kbd> → <kbd>API</kbd></li>
-            <li><span class="step-arrow">→</span> API Key'i not al → Cloudflare'de <code>NEXT_PUBLIC_IMGBB_API_KEY</code> olarak gir</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
+      <div class="card">
+        <h4>DNS Ayarları</h4>
+        <p>Domain sağlayıcınızın DNS panelinde aşağıdaki kayıtları ekleyin:</p>
 
-  <!-- ADIM 8 -->
-  <section class="step" id="step8">
-    <div class="step-header">
-      <div class="step-badge">
-        <div class="step-num" id="snum-8">08</div>
-        <div class="step-connector"></div>
-      </div>
-      <div>
-        <div class="step-title">Terminalden Build Al ve Cloudflare'e Deploy Et</div>
-        <div class="step-subtitle">GitHub yok — 3 komut, direkt Cloudflare'e gönder</div>
-      </div>
-    </div>
-    <div class="step-content">
-
-      <div class="info-box green" style="margin-bottom:16px">
-        <span class="icon">⚡</span>
-        <span><strong>En temiz yöntem bu.</strong> Terminalde 3 komut çalıştırırsın, proje direkt Cloudflare Pages'e yüklenir. GitHub'a, Desktop uygulamasına gerek yok.</span>
-      </div>
-
-      <div class="substep" data-key="s8a">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s8a" />
-          <span class="substep-title">Bağımlılıkları yükle</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Terminal aç → proje klasörünün <strong>içinde</strong> olduğundan emin ol (komut satırında klasör adı görünür).</li>
-            <li><span class="step-arrow">→</span> <strong>macOS:</strong> Finder'da proje klasörüne sağ tık → <kbd>Services</kbd> / <kbd>Quick Actions</kbd> ile "Terminal'de Aç" veya <kbd>cd</kbd> ile klasöre gir.</li>
-            <li><span class="step-arrow">→</span> <strong>Windows:</strong> Proje klasöründe adres çubuğuna <kbd>cmd</kbd> yazıp Enter, veya klasörde boş alana Shift+sağ tık → "PowerShell penceresini burada aç".</li>
-            <li><span class="step-arrow">→</span> İstersen önce <kbd>cd</kbd> ile klasöre gir, sonra tek satır:</li>
-          </ul>
+        <div class="sub-step">
+          <h5>Alt Alan Adı İçin (ör: menu.restoranadi.com)</h5>
           <div class="code-wrap">
-            <span class="code-lang">Terminal (proje klasöründeyken)</span>
-            <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
-            <pre>npm install</pre>
+            <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>Tür: CNAME
+İsim: menu
+Değer: KULLANICI.github.io</pre>
           </div>
-          <div class="info-box orange" style="margin-top:10px">
-            <span class="icon">📌</span>
-            <span>Tam yol yazmana gerek yok: klasörün içinde olduğun sürece sadece <code>npm install</code> yeter.</span>
+        </div>
+
+        <div class="sub-step">
+          <h5>Kök Domain İçin (ör: restoranadi.com)</h5>
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>Tür: A
+İsim: @
+Değer: 185.199.108.153
+       185.199.109.153
+       185.199.110.153
+       185.199.111.153</pre>
           </div>
+        </div>
+
+        <div class="info-box">ℹ️ DNS değişiklikleri 24-48 saat sürebilir, genellikle birkaç dakika içinde aktif olur.</div>
+      </div>
+
+      <div class="card">
+        <h4>CNAME Dosyası</h4>
+        <p>Proje kök dizinine <span class="highlight">public/CNAME</span> dosyası oluşturun:</p>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>menu.restoranadi.com</pre>
+        </div>
+        <p style="margin-top:8px;font-size:13px;color:var(--muted)">Bu dosya deploy sırasında custom domain'in korunmasını sağlar.</p>
+      </div>
+
+      <div class="card">
+        <div class="check-item">
+          <input type="checkbox" id="c7" data-step="7" onchange="saveCheck(this)">
+          <label for="c7">Custom domain bağlandı (veya atlandı)<small>DNS kayıtları ayarlandı, HTTPS aktif</small></label>
         </div>
       </div>
 
-      <div class="substep" data-key="s8b">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s8b" />
-          <span class="substep-title">Cloudflare için build al</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Yine proje klasöründeyken şunu çalıştır (tek komut — derleme + çıktı klasörü hazırlanır):</li>
-          </ul>
-          <div class="code-wrap">
-            <span class="code-lang">Terminal</span>
-            <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
-            <pre>npm run cf:build</pre>
-          </div>
-          <ul class="instruction-list" style="margin-top:8px">
-            <li><span class="step-arrow">→</span> Bittikten sonra proje kökünde <kbd>cloudflare-pages-dist/</kbd> klasörü oluşur — deploy edeceğin şey burası.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="substep" data-key="s8c">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s8c" />
-          <span class="substep-title">Cloudflare'e deploy et — Terminal (Wrangler)</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> <kbd>miqqo-musteri-adi</kbd> kısmını müşterinin kısa adıyla değiştir:</li>
-          </ul>
-          <div class="code-wrap">
-            <span class="code-lang">Terminal — ilk deploy</span>
-            <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
-            <pre>npx wrangler pages deploy cloudflare-pages-dist --project-name miqqo-musteri-adi</pre>
-          </div>
-          <div class="info-box orange" style="margin-top:12px">
-            <span class="icon">❓</span>
-            <span><strong><code>--project-name</code> ne?</strong> Bilgisayarındaki klasör adı <strong>değil</strong>. Firebase proje ID’si <strong>zorunlu değil</strong> — sadece <strong>Cloudflare’de bu müşteri sitesine vereceğin isim</strong>. Dashboard → Workers &amp; Pages’te öyle görünür; URL de <code>https://BU-AD.pages.dev</code> olur. Sen uydurursun: örn. <code>miqqo-kofteci-ahmet</code>, <code>miqqo-pizza-mondo</code>. Boşluk yok, Türkçe karakter yok, tire kullan. İlk deploy’da böyle bir proje yoksa Cloudflare <strong>otomatik oluşturur</strong>.</span>
-          </div>
-          <ul class="instruction-list" style="margin-top:8px">
-            <li><span class="step-arrow">→</span> İlk çalıştırmada Cloudflare hesabıyla giriş isteyecek — tarayıcı açılır, onayla</li>
-            <li><span class="step-arrow">→</span> Proje yoksa otomatik oluşturur, varsa günceller</li>
-            <li><span class="step-arrow">→</span> Bittikten sonra sana bir URL verir: <kbd>https://miqqo-musteri-adi.pages.dev</kbd></li>
-          </ul>
-          <div class="info-box orange" style="margin-top:12px">
-            <span class="icon">🔄</span>
-            <span><strong>Sonraki güncellemelerde</strong> şu iki komutu sırayla çalıştır:</span>
-          </div>
-          <div class="code-wrap">
-            <span class="code-lang">Terminal — güncelleme deploy</span>
-            <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
-            <pre>npm run cf:build</pre>
-          </div>
-          <div class="code-wrap">
-            <span class="code-lang">Terminal — ardından</span>
-            <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
-            <pre>npx wrangler pages deploy cloudflare-pages-dist --project-name miqqo-musteri-adi</pre>
-          </div>
-        </div>
-      </div>
-
-      <div class="substep" data-key="s8d">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s8d" />
-          <span class="substep-title">Neden ZIP ile yükleyemiyorum? (önemli)</span>
-        </label>
-        <div class="substep-body">
-          <div class="info-box red" style="margin-bottom:12px">
-            <span class="icon">⛔</span>
-            <span><strong>Dashboard'dan ZIP yüklemeyi bu projede kullanma.</strong> Build çıktısında <code>_routes.json</code> ve edge fonksiyonları var; Cloudflare'in "Upload assets" akışı bunu desteklemiyor ve <strong>«Pages _routes.json is not supported»</strong> hatası veriyor. Bu normal — senin hatan değil.</span>
-          </div>
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> <strong>Doğru yöntem:</strong> Yukarıdaki <strong>Wrangler</strong> komutu (<kbd>npx wrangler pages deploy cloudflare-pages-dist ...</kbd>). Müşteri kurulumunda da terminalden bunu çalıştır.</li>
-            <li><span class="step-arrow">→</span> <strong>Alternatif (ZIP istemiyorsan):</strong> GitHub'a private repo atıp Cloudflare Pages'te <strong>Connect to Git</strong> ile bağla; build komutu olarak <kbd>npm run cf:build</kbd>, çıktı klasörü <kbd>cloudflare-pages-dist</kbd> (proje ayarlarında tanımlanır). Bu da ZIP hatasını yaşatmaz.</li>
-          </ul>
-        </div>
-      </div>
     </div>
   </section>
 
-  <!-- ADIM 9 -->
-  <section class="step" id="step9">
+  <!-- ═══════════════ STEP 8 ═══════════════ -->
+  <section class="step" id="step-8">
     <div class="step-header">
-      <div class="step-badge">
-        <div class="step-num" id="snum-9">09</div>
-        <div class="step-connector"></div>
-      </div>
+      <div class="step-badge"><div class="step-num">8</div></div>
       <div>
-        <div class="step-title">Cloudflare Pages'te nodejs_compat Flag Ekle</div>
-        <div class="step-subtitle">Firebase SDK'nın çalışması için zorunlu — tarayıcıdan yapılıyor</div>
+        <div class="step-title">Firebase Auth Domain Güncelle</div>
+        <div class="step-desc">Custom domain kullanıyorsanız Firebase'e bu domaini yetkilendirin.</div>
       </div>
     </div>
-    <div class="step-content">
+    <div class="step-body">
 
-      <div class="substep" data-key="s9a">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s9a" />
-          <span class="substep-title">Cloudflare Dashboard'dan flag'i ekle</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> <a href="https://dash.cloudflare.com" target="_blank">dash.cloudflare.com</a> → <kbd>Workers &amp; Pages</kbd> → az önce oluşan projeyi seç</li>
-            <li><span class="step-arrow">→</span> <kbd>Settings</kbd> → <kbd>Functions</kbd> sekmesi</li>
-            <li><span class="step-arrow">→</span> <strong>Compatibility flags</strong> bölümü → <kbd>Add compatibility flag</kbd></li>
-            <li><span class="step-arrow">→</span> <kbd>nodejs_compat</kbd> yaz → <kbd>Save</kbd></li>
-            <li><span class="step-arrow">→</span> <kbd>Deployments</kbd> → <kbd>Retry deployment</kbd></li>
-          </ul>
-          <div class="info-box green" style="margin-top:8px">
-            <span class="icon">✅</span>
-            <span>Bu flag Firebase SDK'nın Cloudflare edge ortamında sorunsuz çalışmasını sağlar. Bir kere eklersin, her deploy'da otomatik aktif olur.</span>
-          </div>
+      <div class="card">
+        <h4>Yetkilendirilmiş Domainler</h4>
+        <ol>
+          <li><a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a> → Projeniz → <strong>Authentication</strong> → <strong>Settings</strong></li>
+          <li><strong>Authorized domains</strong> bölümüne gidin.</li>
+          <li><strong>Add domain</strong> ile aşağıdaki domainleri ekleyin:</li>
+        </ol>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>KULLANICI.github.io
+menu.restoranadi.com</pre>
         </div>
+        <div class="info-box">ℹ️ Hem GitHub Pages varsayılan domainini hem de (varsa) custom domaini ekleyin.</div>
       </div>
 
-      <div class="substep" data-key="s9b">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s9b" />
-          <span class="substep-title">Compatibility date'i kontrol et</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Aynı sayfada <strong>Compatibility date</strong> bölümü → en az <kbd>2024-09-23</kbd> olsun</li>
-            <li><span class="step-arrow">→</span> Değilse güncelle → <kbd>Save</kbd></li>
-          </ul>
+      <div class="card">
+        <div class="check-item">
+          <input type="checkbox" id="c8" data-step="8" onchange="saveCheck(this)">
+          <label for="c8">Firebase Auth domainleri güncellendi<small>Login işlemi canlı sitede çalışıyor</small></label>
         </div>
       </div>
 
     </div>
   </section>
 
-  <!-- ADIM 10 -->
-  <section class="step" id="step10">
+  <!-- ═══════════════ TROUBLESHOOTING ═══════════════ -->
+  <section class="step" id="troubleshooting">
     <div class="step-header">
-      <div class="step-badge">
-        <div class="step-num" id="snum-10">10</div>
-        <div class="step-connector"></div>
-      </div>
+      <div class="step-badge"><div class="step-num">?</div></div>
       <div>
-        <div class="step-title">Ortam Değişkenlerini Cloudflare'e Gir</div>
-        <div class="step-subtitle">Tüm secret key'ler sadece burada saklanır — .env.local yok!</div>
+        <div class="step-title">Sorun Giderme</div>
+        <div class="step-desc">Sık karşılaşılan sorunlar ve çözümleri.</div>
       </div>
     </div>
-    <div class="step-content">
+    <div class="step-body">
 
-      <div class="info-box red" style="margin-bottom:16px">
-        <span class="icon">🔐</span>
-        <span>Bu değerleri asla kod içine veya başka bir dosyaya yazma. Sadece Cloudflare Pages Environment variables bölümüne gir.</span>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Build hatası: "next export" komutu çalışmıyor</div>
+        <div class="faq-a">
+          <p>Next.js 14+ sürümlerinde <code>next export</code> komutu kaldırıldı. Yerine <code>next.config.js</code>'de <code>output: 'export'</code> kullanın. <code>npm run build</code> komutu otomatik olarak <code>out/</code> klasörüne static export oluşturur.</p>
+        </div>
       </div>
 
-      <div class="substep" data-key="s10a">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s10a" />
-          <span class="substep-title">Firebase değişkenlerini Cloudflare'e ekle</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Cloudflare Pages → Projen → <kbd>Settings</kbd> → <kbd>Environment variables</kbd></li>
-            <li><span class="step-arrow">→</span> <kbd>Production</kbd> sekmesi → <kbd>Add variable</kbd> → her satırı tek tek ekle</li>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">GitHub Actions workflow başarısız oluyor</div>
+        <div class="faq-a">
+          <p>Kontrol edin:</p>
+          <ul>
+            <li>Tüm secrets doğru eklenmiş mi? (<strong>Settings → Secrets</strong>)</li>
+            <li>Repository → <strong>Settings → Pages → Source</strong> "GitHub Actions" olarak seçili mi?</li>
+            <li>Repository → <strong>Settings → Actions → General</strong> → Workflow permissions: "Read and write" mi?</li>
+            <li><code>deploy.yml</code> dosyasında YAML syntax hatası var mı?</li>
           </ul>
-          <table style="margin-top:12px">
-            <thead><tr><th>Değişken Adı (Key)</th><th>Değeri (Value)</th></tr></thead>
-            <tbody>
-              <tr><td><code>NEXT_PUBLIC_FIREBASE_API_KEY</code></td><td>Firebase apiKey</td></tr>
-              <tr><td><code>NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN</code></td><td>Firebase authDomain</td></tr>
-              <tr><td><code>NEXT_PUBLIC_FIREBASE_PROJECT_ID</code></td><td>Firebase projectId</td></tr>
-              <tr><td><code>NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET</code></td><td>Firebase storageBucket</td></tr>
-              <tr><td><code>NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID</code></td><td>Firebase messagingSenderId</td></tr>
-              <tr><td><code>NEXT_PUBLIC_FIREBASE_APP_ID</code></td><td>Firebase appId</td></tr>
-              <tr><td><code>NEXT_PUBLIC_FIREBASE_DATABASE_URL</code></td><td>Realtime DB URL'si</td></tr>
-            </tbody>
-          </table>
         </div>
       </div>
 
-      <div class="substep" data-key="s10b">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s10b" />
-          <span class="substep-title">Cloudinary (veya ImgBB) değişkenini ekle</span>
-        </label>
-        <div class="substep-body">
-          <table>
-            <thead><tr><th>Cloudinary Kullanıyorsan</th><th>Değeri</th></tr></thead>
-            <tbody>
-              <tr><td><code>NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME</code></td><td>Cloud name (örn: dxyz123)</td></tr>
-              <tr><td><code>NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET</code></td><td>Preset adı (örn: miqqo_unsigned)</td></tr>
-            </tbody>
-          </table>
-          <table style="margin-top:12px">
-            <thead><tr><th>ImgBB Kullanıyorsan</th><th>Değeri</th></tr></thead>
-            <tbody>
-              <tr><td><code>NEXT_PUBLIC_IMGBB_API_KEY</code></td><td>ImgBB API key</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="substep" data-key="s10c">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s10c" />
-          <span class="substep-title">Kaydet ve yeniden deploy et</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Tüm değerleri girdikten sonra <kbd>Save</kbd> butonuna bas</li>
-            <li><span class="step-arrow">→</span> <kbd>Deployments</kbd> sekmesi → en üstteki deploy → <kbd>Retry deployment</kbd></li>
-            <li><span class="step-arrow">→</span> 2-3 dakika bekle → yeşil "Success" göründüğünde site hazır</li>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Site açılıyor ama beyaz/boş sayfa gösteriyor</div>
+        <div class="faq-a">
+          <p>Muhtemel sebepler:</p>
+          <ul>
+            <li><strong>basePath</strong> eksik olabilir. Repository adı ile alt dizinde yayınlanıyorsa <code>next.config.js</code>'e ekleyin: <code>basePath: '/REPO-ADI'</code></li>
+            <li>Custom domain kullanıyorsanız basePath gerekmez.</li>
+            <li>Tarayıcı konsol hatalarını kontrol edin (F12 → Console).</li>
           </ul>
-          <div class="info-box orange" style="margin-top:8px">
-            <span class="icon">⚡</span>
-            <span>Sonraki güncellemeler için GitHub Desktop → değişiklikleri commit et → Push origin → Cloudflare otomatik deploy eder.</span>
-          </div>
         </div>
       </div>
+
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Firebase "auth/unauthorized-domain" hatası</div>
+        <div class="faq-a">
+          <p>Firebase Console → Authentication → Settings → Authorized domains listesine sitenizin domainini ekleyin. Hem <code>kullanici.github.io</code> hem de custom domain eklenmeli.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Sayfalar arası geçişte 404 hatası</div>
+        <div class="faq-a">
+          <p>GitHub Pages SPA routing desteklemez. Çözümler:</p>
+          <ul>
+            <li><code>out/</code> klasörüne bir <code>404.html</code> dosyası ekleyin (Next.js static export ile otomatik oluşturulabilir).</li>
+            <li>Veya <code>next.config.js</code>'e <code>trailingSlash: true</code> ekleyin — her sayfa kendi klasöründe <code>index.html</code> olarak oluşturulur.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Custom domain'de HTTPS çalışmıyor</div>
+        <div class="faq-a">
+          <p>DNS kayıtlarının yayılması biraz zaman alabilir. 30 dakika bekleyin, ardından GitHub → Settings → Pages'de "Enforce HTTPS" kutusunu tekrar işaretleyin. DNS doğrulaması başarılı olunca GitHub otomatik SSL sertifikası oluşturur.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Görseller yüklenmiyor (Cloudinary/ImgBB)</div>
+        <div class="faq-a">
+          <p>Kontrol edin:</p>
+          <ul>
+            <li>API anahtarları <code>.env.local</code> ve GitHub Secrets'ta doğru mu?</li>
+            <li>Cloudinary'de upload preset <strong>Unsigned</strong> modunda mı?</li>
+            <li>ImgBB API anahtarı aktif mi?</li>
+            <li>Tarayıcı Network sekmesinden hata detayını kontrol edin.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Deploy sonrası değişiklikler görünmüyor</div>
+        <div class="faq-a">
+          <p>Çözümler:</p>
+          <ul>
+            <li>Tarayıcı cache'ini temizleyin: <code>Ctrl+Shift+R</code> (Windows) veya <code>Cmd+Shift+R</code> (Mac).</li>
+            <li>GitHub Actions sekmesinden son workflow'un başarılı tamamlandığını doğrulayın.</li>
+            <li>GitHub Pages'in CDN cache'i birkaç dakika gecikebilir — 5 dakika bekleyin.</li>
+          </ul>
+        </div>
+      </div>
+
     </div>
   </section>
 
-  <!-- ADIM 11 — Domain -->
-  <section class="step" id="step11b">
+  <!-- ═══════════════ SUMMARY ═══════════════ -->
+  <section class="step" id="summary">
     <div class="step-header">
-      <div class="step-badge">
-        <div class="step-num" id="snum-11b">11</div>
-        <div class="step-connector"></div>
-      </div>
+      <div class="step-badge"><div class="step-num">✓</div></div>
       <div>
-        <div class="step-title">Müşteri Domainini Bağla</div>
-        <div class="step-subtitle">Cloudflare Pages → Custom Domains</div>
+        <div class="step-title">Kurulum Özeti</div>
+        <div class="step-desc">Tüm adımların tamamlanma durumunu buradan kontrol edin.</div>
       </div>
     </div>
-    <div class="step-content">
+    <div class="step-body">
 
-      <div class="substep" data-key="s11a">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s11a" />
-          <span class="substep-title">Domain Cloudflare'de kayıtlıysa (en kolay)</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Cloudflare Pages → Projen → <kbd>Custom domains</kbd> → <kbd>Set up a custom domain</kbd></li>
-            <li><span class="step-arrow">→</span> Domain adını yaz → <kbd>Continue</kbd> → Otomatik ayarlanır → Bitti! SSL de otomatik gelir.</li>
-          </ul>
+      <div class="summary-grid" id="summary-grid">
+        <div class="summary-item" data-summary="1">
+          <div class="summary-dot"></div>
+          <span>Firebase Projesi</span>
+        </div>
+        <div class="summary-item" data-summary="2">
+          <div class="summary-dot"></div>
+          <span>Proje Dosyaları</span>
+        </div>
+        <div class="summary-item" data-summary="3">
+          <div class="summary-dot"></div>
+          <span>Görsel Ayarları</span>
+        </div>
+        <div class="summary-item" data-summary="4">
+          <div class="summary-dot"></div>
+          <span>Local Test</span>
+        </div>
+        <div class="summary-item" data-summary="5">
+          <div class="summary-dot"></div>
+          <span>GitHub Repository</span>
+        </div>
+        <div class="summary-item" data-summary="6">
+          <div class="summary-dot"></div>
+          <span>GitHub Pages Deploy</span>
+        </div>
+        <div class="summary-item" data-summary="7">
+          <div class="summary-dot"></div>
+          <span>Custom Domain</span>
+        </div>
+        <div class="summary-item" data-summary="8">
+          <div class="summary-dot"></div>
+          <span>Firebase Auth</span>
         </div>
       </div>
 
-      <div class="substep" data-key="s11b">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s11b" />
-          <span class="substep-title">Domain başka yerde (GoDaddy, Natro, İsimtescil vb.)</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Cloudflare Pages → Projen → <kbd>Custom domains</kbd> → <kbd>Set up a custom domain</kbd></li>
-            <li><span class="step-arrow">→</span> Domain adını yaz → Cloudflare sana hedef adresi gösterir, örn: <kbd>miqqo-musteri.pages.dev</kbd></li>
-            <li><span class="step-arrow">→</span> Domain sağlayıcına gir → DNS yönetimi → CNAME kaydı ekle:</li>
-          </ul>
-          <div class="code-wrap">
-            <span class="code-lang">DNS CNAME Kaydı</span>
-            <pre>Type:   CNAME
-Name:   @  (veya www)
-Value:  miqqo-musteri-adi.pages.dev
-TTL:    Auto</pre>
-          </div>
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> 1-24 saat içinde aktif olur</li>
-            <li><span class="step-arrow">→</span> Kontrol: <a href="https://dnschecker.org" target="_blank">dnschecker.org</a> → domain gir → CNAME'in yayıldığını görünce hazır</li>
-          </ul>
-          <div class="info-box green" style="margin-top:8px">
-            <span class="icon">🔒</span>
-            <span>Cloudflare ücretsiz SSL sertifikası otomatik sağlar. Müşteri sitesi <strong>https://</strong> ile açılır.</span>
-          </div>
+      <div id="completion-msg" style="display:none;margin-top:24px">
+        <div class="success-box" style="font-size:15px;text-align:center;padding:24px">
+          🎉 <strong>Tebrikler!</strong> Tüm kurulum adımları başarıyla tamamlandı.<br>
+          Miqqo Site artık canlı ve kullanıma hazır!
         </div>
       </div>
+
     </div>
   </section>
-
-  <!-- ADIM 12 -->
-  <section class="step" id="step12">
-    <div class="step-header">
-      <div class="step-badge">
-        <div class="step-num" id="snum-12">12</div>
-      </div>
-      <div>
-        <div class="step-title">Test Et 🎉</div>
-        <div class="step-subtitle">Her şey çalışıyor mu kontrol et</div>
-      </div>
-    </div>
-    <div class="step-content">
-      <div class="substep" data-key="s12a">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s12a" />
-          <span class="substep-title">Admin login çalışıyor mu?</span>
-        </label>
-        <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Tarayıcıda <kbd>https://[proje-adi].pages.dev/admin/login</kbd> adresini aç</li>
-            <li><span class="step-arrow">→</span> Adım 5'te oluşturduğun email + şifreyle giriş yap</li>
-            <li><span class="step-arrow">→</span> Dashboard açıldıysa kurulum tamamdır ✅</li>
-          </ul>
-          <div class="info-box green" style="margin-top:12px">
-            <span class="icon">✅</span>
-            <span>Giriş başarılıysa artık müşteriye teslim etmeye hazırsın!</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── Final Checklist ─────────────────── -->
-  <div id="final-checklist" style="scroll-margin-top:32px; margin-bottom:60px">
-    <div class="section-title">Teslim Kontrol Listesi</div>
-    <p style="font-size:14px;color:var(--muted);margin-bottom:20px">Müşteriye teslim etmeden önce hepsini tikle.</p>
-
-    <div class="final-check-item" id="fc-1" onclick="toggleFC('fc-1')">
-      <input type="checkbox" class="fc-check" id="fc-1-cb" /><span class="fc-label">Firebase projesi oluşturuldu</span>
-    </div>
-    <div class="final-check-item" id="fc-2" onclick="toggleFC('fc-2')">
-      <input type="checkbox" class="fc-check" id="fc-2-cb" /><span class="fc-label">Authentication → Email/Password açıldı</span>
-    </div>
-    <div class="final-check-item" id="fc-3" onclick="toggleFC('fc-3')">
-      <input type="checkbox" class="fc-check" id="fc-3-cb" /><span class="fc-label">Firestore oluşturuldu (europe-west1) + güvenlik kuralları yapıştırıldı ve Publish edildi</span>
-    </div>
-    <div class="final-check-item" id="fc-4" onclick="toggleFC('fc-4')">
-      <input type="checkbox" class="fc-check" id="fc-4-cb" /><span class="fc-label">Realtime Database oluşturuldu + kurallar yapıştırıldı ve Publish edildi</span>
-    </div>
-    <div class="final-check-item" id="fc-5" onclick="toggleFC('fc-5')">
-      <input type="checkbox" class="fc-check" id="fc-5-cb" /><span class="fc-label">Firebase bağlantı bilgileri (apiKey vb.) not alındı</span>
-    </div>
-    <div class="final-check-item" id="fc-6" onclick="toggleFC('fc-6')">
-      <input type="checkbox" class="fc-check" id="fc-6-cb" /><span class="fc-label">Admin kullanıcısı oluşturuldu ve bilgiler not alındı</span>
-    </div>
-    <div class="final-check-item" id="fc-7" onclick="toggleFC('fc-7')">
-      <input type="checkbox" class="fc-check" id="fc-7-cb" /><span class="fc-label">Cloudinary veya ImgBB hesabı açıldı, bilgiler not alındı</span>
-    </div>
-    <div class="final-check-item" id="fc-8" onclick="toggleFC('fc-8')">
-      <input type="checkbox" class="fc-check" id="fc-8-cb" /><span class="fc-label">npm install → npm run cf:build → Wrangler ile deploy (veya Git ile otomatik build) tamamlandı</span>
-    </div>
-    <div class="final-check-item" id="fc-9" onclick="toggleFC('fc-9')">
-      <input type="checkbox" class="fc-check" id="fc-9-cb" /><span class="fc-label">Cloudflare Dashboard'dan nodejs_compat flag eklendi ve Retry deployment yapıldı</span>
-    </div>
-    <div class="final-check-item" id="fc-10" onclick="toggleFC('fc-10')">
-      <input type="checkbox" class="fc-check" id="fc-10-cb" /><span class="fc-label">Tüm env değişkenleri Cloudflare'e girildi ve Redeploy yapıldı</span>
-    </div>
-    <div class="final-check-item" id="fc-11" onclick="toggleFC('fc-11')">
-      <input type="checkbox" class="fc-check" id="fc-11-cb" /><span class="fc-label">Admin login başarıyla test edildi</span>
-    </div>
-    <div class="final-check-item" id="fc-12" onclick="toggleFC('fc-12')">
-      <input type="checkbox" class="fc-check" id="fc-12-cb" /><span class="fc-label">Müşteri domaini bağlandı</span>
-    </div>
-    <div class="final-check-item" id="fc-13" onclick="toggleFC('fc-13')">
-      <input type="checkbox" class="fc-check" id="fc-13-cb" /><span class="fc-label">Müşteriye teslim bilgileri gönderildi</span>
-    </div>
-
-    <div class="section-title" style="margin-top:32px">Müşteriye Verilecek Bilgiler</div>
-    <div class="delivery-card">
-      <div class="dc-line"><span class="dc-key">🌐 Web sitesi:</span><span class="dc-val">https://pizzamondo.com</span></div>
-      <div class="dc-line"><span class="dc-key">🔧 Admin panel:</span><span class="dc-val">https://pizzamondo.com/admin/login</span></div>
-      <div class="dc-line"><span class="dc-key">📧 Admin email:</span><span class="dc-val">admin@pizzamondo.com</span></div>
-      <div class="dc-line"><span class="dc-key">🔑 Admin şifre:</span><span class="dc-val">[oluşturduğun güçlü şifre]</span></div>
-    </div>
-  </div>
-
-  <!-- ── Troubleshooting ─────────────────── -->
-  <div id="trouble" style="scroll-margin-top:32px; margin-bottom:60px">
-    <div class="section-title">Sık Karşılaşılan Sorunlar</div>
-
-    <div class="trouble-item" onclick="toggleTrouble(this)">
-      <div class="trouble-q">
-        <span class="err-icon">❌</span>
-        Admin login çalışmıyor
-        <span class="trouble-chevron">▾</span>
-      </div>
-      <div class="trouble-a">
-        <strong>Sebep:</strong> Firestore Rules yanlış yapıştırılmış veya Publish edilmemiş.<br/><br/>
-        <strong>Çözüm:</strong> Firebase Console → Firestore Database → Rules sekmesi → Adım 3'teki kodu tekrar yapıştır → Publish butonuna bas.
-      </div>
-    </div>
-
-    <div class="trouble-item" onclick="toggleTrouble(this)">
-      <div class="trouble-q">
-        <span class="err-icon">❌</span>
-        Görseller yüklenmiyor
-        <span class="trouble-chevron">▾</span>
-      </div>
-      <div class="trouble-a">
-        <strong>Sebep:</strong> Cloudinary preset "Signed" modunda ayarlı.<br/><br/>
-        <strong>Çözüm:</strong> Cloudinary → Settings (⚙️) → Upload sekmesi → Upload preset'in üstüne tıkla → Signing mode: <strong>Unsigned</strong> yap → Save.
-      </div>
-    </div>
-
-    <div class="trouble-item" onclick="toggleTrouble(this)">
-      <div class="trouble-q">
-        <span class="err-icon">❌</span>
-        Site açılıyor ama veri gelmiyor / boş
-        <span class="trouble-chevron">▾</span>
-      </div>
-      <div class="trouble-a">
-        <strong>Sebep:</strong> Cloudflare'deki env değişkenleri eksik veya yanlış girilmiş.<br/><br/>
-        <strong>Çözüm:</strong> Cloudflare Pages → Projen → Settings → Environment variables → tüm değerleri kontrol et → Save → Deployments → Retry deployment.
-      </div>
-    </div>
-
-    <div class="trouble-item" onclick="toggleTrouble(this)">
-      <div class="trouble-q">
-        <span class="err-icon">❌</span>
-        Domain bağlanmıyor / sitenin eski hali geliyor
-        <span class="trouble-chevron">▾</span>
-      </div>
-      <div class="trouble-a">
-        <strong>Sebep:</strong> DNS yayılımı henüz tamamlanmamış (24 saate kadar sürebilir).<br/><br/>
-        <strong>Çözüm:</strong> <a href="https://dnschecker.org" target="_blank">dnschecker.org</a> adresine git → domain adını yaz → CNAME kaydının yayıldığını gör → bekle. Cloudflare Pages → Custom domains → yeşil ✓ bekliyorsun.
-      </div>
-    </div>
-
-    <div class="trouble-item" onclick="toggleTrouble(this)">
-      <div class="trouble-q">
-        <span class="err-icon">❌</span>
-        «Pages _routes.json is not supported» (ZIP yüklerken)
-        <span class="trouble-chevron">▾</span>
-      </div>
-      <div class="trouble-a">
-        <strong>Sebep:</strong> Bu Next.js build'i <code>_routes.json</code> ve edge worker içerir. Cloudflare Dashboard'daki <strong>Upload assets / ZIP</strong> akışı bunu kabul etmiyor.<br/><br/>
-        <strong>Çözüm:</strong> ZIP'i unut. Terminalde: <kbd>npm run cf:build</kbd> sonra <kbd>npx wrangler pages deploy cloudflare-pages-dist --project-name PROJE_ADI</kbd>. Alternatif: GitHub'a bağla, Cloudflare'de <strong>Connect to Git</strong> ile otomatik build.
-      </div>
-    </div>
-
-    <div class="trouble-item" onclick="toggleTrouble(this)">
-      <div class="trouble-q">
-        <span class="err-icon">❌</span>
-        npm run build komutu hata veriyor
-        <span class="trouble-chevron">▾</span>
-      </div>
-      <div class="trouble-a">
-        <strong>Sebep:</strong> Node modülleri eksik veya bozuk.<br/><br/>
-        <strong>Çözüm:</strong> Terminalde şu komutu çalıştır, ardından tekrar build et:
-        <div class="code-wrap" style="margin-top:8px">
-          <button class="btn-copy" onclick="event.stopPropagation(); copyCode(this)">Kopyala</button>
-          <pre>npm install</pre>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Congrats -->
-  <div class="congrats" id="congrats-box" style="display:none">
-    <div style="font-size:56px;margin-bottom:12px">🎉</div>
-    <h2>Kurulum Tamamlandı!</h2>
-    <p id="congrats-customer" style="margin-top:8px">Müşteri başarıyla kuruldu.</p>
-    <button class="btn-primary" style="margin-top:24px" onclick="resetAll()">Yeni Müşteri Kur →</button>
-  </div>
 
 </main>
 
 <script>
-  // ── State ────────────────────────────────────────
-  let customerKey = null;
+const STORAGE_KEY = 'miqqo-setup-checks';
+const TOTAL_STEPS = 8;
 
-  const SUBSTEP_KEYS = [
-    's1a','s2a','s2b','s2c','s2d',
-    's3a','s4a','s5a','s6a',
-    's7a','s7b','s8a','s8b','s8c','s8d',
-    's9a','s9b',
-    's10a','s10b','s10c',
-    's11a','s11b','s12a'
-  ];
+function getChecks() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch { return {}; }
+}
 
-  const STEP_SUBSTEPS = {
-    1:  ['s1a'],
-    2:  ['s2a','s2b','s2c','s2d'],
-    3:  ['s3a'],
-    4:  ['s4a'],
-    5:  ['s5a'],
-    6:  ['s6a'],
-    7:  ['s7a','s7b'],
-    8:  ['s8a','s8b','s8c','s8d'],
-    9:  ['s9a','s9b'],
-    10: ['s10a','s10b','s10c'],
-    '11b': ['s11a','s11b'],
-    12: ['s12a'],
-  };
+function saveCheck(el) {
+  const checks = getChecks();
+  checks[el.id] = el.checked;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(checks));
+  updateUI();
+}
 
-  const FC_KEYS = Array.from({length:13}, (_,i) => `fc-${i+1}`);
-
-  // ── Init ─────────────────────────────────────────
-  window.addEventListener('DOMContentLoaded', () => {
-    // Try to restore last customer
-    const last = localStorage.getItem('miqqo_last_customer');
-    if (last) {
-      customerKey = last;
-      document.getElementById('customer-input').value = last;
-      activateCustomer(last);
-    }
-
-    bindCheckboxes();
-    loadState();
-    updateProgress();
-
-    // Handle enter key on input
-    document.getElementById('customer-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') setCustomer();
-    });
+function loadChecks() {
+  const checks = getChecks();
+  Object.keys(checks).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.checked = checks[id];
   });
+  updateUI();
+}
 
-  function setCustomer() {
-    const name = document.getElementById('customer-input').value.trim();
-    if (!name) { alert('Müşteri adı gir lütfen.'); return; }
-    customerKey = name;
-    localStorage.setItem('miqqo_last_customer', name);
-    activateCustomer(name);
-    loadState();
-    updateProgress();
-  }
+function updateUI() {
+  const checks = getChecks();
+  let done = 0;
 
-  function activateCustomer(name) {
-    const badge = document.getElementById('customer-badge');
-    document.getElementById('badge-name').textContent = name;
-    badge.classList.add('visible');
-    document.getElementById('setup-banner').style.opacity = '0.5';
-  }
+  for (let i = 1; i <= TOTAL_STEPS; i++) {
+    const cb = document.getElementById('c' + i);
+    const stepEl = document.getElementById('step-' + i);
+    const navLink = document.querySelector(`nav a[data-step="${i}"]`);
+    const summaryItem = document.querySelector(`.summary-item[data-summary="${i}"]`);
 
-  // ── Checkbox binding ──────────────────────────────
-  function bindCheckboxes() {
-    // Substeps
-    document.querySelectorAll('.substep-check').forEach(cb => {
-      cb.addEventListener('change', () => {
-        saveState();
-        updateProgress();
-        updateStepStates();
-      });
-    });
-
-    // Final checklist
-    document.querySelectorAll('.fc-check').forEach(cb => {
-      cb.addEventListener('change', () => {
-        saveState();
-        updateProgress();
-        updateFCStates();
-        checkCongrats();
-      });
-    });
-  }
-
-  // ── Save / Load ───────────────────────────────────
-  function saveState() {
-    if (!customerKey) return;
-    const state = {};
-    SUBSTEP_KEYS.forEach(k => {
-      const el = document.querySelector(`.substep-check[data-key="${k}"]`);
-      if (el) state[k] = el.checked;
-    });
-    FC_KEYS.forEach(k => {
-      const el = document.getElementById(`${k}-cb`);
-      if (el) state[k] = el.checked;
-    });
-    localStorage.setItem(`miqqo_state_${customerKey}`, JSON.stringify(state));
-  }
-
-  function loadState() {
-    if (!customerKey) return;
-    const raw = localStorage.getItem(`miqqo_state_${customerKey}`);
-    if (!raw) return;
-    const state = JSON.parse(raw);
-    SUBSTEP_KEYS.forEach(k => {
-      const el = document.querySelector(`.substep-check[data-key="${k}"]`);
-      if (el && state[k]) { el.checked = true; }
-    });
-    FC_KEYS.forEach(k => {
-      const el = document.getElementById(`${k}-cb`);
-      if (el && state[k]) { el.checked = true; }
-    });
-    updateStepStates();
-    updateFCStates();
-    checkCongrats();
-  }
-
-  // ── Progress ──────────────────────────────────────
-  function updateProgress() {
-    const total = SUBSTEP_KEYS.length + FC_KEYS.length;
-    let done = 0;
-    SUBSTEP_KEYS.forEach(k => {
-      const el = document.querySelector(`.substep-check[data-key="${k}"]`);
-      if (el && el.checked) done++;
-    });
-    FC_KEYS.forEach(k => {
-      const el = document.getElementById(`${k}-cb`);
-      if (el && el.checked) done++;
-    });
-    const pct = Math.round((done / total) * 100);
-    document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('progress-pct').textContent = pct + '%';
-  }
-
-  // ── Step completion highlights ────────────────────
-  function updateStepStates() {
-    for (const [stepNum, keys] of Object.entries(STEP_SUBSTEPS)) {
-      const allDone = keys.every(k => {
-        const el = document.querySelector(`.substep-check[data-key="${k}"]`);
-        return el && el.checked;
-      });
-      const stepId = stepNum === '11b' ? 'step11b' : `step${stepNum}`;
-      const navId  = stepNum === '11b' ? 'nav-11b'  : `nav-${stepNum}`;
-      const snumId = stepNum === '11b' ? 'snum-11b' : `snum-${stepNum}`;
-      const stepEl  = document.getElementById(stepId);
-      const navEl   = document.getElementById(navId);
-      const snumEl  = document.getElementById(snumId);
-
-      if (stepEl) stepEl.classList.toggle('completed', allDone);
-      if (navEl) {
-        navEl.classList.toggle('done', allDone);
-        const numSpan = navEl.querySelector('.nav-num');
-        if (numSpan) numSpan.textContent = allDone ? '✓' : String(stepNum).padStart(2, '0');
-      }
-    }
-  }
-
-  function updateFCStates() {
-    FC_KEYS.forEach(k => {
-      const item = document.getElementById(k);
-      const cb = document.getElementById(`${k}-cb`);
-      if (item && cb) item.classList.toggle('done', cb.checked);
-    });
-  }
-
-  function toggleFC(id) {
-    const cb = document.getElementById(`${id}-cb`);
-    if (cb) {
-      cb.checked = !cb.checked;
-      saveState();
-      updateProgress();
-      updateFCStates();
-      checkCongrats();
-    }
-  }
-
-  function checkCongrats() {
-    const allFCDone = FC_KEYS.every(k => {
-      const el = document.getElementById(`${k}-cb`);
-      return el && el.checked;
-    });
-    const allSubDone = SUBSTEP_KEYS.every(k => {
-      const el = document.querySelector(`.substep-check[data-key="${k}"]`);
-      return el && el.checked;
-    });
-    const congrats = document.getElementById('congrats-box');
-    if (allFCDone && allSubDone) {
-      congrats.style.display = 'block';
-      document.getElementById('congrats-customer').textContent =
-        customerKey ? `"${customerKey}" başarıyla kuruldu!` : 'Müşteri başarıyla kuruldu!';
+    if (cb && cb.checked) {
+      done++;
+      if (stepEl) stepEl.classList.add('completed');
+      if (navLink) { navLink.classList.add('done'); navLink.classList.remove('active'); }
+      if (summaryItem) summaryItem.classList.add('done');
     } else {
-      congrats.style.display = 'none';
+      if (stepEl) stepEl.classList.remove('completed');
+      if (navLink) navLink.classList.remove('done');
+      if (summaryItem) summaryItem.classList.remove('done');
     }
   }
 
-  // ── Troubleshooting accordion ─────────────────────
-  function toggleTrouble(el) {
-    const isOpen = el.classList.contains('open');
-    document.querySelectorAll('.trouble-item').forEach(i => i.classList.remove('open'));
-    if (!isOpen) el.classList.add('open');
-  }
+  const pct = Math.round((done / TOTAL_STEPS) * 100);
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
 
-  // ── Copy to clipboard ─────────────────────────────
-  function copyCode(btn) {
-    const pre = btn.closest('.code-wrap').querySelector('pre');
-    const text = pre.innerText;
-    navigator.clipboard.writeText(text).then(() => {
-      btn.textContent = '✓ Kopyalandı';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = 'Kopyala';
-        btn.classList.remove('copied');
-      }, 2000);
-    });
-  }
+  const msg = document.getElementById('completion-msg');
+  if (msg) msg.style.display = done === TOTAL_STEPS ? 'block' : 'none';
+}
 
-  // ── Reset ─────────────────────────────────────────
-  function resetAll() {
-    if (!confirm('Tüm ilerleme silinecek. Yeni müşteri için başlamak istiyor musun?')) return;
-    if (customerKey) localStorage.removeItem(`miqqo_state_${customerKey}`);
-    localStorage.removeItem('miqqo_last_customer');
-    location.reload();
-  }
+function resetProgress() {
+  if (!confirm('Tüm ilerlemeniz sıfırlanacak. Emin misiniz?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  document.querySelectorAll('.check-item input[type="checkbox"]').forEach(cb => cb.checked = false);
+  updateUI();
+}
+
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = 'Kopyalandı!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Kopyala';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+function switchTab(btn, tabId) {
+  const group = btn.closest('.tab-group');
+  group.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  group.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+// Smooth scroll for nav
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelector('aside').classList.remove('open');
+  });
+});
+
+// Highlight active nav on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`nav a[href="#${id}"]`);
+      if (active && !active.classList.contains('done')) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -60% 0px' });
+
+document.querySelectorAll('.step').forEach(s => observer.observe(s));
+
+loadChecks();
 </script>
 </body>
 </html>

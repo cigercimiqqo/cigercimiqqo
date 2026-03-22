@@ -27,7 +27,8 @@ import {
   PlusCircle,
 } from 'lucide-react';
 import type { Category, Product, ProductBadge, DiscountType } from '@/types';
-import { Timestamp, where } from 'firebase/firestore/lite';
+import { Timestamp } from 'firebase/firestore';
+import { where } from 'firebase/firestore';
 
 const BADGES: { value: ProductBadge; label: string }[] = [
   { value: 'bestseller', label: 'En Çok Satan' },

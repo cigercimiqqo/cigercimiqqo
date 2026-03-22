@@ -1,4 +1,4 @@
-import type { Timestamp } from 'firebase/firestore/lite';
+import { Timestamp } from 'firebase/firestore';
 
 // ─── Settings ──────────────────────────────────────────────────────────────
 

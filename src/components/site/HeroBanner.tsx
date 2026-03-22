@@ -5,13 +5,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
+import { useSettingsStore } from '@/store/settingsStore';
 import { cn } from '@/lib/utils';
 
-interface HeroBannerProps {
-  images: string[];
-}
-
-export function HeroBanner({ images }: HeroBannerProps) {
+export function HeroBanner() {
+  const { settings } = useSettingsStore();
+  const images = settings?.appearance?.heroImages || [];
   const [current, setCurrent] = useState(0);
   const hasImages = images.length > 0;
 
@@ -52,10 +51,8 @@ export function HeroBanner({ images }: HeroBannerProps) {
         <div className="absolute inset-0 bg-gradient-to-br from-orange-600 to-orange-900" />
       )}
 
-      {/* Overlay */}
       <div className="absolute inset-0 bg-black/40" />
 
-      {/* Content */}
       <div className="relative z-10 h-full flex items-center justify-center text-center px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -82,7 +79,6 @@ export function HeroBanner({ images }: HeroBannerProps) {
         </motion.div>
       </div>
 
-      {/* Arrows */}
       {images.length > 1 && (
         <>
           <button
@@ -98,7 +94,6 @@ export function HeroBanner({ images }: HeroBannerProps) {
             <ChevronRight size={24} />
           </button>
 
-          {/* Dots */}
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
             {images.map((_, i) => (
               <button

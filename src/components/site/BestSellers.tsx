@@ -1,10 +1,19 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { getBestSellerProducts } from '@/lib/firebase/firestore';
 import { ProductCard } from './ProductCard';
 import { TrendingUp } from 'lucide-react';
 import Link from 'next/link';
+import type { Product } from '@/types';
 
-export async function BestSellers() {
-  const products = await getBestSellerProducts(6).catch(() => []);
+export function BestSellers() {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    getBestSellerProducts(6).then(setProducts).catch(() => {});
+  }, []);
+
   if (!products.length) return null;
 
   return (
@@ -16,16 +25,16 @@ export async function BestSellers() {
           </div>
           <div>
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900">En Çok Satanlar</h2>
-            <p className="text-gray-500 mt-0.5 text-sm">Müşterilerin favorileri</p>
+            <p className="text-gray-500 text-sm">Müşterilerimizin favorileri</p>
           </div>
         </div>
         <Link href="/menu" className="text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors">
           Tümünü gör →
         </Link>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {products.map((p) => (
+          <ProductCard key={p.id} product={p} />
         ))}
       </div>
     </section>

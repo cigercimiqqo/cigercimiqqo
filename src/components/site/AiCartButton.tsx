@@ -30,14 +30,9 @@ export function AiCartButton({ products }: AiCartButtonProps) {
     setSuggestion(null);
 
     try {
-      const res = await fetch('/api/ai-cart', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userRequest: message }),
-      });
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-      setSuggestion(data.items);
+      const { getAiCartSuggestion } = await import('@/lib/pollinations');
+      const result = await getAiCartSuggestion(products, message);
+      setSuggestion(result.items);
     } catch {
       toast.error('Öneri şu an yüklenemiyor, manuel eklemeye devam edebilirsin');
     } finally {

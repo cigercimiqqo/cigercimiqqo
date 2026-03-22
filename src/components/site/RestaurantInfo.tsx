@@ -1,21 +1,15 @@
+'use client';
+
 import { MapPin, Phone, Clock } from 'lucide-react';
-import type { SiteSettings } from '@/types';
+import { useSettingsStore } from '@/store/settingsStore';
 
-interface RestaurantInfoProps {
-  settings: SiteSettings | null;
-}
-
-export function RestaurantInfo({ settings }: RestaurantInfoProps) {
+export function RestaurantInfo() {
+  const { settings } = useSettingsStore();
   const address = settings?.general?.address;
   const phones = settings?.general?.phone || [];
   const workingHours = settings?.ordering?.workingHours;
 
   if (!address && !phones.length) return null;
-
-  const dayLabels: Record<string, string> = {
-    mon: 'Pazartesi', tue: 'Salı', wed: 'Çarşamba',
-    thu: 'Perşembe', fri: 'Cuma', sat: 'Cumartesi', sun: 'Pazar',
-  };
 
   const todayKey = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][new Date().getDay()];
   const todayHours = workingHours?.[todayKey as keyof typeof workingHours];
@@ -41,7 +35,7 @@ export function RestaurantInfo({ settings }: RestaurantInfoProps) {
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">Telefon</h3>
             <div className="space-y-1.5">
-              {phones.map((phone, i) => (
+              {phones.map((phone: string, i: number) => (
                 <a
                   key={i}
                   href={`tel:${phone}`}

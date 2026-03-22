@@ -1,6 +1,6 @@
 # Miqqo — Restoran SaaS
 
-Next.js tabanlı restoran sitesi ve admin paneli.
+Next.js tabanlı restoran sipariş sitesi ve admin paneli. Firebase (Firestore + Realtime DB + Auth) ile çalışır, GitHub Pages üzerinden deploy edilir.
 
 ## Geliştirme
 
@@ -11,17 +11,24 @@ npm run dev
 
 Tarayıcıda: [http://localhost:3000](http://localhost:3000)
 
-## Production build (Cloudflare Pages)
+## Production Build
 
 ```bash
-npm install
-npm run cf:build
-npx wrangler pages deploy cloudflare-pages-dist --project-name PROJE_ADIN
+npm run build
 ```
 
-Detaylı adımlar: `KURULUM_REHBERI.html` dosyasını tarayıcıda aç.
+Statik çıktı `out/` klasörüne oluşturulur. GitHub Pages ile otomatik deploy için `.github/workflows/deploy.yml` dosyası hazırdır.
 
-## Kaynaklar
+## Yeni Müşteri Kurulumu
 
-- [Next.js dokümantasyonu](https://nextjs.org/docs)
-- [Cloudflare Pages — Next.js](https://developers.cloudflare.com/pages/framework-guides/nextjs/)
+Detaylı adım adım rehber: `KURULUM_REHBERI.html` dosyasını tarayıcıda aç.
+
+## Teknolojiler
+
+- **Next.js 16** (Static Export)
+- **Firebase** (Firestore, Realtime Database, Authentication)
+- **Cloudinary / ImgBB** (Görsel yükleme)
+- **GitHub Pages** (Hosting)
+- **Tailwind CSS 4** (Styling)
+- **Zustand** (State management)
+- **Framer Motion** (Animasyonlar)

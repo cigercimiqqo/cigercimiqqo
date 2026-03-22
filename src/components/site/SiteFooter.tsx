@@ -1,13 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Phone, MapPin, Instagram, Facebook, Youtube, Twitter } from 'lucide-react';
-import type { SiteSettings } from '@/types';
+import { useSettingsStore } from '@/store/settingsStore';
 
-interface SiteFooterProps {
-  settings: SiteSettings | null;
-}
-
-export function SiteFooter({ settings }: SiteFooterProps) {
+export function SiteFooter() {
+  const { settings } = useSettingsStore();
   const siteName = settings?.general?.siteName || 'Restoran';
   const description = settings?.general?.siteDescription || '';
   const phones = settings?.general?.phone || [];
@@ -19,7 +18,6 @@ export function SiteFooter({ settings }: SiteFooterProps) {
     <footer className="bg-gray-900 text-gray-400 mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Brand */}
           <div>
             <div className="flex items-center gap-2.5 mb-4">
               {logo ? (
@@ -32,7 +30,6 @@ export function SiteFooter({ settings }: SiteFooterProps) {
               <span className="font-bold text-white text-lg">{siteName}</span>
             </div>
             {description && <p className="text-sm leading-relaxed mb-4">{description}</p>}
-            {/* Social */}
             <div className="flex gap-3">
               {social.instagram && (
                 <a href={social.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">
@@ -57,7 +54,6 @@ export function SiteFooter({ settings }: SiteFooterProps) {
             </div>
           </div>
 
-          {/* Links */}
           <div>
             <h3 className="text-white font-semibold mb-4">Hızlı Linkler</h3>
             <ul className="space-y-2 text-sm">
@@ -67,11 +63,10 @@ export function SiteFooter({ settings }: SiteFooterProps) {
             </ul>
           </div>
 
-          {/* Contact */}
           <div>
             <h3 className="text-white font-semibold mb-4">İletişim</h3>
             <ul className="space-y-3 text-sm">
-              {phones.map((phone, i) => (
+              {phones.map((phone: string, i: number) => (
                 <li key={i} className="flex items-center gap-2">
                   <Phone size={14} className="text-orange-400 shrink-0" />
                   <a href={`tel:${phone}`} className="hover:text-orange-400 transition-colors">{phone}</a>

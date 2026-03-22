@@ -1,9 +1,18 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { getReviews } from '@/lib/firebase/firestore';
 import Image from 'next/image';
 import { Star } from 'lucide-react';
+import type { Review } from '@/types';
 
-export async function ReviewsSection() {
-  const reviews = await getReviews(true).catch(() => []);
+export function ReviewsSection() {
+  const [reviews, setReviews] = useState<Review[]>([]);
+
+  useEffect(() => {
+    getReviews(true).then(setReviews).catch(() => {});
+  }, []);
+
   if (!reviews.length) return null;
 
   return (
@@ -15,7 +24,6 @@ export async function ReviewsSection() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {reviews.map((review) => (
           <div key={review.id} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-            {/* Google header */}
             {review.platform === 'google' && (
               <div className="flex items-center gap-1.5 mb-3">
                 <Image src="/google-logo.svg" alt="Google" width={14} height={14} />
@@ -23,7 +31,6 @@ export async function ReviewsSection() {
               </div>
             )}
 
-            {/* Rating */}
             <div className="flex gap-0.5 mb-3">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star

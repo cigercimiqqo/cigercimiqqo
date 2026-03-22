@@ -1,100 +1,74 @@
-# Miqqo — Restoran SaaS Kurulum Rehberi
+# Miqqo Site — Müşteri Kurulum Rehberi (GitHub Pages)
 
-> **Kime göre:** Yazılımcı (sen)  
-> **Nerede test ederiz:** Cloudflare Pages canlı URL’sinde (production secret’ları Cloudflare’de)  
-> **Veriler nerede saklanır:** Cloudflare Pages ortam değişkenlerinde — `.env.local` zorunlu değil, kodda tutma
+Her müşteri için ayrı bir Firebase projesi + GitHub Pages sitesi oluşturulur. Bu rehber adım adım her şeyi anlatır.
 
 ---
 
-## Yeni müşteri eklerken yapılacaklar (sırasıyla)
+## 1. Firebase Projesi Oluştur
 
-### ADIM 1 — Firebase projesi aç
+1. [Firebase Console](https://console.firebase.google.com) → **Proje Ekle**
+2. Proje adı: `miqqo-musteri-adi` (örn. `miqqo-kofteci-ahmet`)
+3. Google Analytics → İsteğe bağlı → **Proje Oluştur**
 
-**Tarayıcıdan; terminal şart değil.**
+### 1a. Firestore Database
 
-1. [console.firebase.google.com](https://console.firebase.google.com) → giriş yap  
-2. **Add project** → Proje adı: `miqqo-musteri-adi` (örn. `miqqo-pizza-mondo`)  
-3. Google Analytics: isteğe bağlı → **Create project**
+1. Sol menü → **Firestore Database** → **Veritabanı oluştur**
+2. Konum: `europe-west1` (veya en yakın) → **Üretim modunda başla**
+3. **Kurallar** sekmesi → şu kuralları yapıştır:
 
----
-
-### ADIM 2 — Firebase servislerini aç
-
-#### Authentication
-
-1. **Authentication** → **Get started**  
-2. **Sign-in method** → **Email/Password** → Enable → **Save**
-
-#### Firestore
-
-1. **Firestore Database** → **Create database**  
-2. **Production mode** → **Next**  
-3. Bölge: `europe-west1 (Belgium)` → **Enable**
-
-#### Realtime Database
-
-1. **Realtime Database** → **Create database**  
-2. Bölge: `europe-west1 (Belgium)` → **Next**  
-3. **Locked mode** → **Enable**
-
-#### Storage (opsiyonel)
-
-1. **Storage** → **Get started** → **Next** → **Done**
-
----
-
-### ADIM 3 — Firestore güvenlik kuralları
-
-1. **Firestore Database** → **Rules**  
-2. Aşağıdakini yapıştır → **Publish**
-
-```javascript
+```
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    match /settings/{doc} { allow read: if true; allow write: if request.auth != null; }
-    match /categories/{doc} { allow read: if true; allow write: if request.auth != null; }
-    match /products/{doc} { allow read: if true; allow write: if request.auth != null; }
-    match /blog_posts/{doc} { allow read: if true; allow write: if request.auth != null; }
-    match /pages/{doc} { allow read: if true; allow write: if request.auth != null; }
-
-    match /orders/{doc} {
-      allow create: if true;
-      allow read, update, delete: if request.auth != null;
-    }
-
-    match /reviews/{doc} {
-      allow create: if true;
+    match /settings/{doc} {
       allow read: if true;
-      allow update, delete: if request.auth != null;
+      allow write: if request.auth != null;
     }
-
-    match /visitors/{doc} { allow read, write: if request.auth != null; }
-    match /coupons/{doc} { allow read: if true; allow write: if request.auth != null; }
+    match /categories/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /products/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /orders/{doc} {
+      allow read, write: if true;
+    }
+    match /visitors/{doc} {
+      allow read, write: if true;
+    }
+    match /blog_posts/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /reviews/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /pages/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /coupons/{doc} {
+      allow read, write: if request.auth != null;
+    }
   }
 }
 ```
 
----
+4. **Yayınla** butonuna tıkla.
 
-### ADIM 4 — Realtime Database kuralları
+### 1b. Realtime Database
 
-1. **Realtime Database** → **Rules**  
-2. Aşağıdakini yapıştır → **Publish**
+1. Sol menü → **Realtime Database** → **Veritabanı oluştur**
+2. Konum: `europe-west1` → **Kilitli modda başla**
+3. **Kurallar** sekmesi:
 
 ```json
 {
   "rules": {
-    "orders": {
-      ".read": "auth != null",
-      ".write": "auth != null"
-    },
-    "notifications": {
-      ".read": "auth != null",
-      ".write": "auth != null"
-    },
-    "visitor_count": {
+    "activeOrders": {
       ".read": true,
       ".write": true
     }
@@ -102,213 +76,245 @@ service cloud.firestore {
 }
 ```
 
----
+4. **Yayınla**.
 
-### ADIM 5 — İlk admin kullanıcısı
+### 1c. Authentication
 
-1. **Authentication** → **Users** → **Add user**  
-2. Email + şifre → kaydet, bilgileri not al
+1. Sol menü → **Authentication** → **Başlayın**
+2. **E-posta/Şifre** sağlayıcısını etkinleştir → **Kaydet**
+3. **Users** sekmesi → **Kullanıcı ekle** → admin e-posta ve şifresi gir
 
----
+### 1d. Firebase Web Uygulaması
 
-### ADIM 6 — Firebase bağlantı bilgileri
-
-1. **Project settings** (⚙️) → **Your apps** → Web uygulaması yoksa **&lt;/&gt;** ile ekle  
-2. `miqqo-web` gibi bir isim → **Register app**  
-3. Şu alanları Cloudflare’de kullanacağın isimlerle eşleştir:
-
-| Firebase alanı | Cloudflare’deki key |
-|----------------|---------------------|
-| apiKey | `NEXT_PUBLIC_FIREBASE_API_KEY` |
-| authDomain | `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` |
-| projectId | `NEXT_PUBLIC_FIREBASE_PROJECT_ID` |
-| storageBucket | `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` |
-| messagingSenderId | `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` |
-| appId | `NEXT_PUBLIC_FIREBASE_APP_ID` |
-
-4. **Realtime Database** URL’sini bul → `NEXT_PUBLIC_FIREBASE_DATABASE_URL`
+1. Proje ayarları (⚙️ ikonu) → **Genel** → alta kaydır → **Web uygulaması ekle** (`</>`)
+2. Uygulama adı: `miqqo-web` → **Kaydet**
+3. Çıkan `firebaseConfig` bilgilerini not al:
+   - `apiKey`
+   - `authDomain`
+   - `projectId`
+   - `storageBucket`
+   - `messagingSenderId`
+   - `appId`
+   - `databaseURL` (Realtime Database sekmesinden al)
 
 ---
 
-### ADIM 7 — Görsel yükleme (Cloudinary veya ImgBB)
+## 2. Proje Dosyalarını Hazırla
 
-**Cloudinary (önerilen — video da var):**
-
-1. [cloudinary.com/users/register/free](https://cloudinary.com/users/register/free)  
-2. **Cloud Name** ve **Upload preset** (Signing: **Unsigned**) not al  
-3. Cloudflare’de: `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`, `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET`
-
-**ImgBB (sadece görsel):**
-
-1. [imgbb.com](https://imgbb.com) → API key  
-2. Cloudflare’de: `NEXT_PUBLIC_IMGBB_API_KEY`
-
----
-
-### ADIM 8 — Terminalden build ve Cloudflare’e deploy
-
-GitHub zorunlu değil. Proje klasöründe terminal açıp ilerle.
-
-#### 8a — Bağımlılıkları yükle
-
-- Terminali **proje klasörünün içinde** aç (Finder’da sağ tık / Windows’ta klasörde cmd veya PowerShell / `cd` ile gir).  
-- Tam yol yazmana gerek yok; klasördeyken:
+1. Proje klasörünü bilgisayarına kopyala (ZIP'i aç veya `git clone`)
+2. Klasörün içinde terminal aç
+3. Bağımlılıkları yükle:
 
 ```bash
 npm install
 ```
 
-#### 8b — Cloudflare için build
+4. `.env.local` dosyası oluştur (bu dosya sadece **local geliştirme** içindir, GitHub'a gitmez):
+
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSy...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=miqqo-xxx.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=miqqo-xxx
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=miqqo-xxx.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
+NEXT_PUBLIC_FIREBASE_APP_ID=1:123:web:abc
+NEXT_PUBLIC_FIREBASE_DATABASE_URL=https://miqqo-xxx-default-rtdb.europe-west1.firebasedatabase.app
+
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=
+```
+
+---
+
+## 3. Görsel/Video Yükleme Ayarları (Cloudinary veya ImgBB)
+
+### Seçenek A: Cloudinary (önerilen — görsel + video, 25 kredi/ay ücretsiz)
+
+1. [cloudinary.com](https://cloudinary.com/users/register/free) → Ücretsiz hesap
+2. Dashboard → **Cloud Name** → `.env.local`'e yaz
+3. Settings → Upload → **Add upload preset** → Signing Mode: **Unsigned** → Kaydet
+4. Preset adını `.env.local`'e yaz
+
+### Seçenek B: ImgBB (sadece görsel, sınırsız ücretsiz)
+
+1. [imgbb.com](https://imgbb.com) → Hesap oluştur
+2. Account → API → API Key al
+3. `.env.local`'e ekle: `NEXT_PUBLIC_IMGBB_API_KEY=xxx`
+
+---
+
+## 4. Local Test
 
 ```bash
-npm run cf:build
+npm run dev
 ```
 
-Bu komut projeyi Cloudflare Pages formatına derler ve kökte **`cloudflare-pages-dist/`** klasörünü oluşturur (deploy edeceğin çıktı burası).
+Tarayıcıda `http://localhost:3000` aç. Admin paneli: `http://localhost:3000/admin/login`
 
-#### 8c — Deploy — Terminal (Wrangler)
+---
 
-`--project-name` **ne yazılır?** Bilgisayardaki klasör adı değil; **Cloudflare’de bu müşteriye vereceğin site adı** (sen seçersin). Örnek: `miqqo-kofteci-ahmet`, `miqqo-pizza-mondo`. Dashboard’da ve `https://BU-AD.pages.dev` adresinde böyle görünür. Boşluk yok, küçük harf, tire; Türkçe karakter kullanma. İlk seferde Cloudflare bu isimle projeyi yoksa oluşturur. Firebase proje adıyla aynı olmak zorunda değil (istersen aynı tutabilirsin).
+## 5. GitHub Repository Oluştur
+
+1. [github.com/new](https://github.com/new) → Yeni repo oluştur
+2. Repo adı: `miqqo-musteri-adi` (örn. `miqqo-kofteci-ahmet`)
+3. **Private** seç → **Create repository**
+4. Terminalde:
 
 ```bash
-npx wrangler pages deploy cloudflare-pages-dist --project-name miqqo-musteri-adi
+git init
+git add .
+git commit -m "ilk kurulum"
+git branch -M main
+git remote add origin https://github.com/KULLANICI_ADIN/REPO_ADI.git
+git push -u origin main
 ```
 
-- İlk seferde Cloudflare hesabına tarayıcıdan giriş isteyebilir.  
-- Proje yoksa oluşturur; varsa günceller.  
-- Örnek URL: `https://miqqo-musteri-adi.pages.dev`
+---
 
-**Sonraki güncellemeler:**
+## 6. GitHub Pages ile Deploy
+
+### Yöntem A: GitHub Actions (Otomatik — Önerilen)
+
+1. Repo'da `.github/workflows/deploy.yml` dosyası oluştur:
+
+```yaml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        env:
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
+          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+          NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
+          NEXT_PUBLIC_FIREBASE_DATABASE_URL: ${{ secrets.NEXT_PUBLIC_FIREBASE_DATABASE_URL }}
+          NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
+          NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET: ${{ secrets.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET }}
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+2. GitHub repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**
+3. Her bir environment variable için secret ekle (toplam 7-9 adet):
+   - `NEXT_PUBLIC_FIREBASE_API_KEY`
+   - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+   - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+   - `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
+   - `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+   - `NEXT_PUBLIC_FIREBASE_APP_ID`
+   - `NEXT_PUBLIC_FIREBASE_DATABASE_URL`
+   - `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` (varsa)
+   - `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` (varsa)
+
+4. GitHub repo → **Settings** → **Pages** → Source: **GitHub Actions** seç
+
+5. `main` branch'e push yap → otomatik deploy başlar!
+
+### Yöntem B: Manuel Deploy (Terminal)
+
+1. Build al:
 
 ```bash
-npm run cf:build
-npx wrangler pages deploy cloudflare-pages-dist --project-name miqqo-musteri-adi
+npm run build
 ```
 
-#### 8d — ZIP ile Dashboard’dan yükleme (bu projede kullanma)
-
-Cloudflare’in **Upload assets / ZIP** ekranı, bu Next.js çıktısındaki **`_routes.json`** ve edge dosyalarını desteklemiyor; **`Pages _routes.json is not supported`** hatası alırsın — bu beklenen bir kısıt.
-
-**Ne yapmalısın:**
-
-- **Wrangler** ile deploy et (yukarıdaki `npx wrangler pages deploy ...`) — doğru yöntem bu.  
-- **Alternatif:** Kodu private GitHub’a at → Cloudflare Pages’te **Connect to Git** → build: `npm run cf:build`, çıktı klasörü: `cloudflare-pages-dist` (proje ayarlarından tanımla).
-
----
-
-### ADIM 9 — Cloudflare’de `nodejs_compat` (Firebase için)
-
-1. **Workers & Pages** → projen → **Settings** → **Functions**  
-2. **Compatibility flags** → **Add** → `nodejs_compat` → **Save**  
-3. **Compatibility date** en az `2024-09-23` olsun.  
-4. **Deployments** → **Retry deployment**
-
----
-
-### ADIM 10 — Ortam değişkenleri (Cloudflare)
-
-Tüm secret’lar **sadece** Cloudflare’de; koda ve repoya yazma.
-
-1. Proje → **Settings** → **Environment variables** → **Production**  
-2. Aşağıdakileri **Add variable** ile tek tek ekle → **Save**
-
-| Key | Value |
-|-----|--------|
-| `NEXT_PUBLIC_FIREBASE_API_KEY` | Firebase apiKey |
-| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | authDomain |
-| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | projectId |
-| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | storageBucket |
-| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | messagingSenderId |
-| `NEXT_PUBLIC_FIREBASE_APP_ID` | appId |
-| `NEXT_PUBLIC_FIREBASE_DATABASE_URL` | Realtime DB URL |
-| `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | Cloudinary (ImgBB kullanıyorsan atla) |
-| `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` | Preset adı |
-| `NEXT_PUBLIC_IMGBB_API_KEY` | Sadece ImgBB kullanıyorsan |
-
-3. **Deployments** → **Retry deployment**
-
----
-
-### ADIM 11 — Müşteri domaini
-
-**Domain Cloudflare’deyse:**  
-**Custom domains** → domain ekle → yönlendirme otomatik; SSL Cloudflare’den gelir.
-
-**Domain başka sağlayıcıdaysa:**  
-**Custom domains** ile verilen hedefe (örn. `proje-adi.pages.dev`) göre DNS’te **CNAME** ekle; yayılım 1–24 saat sürebilir. Kontrol: [dnschecker.org](https://dnschecker.org)
-
----
-
-### ADIM 12 — Test
-
-1. `https://[proje-adi].pages.dev/admin/login`  
-2. Adım 5’teki admin ile giriş  
-3. Çalışıyorsa kurulum tamam
-
----
-
-## Müşteriye teslim örneği
-
-```
-Web:     https://ornek.com
-Admin:   https://ornek.com/admin/login
-E-posta: admin@ornek.com
-Şifre:   [güçlü şifre]
-```
-
----
-
-## Kontrol listesi
-
-- [ ] Firebase projesi + Auth + Firestore + Realtime DB  
-- [ ] Firestore ve Realtime kuralları yayınlandı  
-- [ ] Admin kullanıcı oluşturuldu  
-- [ ] Firebase + medya bilgileri not alındı  
-- [ ] `npm install` ve `npm run cf:build` çalıştı  
-- [ ] Deploy: **Wrangler** veya **Git ile otomatik build** (Dashboard ZIP bu Next.js build’i için uygun değil)  
-- [ ] `nodejs_compat` + uygun compatibility date  
-- [ ] Tüm env değişkenleri Cloudflare’de + redeploy  
-- [ ] Domain bağlandı  
-- [ ] Admin login test edildi  
-- [ ] Müşteriye bilgiler verildi  
-
----
-
-## Sık sorunlar
-
-**Admin login olmuyor**  
-→ Firestore **Rules** tekrar yapıştır → **Publish**
-
-**Görseller yüklenmiyor**  
-→ Cloudinary preset **Unsigned** olmalı
-
-**Sayfa açılıyor, veri yok**  
-→ Cloudflare **Environment variables** eksik/yanlış → düzelt → **Retry deployment**
-
-**Domain bağlanmıyor**  
-→ DNS yayılımı; dnschecker ile CNAME kontrolü
-
-**`npm run cf:build` hata veriyor**  
-→ Önce `npm install`; Node sürümü 20.x önerilir. Hâlâ hata varsa proje `README.md` ve güncel bağımlılıklara bak.
-
-**«Pages _routes.json is not supported» (ZIP yüklerken)**  
-→ Dashboard ZIP bu projeyi taşıyamaz. **Wrangler** ile deploy et veya **Git + Connect to Git** kullan.
-
----
-
-## Güvenli ZIP yedek (kaynak kod)
-
-`node_modules`, build çıktıları ve `.env.local` dışarıda kalsın:
+2. `out/` klasörü oluşur. Bunu GitHub Pages'a deploy etmek için:
 
 ```bash
-# Kendi üst klasörüne göre düzenle
-zip -r MiqqoSite_backup_$(date +%Y%m%d).zip MiqqoSite \
-  --exclude "MiqqoSite/node_modules/*" \
-  --exclude "MiqqoSite/.next/*" \
-  --exclude "MiqqoSite/cloudflare-pages-dist/*" \
-  --exclude "MiqqoSite/.env.local"
+npx gh-pages -d out
 ```
+
+> `gh-pages` paketi yoksa: `npm install -D gh-pages`
 
 ---
 
-*Miqqo SaaS — Cloudflare Pages + Firebase.*
+## 7. Custom Domain Bağlama
+
+1. GitHub repo → **Settings** → **Pages** → **Custom domain**
+2. Domain adını yaz (örn. `siparis.kofteciaahmet.com`)
+3. DNS ayarları (domain sağlayıcında):
+   - **CNAME** kaydı: `siparis` → `KULLANICI_ADIN.github.io`
+   - VEYA **A** kayıtları (apex domain için):
+     ```
+     185.199.108.153
+     185.199.109.153
+     185.199.110.153
+     185.199.111.153
+     ```
+4. **Enforce HTTPS** kutusunu işaretle
+5. DNS yayılması 5-30 dakika sürebilir
+
+---
+
+## 8. Firebase Auth Domain Güncelle
+
+1. Firebase Console → **Authentication** → **Settings** → **Authorized domains**
+2. Custom domain'i ekle (örn. `siparis.kofteciaahmet.com`)
+3. GitHub Pages domain'i de ekle (örn. `kullaniciadi.github.io`)
+
+---
+
+## Sorun Giderme
+
+| Sorun | Çözüm |
+|-------|-------|
+| Sayfa beyaz kalıyor | Tarayıcı konsolunu kontrol et (F12). Firebase config doğru mu? |
+| Admin giriş yapamıyor | Firebase Auth'ta kullanıcı oluşturuldu mu? Authorized domains doğru mu? |
+| Görseller yüklenmiyor | Cloudinary/ImgBB ayarları doğru mu? Upload preset **unsigned** mı? |
+| Build hatası | `npm run build` çıktısını oku. Genellikle env variable eksik. |
+| 404 hatası (custom domain) | DNS ayarları doğru mu? CNAME kaydı var mı? 24 saat bekle. |
+| GitHub Actions başarısız | Settings → Secrets'ta tüm env variable'lar doğru yazılmış mı? |
+
+---
+
+## Özet: Her Müşteri İçin Yapılacaklar
+
+1. ✅ Firebase projesi oluştur (Firestore + Realtime DB + Auth)
+2. ✅ Proje dosyalarını kopyala
+3. ✅ `.env.local` dosyasını doldur
+4. ✅ Cloudinary veya ImgBB ayarla
+5. ✅ GitHub repo oluştur + push
+6. ✅ GitHub Actions secrets ekle
+7. ✅ GitHub Pages'ı etkinleştir (Source: GitHub Actions)
+8. ✅ Custom domain bağla (opsiyonel)
+9. ✅ Firebase Auth'a domain ekle

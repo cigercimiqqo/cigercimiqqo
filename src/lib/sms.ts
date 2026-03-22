@@ -19,17 +19,9 @@ export function buildOrderSmsMessage(order: Order, status: OrderStatus): string 
   return statusMessages[status] || '';
 }
 
-export async function sendSms(payload: SmsPayload): Promise<boolean> {
-  try {
-    const res = await fetch('/api/sms', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
+export async function sendSms(_payload: SmsPayload): Promise<boolean> {
+  console.warn('SMS gönderimi sunucu taraflı API gerektirir. WhatsApp alternatifini kullanın.');
+  return false;
 }
 
 export function buildWhatsAppUrl(phone: string, message: string): string {

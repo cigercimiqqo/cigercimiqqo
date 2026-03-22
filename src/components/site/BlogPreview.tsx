@@ -1,20 +1,28 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { getBlogPosts } from '@/lib/firebase/firestore';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar } from 'lucide-react';
 import { estimateReadingTime, truncateText } from '@/lib/utils';
-import type { Timestamp } from 'firebase/firestore/lite';
+import type { BlogPost } from '@/types';
 
-function formatDate(ts: Timestamp | null): string {
-  if (!ts) return '';
-  const date = ts.toDate();
-  return date.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
-}
+export function BlogPreview() {
+  const [posts, setPosts] = useState<BlogPost[]>([]);
 
-export async function BlogPreview() {
-  const posts = await getBlogPosts(true).catch(() => []);
-  const recent = posts.slice(0, 3);
-  if (!recent.length) return null;
+  useEffect(() => {
+    getBlogPosts(true)
+      .then((p) => setPosts(p.slice(0, 3)))
+      .catch(() => {});
+  }, []);
+
+  if (!posts.length) return null;
+
+  function formatDate(ts: { toDate: () => Date } | null): string {
+    if (!ts) return '';
+    return ts.toDate().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
 
   return (
     <section className="py-16">
@@ -29,8 +37,8 @@ export async function BlogPreview() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {recent.map((post) => (
-          <Link key={post.id} href={`/blog/${post.slug}`} className="group">
+        {posts.map((post) => (
+          <Link key={post.id} href={`/blog?slug=${post.slug}`} className="group">
             <article className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
               {post.coverImage && (
                 <div className="relative h-48 overflow-hidden">

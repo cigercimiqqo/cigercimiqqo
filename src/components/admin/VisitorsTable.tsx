@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { getVisitors } from '@/lib/firebase/firestore';
 import { Loader2 } from 'lucide-react';
 import type { Visitor } from '@/types';
-import type { Timestamp } from 'firebase/firestore/lite';
+import type { Timestamp } from 'firebase/firestore';
 
 function formatTs(ts: Timestamp): string {
   return ts.toDate().toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });

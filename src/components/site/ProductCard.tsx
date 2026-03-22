@@ -61,7 +61,7 @@ export function ProductCard({ product, showAddButton = true }: ProductCardProps)
       className="group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md border border-gray-100 transition-shadow"
     >
       {/* Image */}
-      <Link href={`/menu/${product.slug}`} className="block">
+      <Link href={`/menu?slug=${product.slug}`} className="block">
         <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
           {mainImage ? (
             <>
@@ -132,7 +132,7 @@ export function ProductCard({ product, showAddButton = true }: ProductCardProps)
 
       {/* Content */}
       <div className="p-4">
-        <Link href={`/menu/${product.slug}`}>
+        <Link href={`/menu?slug=${product.slug}`}>
           <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-1 hover:text-orange-500 transition-colors">
             {product.name}
           </h3>

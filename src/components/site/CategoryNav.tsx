@@ -1,17 +1,27 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { getCategories } from '@/lib/firebase/firestore';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Category } from '@/types';
 
-export async function CategoryNav() {
-  const categories = await getCategories().catch(() => []);
-  const active = categories.filter((c) => c.isActive);
-  if (!active.length) return null;
+export function CategoryNav() {
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    getCategories()
+      .then((cats) => setCategories(cats.filter((c) => c.isActive)))
+      .catch(() => {});
+  }, []);
+
+  if (!categories.length) return null;
 
   return (
     <section className="py-12">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Kategoriler</h2>
       <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-        {active.map((cat) => (
+        {categories.map((cat) => (
           <Link
             key={cat.id}
             href={`/menu?category=${cat.slug}`}

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { auth } from '@/lib/firebase/auth';
+import { auth } from '@/lib/firebase/client';
 import { useAuthStore } from '@/store/authStore';
 
 export function useAuth() {

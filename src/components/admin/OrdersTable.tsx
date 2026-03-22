@@ -9,7 +9,7 @@ import { formatPrice } from '@/lib/utils';
 import { toast } from 'sonner';
 import { Search, Filter, Eye, Ban, ChevronDown } from 'lucide-react';
 import type { Order, OrderStatus } from '@/types';
-import { Timestamp } from 'firebase/firestore/lite';
+import { Timestamp } from 'firebase/firestore';
 
 const statusLabels: Record<OrderStatus, string> = {
   new: 'Yeni',

@@ -7,7 +7,6 @@ import {
   getOrCreateSessionId,
   trackPageView,
   getSessionStartTime,
-  getSessionPageViews,
 } from '@/lib/visitor';
 
 export function useVisitorTracking() {
@@ -23,38 +22,49 @@ export function useVisitorTracking() {
     const visitorId = getOrCreateVisitorId();
     const sessionId = getOrCreateSessionId();
 
-    fetch('/api/visitors', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        visitorId: visitorId || null,
-        sessionId,
-        referrer: document.referrer,
-        userAgent: navigator.userAgent,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.visitorId) storeVisitorId(data.visitorId);
-      })
-      .catch(() => {});
+    (async () => {
+      try {
+        const { createVisitor, updateVisitor } = await import('@/lib/firebase/firestore');
+        const { Timestamp, collection, query, where, getDocs } = await import('firebase/firestore');
+        const { db } = await import('@/lib/firebase/client');
 
-    const handleUnload = () => {
-      const duration = Math.round((Date.now() - getSessionStartTime()) / 1000);
-      const pageViews = getSessionPageViews();
-      navigator.sendBeacon(
-        '/api/visitors',
-        JSON.stringify({
-          visitorId: getOrCreateVisitorId(),
-          sessionId,
-          action: 'end',
-          duration,
-          pageViews,
-        })
-      );
-    };
-
-    window.addEventListener('beforeunload', handleUnload);
-    return () => window.removeEventListener('beforeunload', handleUnload);
+        if (visitorId) {
+          const snap = await getDocs(
+            query(collection(db, 'visitors'), where('visitorId', '==', visitorId))
+          );
+          if (!snap.empty) {
+            const existingDoc = snap.docs[0];
+            const data = existingDoc.data();
+            await updateVisitor(existingDoc.id, {
+              lastVisit: Timestamp.now(),
+              totalVisits: (data.totalVisits || 0) + 1,
+            });
+          }
+        } else {
+          const newVisitorId = `v_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+          await createVisitor({
+            visitorId: newVisitorId,
+            ip: 'client',
+            userAgent: navigator.userAgent,
+            sessions: [{
+              sessionId,
+              startTime: Timestamp.now(),
+              endTime: Timestamp.now(),
+              duration: 0,
+              pageViews: 1,
+              referrer: document.referrer,
+            }],
+            totalVisits: 1,
+            lastVisit: Timestamp.now(),
+            cartEvents: [],
+            orders: [],
+            isBlacklisted: false,
+          });
+          storeVisitorId(newVisitorId);
+        }
+      } catch {
+        // Visitor tracking is non-critical
+      }
+    })();
   }, []);
 }

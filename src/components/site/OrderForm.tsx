@@ -100,33 +100,44 @@ export function OrderForm({ onBack }: OrderFormProps) {
 
     setIsLoading(true);
     try {
+      const { createOrder, incrementProductOrderCount, incrementCouponUsage } = await import('@/lib/firebase/firestore');
+      const { Timestamp } = await import('firebase/firestore');
+      const { generateOrderNumber } = await import('@/lib/utils');
+
       const visitorId = getOrCreateVisitorId();
       const fullText = `${form.mahalle}, ${form.ilce}, ${form.il} - ${form.detay}`;
+      const orderNumber = generateOrderNumber();
 
-      const res = await fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          customer: {
-            name: form.name,
-            phone: form.phone,
-            address: { il: form.il, ilce: form.ilce, mahalle: form.mahalle, detay: form.detay, fullText },
-          },
-          items,
-          paymentMethod: form.paymentMethod,
-          note: form.note,
-          visitorId,
-          couponCode,
-          discountAmount,
-        }),
+      const orderId = await createOrder({
+        orderNumber,
+        customer: {
+          name: form.name,
+          phone: form.phone,
+          address: { il: form.il, ilce: form.ilce, mahalle: form.mahalle, detay: form.detay, fullText },
+        },
+        items,
+        subtotal: subTotal,
+        total: totalAmount,
+        discountAmount,
+        couponCode: couponCode || undefined,
+        paymentMethod: form.paymentMethod,
+        note: form.note,
+        status: 'new',
+        statusHistory: [{ status: 'new', timestamp: Timestamp.now(), note: '' }],
+        visitorId,
+        isBlacklisted: false,
+        createdAt: Timestamp.now(),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      items.forEach((item) => incrementProductOrderCount(item.productId).catch(() => {}));
+      if (couponCode) {
+        const coupon = await import('@/lib/firebase/firestore').then((m) => m.getCouponByCode(couponCode));
+        if (coupon) incrementCouponUsage(coupon.id).catch(() => {});
+      }
 
       clearCart();
-      toast.success(`Sipariş alındı! #${data.orderNumber}`);
-      router.push(`/order/${data.orderId}`);
+      toast.success(`Sipariş alındı! #${orderNumber}`);
+      router.push(`/order?id=${orderId}`);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Sipariş verilemedi');
     } finally {
