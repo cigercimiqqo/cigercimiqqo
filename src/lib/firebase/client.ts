@@ -1,7 +1,7 @@
 import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
-import type { Firestore } from 'firebase/firestore';
-import type { Auth } from 'firebase/auth';
-import type { Database } from 'firebase/database';
+import { getFirestore, type Firestore } from 'firebase/firestore';
+import { getAuth, type Auth } from 'firebase/auth';
+import { getDatabase, type Database } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -27,26 +27,23 @@ function getFirebaseApp(): FirebaseApp {
 
 export function getFirestoreInstance(): Firestore {
   if (!_db) {
-    const { getFirestore } = require('firebase/firestore');
     _db = getFirestore(getFirebaseApp());
   }
-  return _db!;
+  return _db;
 }
 
 export function getAuthInstance(): Auth {
   if (!_auth) {
-    const { getAuth } = require('firebase/auth');
     _auth = getAuth(getFirebaseApp());
   }
-  return _auth!;
+  return _auth;
 }
 
 export function getRtdbInstance(): Database {
   if (!_rtdb) {
-    const { getDatabase } = require('firebase/database');
     _rtdb = getDatabase(getFirebaseApp());
   }
-  return _rtdb!;
+  return _rtdb;
 }
 
 export const db = new Proxy({} as Firestore, {
