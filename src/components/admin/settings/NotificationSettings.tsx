@@ -16,10 +16,10 @@ export function NotificationSettings() {
   }, []);
 
   async function handleSave() {
-    if (!settings) return;
+    const notifications = (settings?.notifications ?? {}) as Partial<SiteSettings['notifications']>;
     setIsSaving(true);
     try {
-      await updateSettings({ notifications: settings.notifications });
+      await updateSettings({ notifications } as Partial<SiteSettings>);
       toast.success('Bildirim ayarları kaydedildi');
     } catch {
       toast.error('Kaydedilemedi');
@@ -29,7 +29,11 @@ export function NotificationSettings() {
   }
 
   function updateNotif(field: string, value: unknown) {
-    setSettings((prev) => prev ? { ...prev, notifications: { ...prev.notifications, [field]: value } } : prev);
+    setSettings((prev) => {
+      const base = prev ?? ({} as Partial<SiteSettings>);
+      const current = base.notifications ?? ({} as Partial<SiteSettings['notifications']>);
+      return { ...base, notifications: { ...current, [field]: value } } as SiteSettings;
+    });
   }
 
   if (isLoading) return <div className="flex justify-center py-12"><Loader2 size={24} className="animate-spin text-gray-300" /></div>;

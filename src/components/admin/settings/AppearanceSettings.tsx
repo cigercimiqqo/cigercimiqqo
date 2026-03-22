@@ -26,10 +26,10 @@ export function AppearanceSettings() {
   }, []);
 
   async function handleSave() {
-    if (!settings) return;
+    const appearance = (settings?.appearance ?? {}) as Partial<SiteSettings['appearance']>;
     setIsSaving(true);
     try {
-      await updateSettings({ appearance: settings.appearance });
+      await updateSettings({ appearance } as Partial<SiteSettings>);
       toast.success('Görünüm ayarları kaydedildi');
     } catch {
       toast.error('Kaydedilemedi');
@@ -39,7 +39,11 @@ export function AppearanceSettings() {
   }
 
   function updateAppearance(field: string, value: unknown) {
-    setSettings((prev) => prev ? { ...prev, appearance: { ...prev.appearance, [field]: value } } : prev);
+    setSettings((prev) => {
+      const base = prev ?? ({} as Partial<SiteSettings>);
+      const current = base.appearance ?? ({} as Partial<SiteSettings['appearance']>);
+      return { ...base, appearance: { ...current, [field]: value } } as SiteSettings;
+    });
   }
 
   async function handleHeroUpload(file: File) {

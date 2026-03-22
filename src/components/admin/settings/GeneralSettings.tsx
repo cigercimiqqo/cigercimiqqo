@@ -27,10 +27,10 @@ export function GeneralSettings() {
   }, []);
 
   async function handleSave() {
-    if (!settings) return;
+    const general = (settings?.general ?? {}) as Partial<SiteSettings['general']>;
     setIsSaving(true);
     try {
-      await updateSettings({ general: settings.general });
+      await updateSettings({ general } as Partial<SiteSettings>);
       toast.success('Genel ayarlar kaydedildi');
     } catch {
       toast.error('Kaydedilemedi');
@@ -40,14 +40,23 @@ export function GeneralSettings() {
   }
 
   function updateGeneral(field: string, value: unknown) {
-    setSettings((prev) => prev ? { ...prev, general: { ...prev.general, [field]: value } } : prev);
+    setSettings((prev) => {
+      const base = prev ?? ({} as Partial<SiteSettings>);
+      const currentGeneral = base.general ?? ({} as Partial<SiteSettings['general']>);
+      return { ...base, general: { ...currentGeneral, [field]: value } } as SiteSettings;
+    });
   }
 
   function updateSocial(field: string, value: string) {
-    setSettings((prev) => prev ? {
-      ...prev,
-      general: { ...prev.general, socialMedia: { ...(prev.general.socialMedia || DEFAULT_SOCIAL), [field]: value } },
-    } : prev);
+    setSettings((prev) => {
+      const base = prev ?? ({} as Partial<SiteSettings>);
+      const currentGeneral = base.general ?? ({} as Partial<SiteSettings['general']>);
+      const social = currentGeneral.socialMedia ?? DEFAULT_SOCIAL;
+      return {
+        ...base,
+        general: { ...currentGeneral, socialMedia: { ...social, [field]: value } },
+      } as SiteSettings;
+    });
   }
 
   async function handleLogoUpload(file: File, type: 'logo' | 'favicon') {

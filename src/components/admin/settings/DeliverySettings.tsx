@@ -26,10 +26,10 @@ export function DeliverySettings() {
   }, []);
 
   async function handleSave() {
-    if (!settings) return;
+    const delivery = (settings?.delivery ?? {}) as Partial<SiteSettings['delivery']>;
     setIsSaving(true);
     try {
-      await updateSettings({ delivery: settings.delivery });
+      await updateSettings({ delivery } as Partial<SiteSettings>);
       toast.success('Teslimat ayarları kaydedildi');
     } catch {
       toast.error('Kaydedilemedi');
@@ -49,18 +49,22 @@ export function DeliverySettings() {
       mahalle: newDistrict.mahalle,
       minOrder: parseFloat(newDistrict.minOrder) || 0,
     };
-    setSettings((prev) => prev ? {
-      ...prev,
-      delivery: { ...prev.delivery, districts: [...(prev.delivery?.districts || []), entry] },
-    } : prev);
+    setSettings((prev) => {
+      const base = prev ?? ({} as Partial<SiteSettings>);
+      const delivery = base.delivery ?? ({} as Partial<SiteSettings['delivery']>);
+      const districts = delivery.districts ?? [];
+      return { ...base, delivery: { ...delivery, districts: [...districts, entry] } } as SiteSettings;
+    });
     setNewDistrict({ il: '', ilce: '', mahalle: '', minOrder: '' });
   }
 
   function removeDistrict(i: number) {
-    setSettings((prev) => prev ? {
-      ...prev,
-      delivery: { ...prev.delivery, districts: (prev.delivery?.districts || []).filter((_, idx) => idx !== i) },
-    } : prev);
+    setSettings((prev) => {
+      const base = prev ?? ({} as Partial<SiteSettings>);
+      const delivery = base.delivery ?? ({} as Partial<SiteSettings['delivery']>);
+      const districts = (delivery.districts ?? []).filter((_, idx) => idx !== i);
+      return { ...base, delivery: { ...delivery, districts } } as SiteSettings;
+    });
   }
 
   if (isLoading) return <div className="flex justify-center py-12"><Loader2 size={24} className="animate-spin text-gray-300" /></div>;

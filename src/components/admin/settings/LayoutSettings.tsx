@@ -39,7 +39,6 @@ export function LayoutSettings() {
   const deviceConfig = layout[activeDevice];
 
   async function handleSave() {
-    if (!settings) return;
     setIsSaving(true);
     try {
       await updateSettings({ layout });
@@ -52,9 +51,10 @@ export function LayoutSettings() {
   }
 
   function updateLayout(updater: (prev: LayoutSettings) => LayoutSettings) {
-    setSettings((prev) =>
-      prev ? { ...prev, layout: updater(prev.layout ?? getDefaultLayoutSettings()) } : prev
-    );
+    setSettings((prev) => {
+      const base = prev ?? ({} as Partial<SiteSettings>);
+      return { ...base, layout: updater(base.layout ?? getDefaultLayoutSettings()) } as SiteSettings;
+    });
   }
 
   function moveSection(id: HomeSectionId, dir: 'up' | 'down') {
