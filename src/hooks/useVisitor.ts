@@ -26,11 +26,11 @@ export function useVisitorTracking() {
       try {
         const { createVisitor, updateVisitor } = await import('@/lib/firebase/firestore');
         const { Timestamp, collection, query, where, getDocs } = await import('firebase/firestore');
-        const { db } = await import('@/lib/firebase/client');
+        const { getDb } = await import('@/lib/firebase/client');
 
         if (visitorId) {
           const snap = await getDocs(
-            query(collection(db, 'visitors'), where('visitorId', '==', visitorId))
+            query(collection(getDb(), 'visitors'), where('visitorId', '==', visitorId))
           );
           if (!snap.empty) {
             const existingDoc = snap.docs[0];

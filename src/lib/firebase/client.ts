@@ -25,49 +25,19 @@ function getFirebaseApp(): FirebaseApp {
   return _app;
 }
 
-export function getFirestoreInstance(): Firestore {
-  if (!_db) {
-    _db = getFirestore(getFirebaseApp());
-  }
+export function getDb(): Firestore {
+  if (!_db) _db = getFirestore(getFirebaseApp());
   return _db;
 }
 
 export function getAuthInstance(): Auth {
-  if (!_auth) {
-    _auth = getAuth(getFirebaseApp());
-  }
+  if (!_auth) _auth = getAuth(getFirebaseApp());
   return _auth;
 }
 
-export function getRtdbInstance(): Database {
-  if (!_rtdb) {
-    _rtdb = getDatabase(getFirebaseApp());
-  }
+export function getRtdb(): Database {
+  if (!_rtdb) _rtdb = getDatabase(getFirebaseApp());
   return _rtdb;
 }
-
-export const db = new Proxy({} as Firestore, {
-  get: (_, prop) => {
-    const instance = getFirestoreInstance();
-    const val = (instance as unknown as Record<string | symbol, unknown>)[prop];
-    return typeof val === 'function' ? val.bind(instance) : val;
-  },
-});
-
-export const auth = new Proxy({} as Auth, {
-  get: (_, prop) => {
-    const instance = getAuthInstance();
-    const val = (instance as unknown as Record<string | symbol, unknown>)[prop];
-    return typeof val === 'function' ? val.bind(instance) : val;
-  },
-});
-
-export const rtdb = new Proxy({} as Database, {
-  get: (_, prop) => {
-    const instance = getRtdbInstance();
-    const val = (instance as unknown as Record<string | symbol, unknown>)[prop];
-    return typeof val === 'function' ? val.bind(instance) : val;
-  },
-});
 
 export default getFirebaseApp;
