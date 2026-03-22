@@ -650,7 +650,7 @@
     <a href="#step5" id="nav-5"><span class="nav-num">05</span> Admin Kullanıcısı</a>
     <a href="#step6" id="nav-6"><span class="nav-num">06</span> Bağlantı Bilgileri</a>
     <a href="#step7" id="nav-7"><span class="nav-num">07</span> Görsel Yükleme</a>
-    <a href="#step8" id="nav-8"><span class="nav-num">08</span> Cloudflare Pages</a>
+    <a href="#step8" id="nav-8"><span class="nav-num">08</span> Vercel'e Deploy</a>
     <a href="#step9" id="nav-9"><span class="nav-num">09</span> Env Değişkenleri</a>
     <a href="#step10" id="nav-10"><span class="nav-num">10</span> Domain Bağla</a>
     <a href="#step11" id="nav-11"><span class="nav-num">11</span> Test Et</a>
@@ -1033,20 +1033,26 @@ service cloud.firestore {
         <div class="step-connector"></div>
       </div>
       <div>
-        <div class="step-title">Cloudflare Pages Projesi Oluştur</div>
-        <div class="step-subtitle">GitHub gerekmez — direkt upload yapacağız</div>
+        <div class="step-title">Vercel'e Deploy Et</div>
+        <div class="step-subtitle">Next.js için en doğru platform — 2 terminial komutu, hepsi bu</div>
       </div>
     </div>
     <div class="step-content">
 
+      <div class="info-box orange" style="margin-bottom:16px">
+        <span class="icon">💡</span>
+        <span><strong>Neden Vercel?</strong> Bu proje sunucu taraflı (SSR) Next.js — API route'ları ve dinamik sayfalar var. Vercel bu tür projeleri "olduğu gibi" çalıştırır, sıfır ekstra ayar. Cloudflare Pages SSR için ekstra adapter kurmak gerektirir.</span>
+      </div>
+
       <div class="substep" data-key="s8a">
         <label class="substep-header">
           <input type="checkbox" class="substep-check" data-key="s8a" />
-          <span class="substep-title">Cloudflare hesabı aç</span>
+          <span class="substep-title">Vercel hesabı aç</span>
         </label>
         <div class="substep-body">
           <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> <a href="https://dash.cloudflare.com" target="_blank">dash.cloudflare.com</a> → ücretsiz kayıt ol</li>
+            <li><span class="step-arrow">→</span> <a href="https://vercel.com/signup" target="_blank">vercel.com/signup</a> → ücretsiz kayıt ol (GitHub, GitLab veya email)</li>
+            <li><span class="step-arrow">→</span> Ücretsiz Hobby planı: 100GB bant genişliği/ay, sınırsız proje</li>
           </ul>
         </div>
       </div>
@@ -1054,42 +1060,45 @@ service cloud.firestore {
       <div class="substep" data-key="s8b">
         <label class="substep-header">
           <input type="checkbox" class="substep-check" data-key="s8b" />
-          <span class="substep-title">Pages projesi oluştur</span>
+          <span class="substep-title">Projeyi 2 komutla deploy et</span>
         </label>
         <div class="substep-body">
-          <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Sol menü → <kbd>Workers &amp; Pages</kbd> → <kbd>Pages</kbd></li>
-            <li><span class="step-arrow">→</span> <kbd>Create a project</kbd> butonuna bas</li>
-            <li><span class="step-arrow">→</span> <strong>"Connect to Git"</strong> değil, <kbd>Upload assets</kbd> seçeneğini seç</li>
-            <li><span class="step-arrow">→</span> Project name: <kbd>miqqo-musteri-adi</kbd> gir</li>
+          <div class="info-box orange">
+            <span class="icon">⚡</span>
+            <span>Terminali aç, proje klasörüne git (<kbd>cd /Users/furkangunduz/CursorProjects/MiqqoSite</kbd>) ve şu iki komutu sırayla çalıştır:</span>
+          </div>
+          <div class="code-wrap">
+            <span class="code-lang">Terminal — 1. Adım: Kur</span>
+            <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
+            <pre>npm install</pre>
+          </div>
+          <div class="code-wrap">
+            <span class="code-lang">Terminal — 2. Adım: Deploy</span>
+            <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
+            <pre>npx vercel</pre>
+          </div>
+          <ul class="instruction-list" style="margin-top:8px">
+            <li><span class="step-arrow">→</span> İlk çalıştırmada Vercel hesabınla giriş yapmanı ister — tarayıcı açılır, onayla</li>
+            <li><span class="step-arrow">→</span> Birkaç soru sorar (hepsine Enter basabilirsin — varsayılanlar doğru)</li>
+            <li><span class="step-arrow">→</span> Bittikten sonra sana bir URL verir: <kbd>https://miqqo-xxx.vercel.app</kbd></li>
           </ul>
+          <div class="info-box green" style="margin-top:12px">
+            <span class="icon">✅</span>
+            <span>İlk deploy sonrası env değişkenleri eksik olduğu için Firebase hatası görebilirsin. Bu normal — bir sonraki adımda gireceksin, ardından tekrar deploy yapacaksın.</span>
+          </div>
         </div>
       </div>
 
       <div class="substep" data-key="s8c">
         <label class="substep-header">
           <input type="checkbox" class="substep-check" data-key="s8c" />
-          <span class="substep-title">Projeyi derle (tek seferlik terminal komutu)</span>
+          <span class="substep-title">Vercel Dashboard'dan projeyi gör</span>
         </label>
         <div class="substep-body">
-          <div class="info-box orange">
-            <span class="icon">⚡</span>
-            <span>Bu tek komut tek seferlik çalıştırılır. Terminal'i aç, proje klasörüne git ve şunu çalıştır:</span>
-          </div>
-          <div class="code-wrap">
-            <span class="code-lang">Terminal</span>
-            <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
-            <pre>npm run build</pre>
-          </div>
-          <ul class="instruction-list" style="margin-top:8px">
-            <li><span class="step-arrow">→</span> Komut bittikten sonra proje klasöründe <kbd>.next</kbd> adlı bir klasör oluşur</li>
-            <li><span class="step-arrow">→</span> Cloudflare'deki <strong>Upload assets</strong> ekranına bu <kbd>.next</kbd> klasörünü sürükle-bırak</li>
-            <li><span class="step-arrow">→</span> <kbd>Deploy site</kbd> butonuna bas — ilk deploy başlar</li>
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> <a href="https://vercel.com/dashboard" target="_blank">vercel.com/dashboard</a> → projen listede görünüyor mu kontrol et</li>
+            <li><span class="step-arrow">→</span> Projeye tıkla — deployment durumunu ve URL'sini görürsün</li>
           </ul>
-          <div class="info-box green">
-            <span class="icon">✅</span>
-            <span>İlk deploy sonrası env değişkenleri eksik olduğu için site hata verebilir. Bu normal — bir sonraki adımda gireceksin.</span>
-          </div>
         </div>
       </div>
     </div>
@@ -1103,7 +1112,7 @@ service cloud.firestore {
         <div class="step-connector"></div>
       </div>
       <div>
-        <div class="step-title">Ortam Değişkenlerini Cloudflare'e Gir</div>
+        <div class="step-title">Ortam Değişkenlerini Vercel'e Gir</div>
         <div class="step-subtitle">Tüm secret key'ler sadece burada saklanır — .env.local yok!</div>
       </div>
     </div>
@@ -1111,22 +1120,23 @@ service cloud.firestore {
 
       <div class="info-box red" style="margin-bottom:16px">
         <span class="icon">🔐</span>
-        <span>Bu değerleri asla kod içine veya başka bir dosyaya yazma. Sadece Cloudflare Pages Environment variables bölümüne gir.</span>
+        <span>Bu değerleri asla kod içine veya başka bir dosyaya yazma. Sadece Vercel'in Environment Variables bölümüne gir.</span>
       </div>
 
       <div class="substep" data-key="s9a">
         <label class="substep-header">
           <input type="checkbox" class="substep-check" data-key="s9a" />
-          <span class="substep-title">Firebase değişkenlerini gir</span>
+          <span class="substep-title">Firebase değişkenlerini Vercel'e ekle</span>
         </label>
         <div class="substep-body">
           <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Cloudflare Pages → Projen → <kbd>Settings</kbd> → <kbd>Environment variables</kbd></li>
-            <li><span class="step-arrow">→</span> <kbd>Production</kbd> sekmesi → <kbd>Add variable</kbd> butonuna bas</li>
-            <li><span class="step-arrow">→</span> Aşağıdaki 7 değeri tek tek ekle:</li>
+            <li><span class="step-arrow">→</span> <a href="https://vercel.com/dashboard" target="_blank">vercel.com/dashboard</a> → Projen → <kbd>Settings</kbd> sekmesi</li>
+            <li><span class="step-arrow">→</span> Sol menü → <kbd>Environment Variables</kbd></li>
+            <li><span class="step-arrow">→</span> Her satır için: <strong>Key</strong> alanına değişken adını, <strong>Value</strong> alanına değeri yaz → <kbd>Save</kbd></li>
+            <li><span class="step-arrow">→</span> Environment: <kbd>Production</kbd>, <kbd>Preview</kbd>, <kbd>Development</kbd> üçünü de seç</li>
           </ul>
           <table style="margin-top:12px">
-            <thead><tr><th>Değişken Adı</th><th>Değeri</th></tr></thead>
+            <thead><tr><th>Değişken Adı (Key)</th><th>Değeri (Value)</th></tr></thead>
             <tbody>
               <tr><td><code>NEXT_PUBLIC_FIREBASE_API_KEY</code></td><td>Firebase apiKey</td></tr>
               <tr><td><code>NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN</code></td><td>Firebase authDomain</td></tr>
@@ -1143,7 +1153,7 @@ service cloud.firestore {
       <div class="substep" data-key="s9b">
         <label class="substep-header">
           <input type="checkbox" class="substep-check" data-key="s9b" />
-          <span class="substep-title">Cloudinary (veya ImgBB) değişkenini gir</span>
+          <span class="substep-title">Cloudinary (veya ImgBB) değişkenini ekle</span>
         </label>
         <div class="substep-body">
           <table>
@@ -1165,14 +1175,18 @@ service cloud.firestore {
       <div class="substep" data-key="s9c">
         <label class="substep-header">
           <input type="checkbox" class="substep-check" data-key="s9c" />
-          <span class="substep-title">Kaydet ve yeniden deploy et</span>
+          <span class="substep-title">Tekrar deploy et (env değişkenleri aktif olsun)</span>
         </label>
         <div class="substep-body">
           <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Tüm değerleri girdikten sonra <kbd>Save</kbd> butonuna bas</li>
-            <li><span class="step-arrow">→</span> <kbd>Deployments</kbd> sekmesi → en üstteki deploy → <kbd>Retry deployment</kbd></li>
-            <li><span class="step-arrow">→</span> Deploy bitmesini bekle (1-3 dakika)</li>
+            <li><span class="step-arrow">→</span> Vercel Dashboard → Projen → <kbd>Deployments</kbd> sekmesi</li>
+            <li><span class="step-arrow">→</span> En üstteki deploy → sağdaki <kbd>⋯</kbd> → <kbd>Redeploy</kbd></li>
+            <li><span class="step-arrow">→</span> 1-2 dakika bekle → yeşil "Ready" göründüğünde site hazır</li>
           </ul>
+          <div class="info-box orange" style="margin-top:8px">
+            <span class="icon">⚡</span>
+            <span>Sonraki güncellemelerde terminalde <kbd>npx vercel --prod</kbd> yazman yeterli. Otomatik build + deploy yapar.</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1187,7 +1201,7 @@ service cloud.firestore {
       </div>
       <div>
         <div class="step-title">Müşteri Domainini Bağla</div>
-        <div class="step-subtitle">Domaine göre farklı yöntem</div>
+        <div class="step-subtitle">Vercel Dashboard'dan — her domain sağlayıcısı için aynı adım</div>
       </div>
     </div>
     <div class="step-content">
@@ -1195,12 +1209,13 @@ service cloud.firestore {
       <div class="substep" data-key="s10a">
         <label class="substep-header">
           <input type="checkbox" class="substep-check" data-key="s10a" />
-          <span class="substep-title">Domain Cloudflare'de kayıtlıysa (en kolay)</span>
+          <span class="substep-title">Vercel'de domain ekle</span>
         </label>
         <div class="substep-body">
           <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Cloudflare Pages → Projen → <kbd>Custom domains</kbd> → <kbd>Set up a custom domain</kbd></li>
-            <li><span class="step-arrow">→</span> Domain adını yaz → <kbd>Continue</kbd> → Otomatik ayarlanır → Bitti!</li>
+            <li><span class="step-arrow">→</span> Vercel Dashboard → Projen → <kbd>Settings</kbd> → <kbd>Domains</kbd></li>
+            <li><span class="step-arrow">→</span> Domain adını yaz (örn: <kbd>pizzamondo.com</kbd>) → <kbd>Add</kbd></li>
+            <li><span class="step-arrow">→</span> Vercel sana DNS kayıtlarını gösterir — bunları domain sağlayıcına gir</li>
           </ul>
         </div>
       </div>
@@ -1208,25 +1223,32 @@ service cloud.firestore {
       <div class="substep" data-key="s10b">
         <label class="substep-header">
           <input type="checkbox" class="substep-check" data-key="s10b" />
-          <span class="substep-title">Domain başka yerde (GoDaddy, Natro, İsimtescil vb.)</span>
+          <span class="substep-title">Domain sağlayıcında DNS kaydı ekle (GoDaddy, Natro, İsimtescil vb.)</span>
         </label>
         <div class="substep-body">
           <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Cloudflare Pages → Projen → <kbd>Custom domains</kbd> → <kbd>Set up a custom domain</kbd></li>
-            <li><span class="step-arrow">→</span> Domain adını yaz → Sana bir hedef URL gösterir, örn: <kbd>miqqo-pizza-mondo.pages.dev</kbd></li>
-            <li><span class="step-arrow">→</span> Domain sağlayıcına gir → DNS yönetimi → CNAME kaydı ekle:</li>
+            <li><span class="step-arrow">→</span> Vercel'in gösterdiği değerleri kopyala. Genellikle şuna benzer:</li>
           </ul>
           <div class="code-wrap">
-            <span class="code-lang">DNS CNAME Kaydı</span>
-            <pre>Type:   CNAME
-Name:   @  (veya www)
-Value:  miqqo-musteri-adi.pages.dev
-TTL:    Auto</pre>
+            <span class="code-lang">DNS Kayıtları (Vercel'in gösterdiği değerleri kullan)</span>
+            <pre>Type:   A
+Name:   @
+Value:  76.76.21.21   (Vercel'in IP'si)
+
+Type:   CNAME
+Name:   www
+Value:  cname.vercel-dns.com</pre>
           </div>
           <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Domain sağlayıcına gir → DNS yönetimi → bu kayıtları ekle</li>
             <li><span class="step-arrow">→</span> DNS yayılımı 1-24 saat sürebilir</li>
-            <li><span class="step-arrow">→</span> Kontrol için: <a href="https://dnschecker.org" target="_blank">dnschecker.org</a> → domain gir → CNAME kayıtlarını gör</li>
+            <li><span class="step-arrow">→</span> Vercel Dashboard → Domains → domain yanında yeşil ✓ göründüğünde bağlandı</li>
+            <li><span class="step-arrow">→</span> HTTPS (SSL) otomatik olarak aktif olur — ekstra bir şey yapmana gerek yok</li>
           </ul>
+          <div class="info-box green" style="margin-top:8px">
+            <span class="icon">🔒</span>
+            <span>Vercel ücretsiz planla bile otomatik SSL sertifikası sağlar. Müşterinin sitesi <strong>https://</strong> ile açılır.</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1291,13 +1313,13 @@ TTL:    Auto</pre>
       <input type="checkbox" class="fc-check" id="fc-7-cb" /><span class="fc-label">Cloudinary veya ImgBB hesabı açıldı, bilgiler not alındı</span>
     </div>
     <div class="final-check-item" id="fc-8" onclick="toggleFC('fc-8')">
-      <input type="checkbox" class="fc-check" id="fc-8-cb" /><span class="fc-label">npm run build çalıştırıldı, .next klasörü oluştu</span>
+      <input type="checkbox" class="fc-check" id="fc-8-cb" /><span class="fc-label">npm install çalıştırıldı, ardından npx vercel ile ilk deploy yapıldı</span>
     </div>
     <div class="final-check-item" id="fc-9" onclick="toggleFC('fc-9')">
-      <input type="checkbox" class="fc-check" id="fc-9-cb" /><span class="fc-label">Cloudflare Pages projesi oluşturuldu ve ilk deploy yapıldı</span>
+      <input type="checkbox" class="fc-check" id="fc-9-cb" /><span class="fc-label">Vercel Dashboard'da proje görünüyor</span>
     </div>
     <div class="final-check-item" id="fc-10" onclick="toggleFC('fc-10')">
-      <input type="checkbox" class="fc-check" id="fc-10-cb" /><span class="fc-label">Tüm env değişkenleri Cloudflare'e girildi ve redeploy yapıldı</span>
+      <input type="checkbox" class="fc-check" id="fc-10-cb" /><span class="fc-label">Tüm env değişkenleri Vercel'e girildi ve Redeploy yapıldı</span>
     </div>
     <div class="final-check-item" id="fc-11" onclick="toggleFC('fc-11')">
       <input type="checkbox" class="fc-check" id="fc-11-cb" /><span class="fc-label">Admin login başarıyla test edildi</span>
@@ -1353,8 +1375,8 @@ TTL:    Auto</pre>
         <span class="trouble-chevron">▾</span>
       </div>
       <div class="trouble-a">
-        <strong>Sebep:</strong> Cloudflare'deki env değişkenleri eksik veya yanlış girilmiş.<br/><br/>
-        <strong>Çözüm:</strong> Cloudflare Pages → Projen → Settings → Environment variables → tüm değerleri kontrol et → Save → Deployments → Retry deployment.
+        <strong>Sebep:</strong> Vercel'deki env değişkenleri eksik veya yanlış girilmiş.<br/><br/>
+        <strong>Çözüm:</strong> Vercel Dashboard → Projen → Settings → Environment Variables → tüm değerleri kontrol et → Save → Deployments → Redeploy.
       </div>
     </div>
 
@@ -1366,7 +1388,7 @@ TTL:    Auto</pre>
       </div>
       <div class="trouble-a">
         <strong>Sebep:</strong> DNS yayılımı henüz tamamlanmamış (24 saate kadar sürebilir).<br/><br/>
-        <strong>Çözüm:</strong> <a href="https://dnschecker.org" target="_blank">dnschecker.org</a> adresine git → domain adını yaz → CNAME kaydının yayıldığını gör → bekle.
+        <strong>Çözüm:</strong> <a href="https://dnschecker.org" target="_blank">dnschecker.org</a> adresine git → domain adını yaz → A veya CNAME kaydının yayıldığını gör → bekle. Vercel Dashboard → Domains → yeşil ✓ bekliyorsun.
       </div>
     </div>
 
