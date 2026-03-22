@@ -88,7 +88,7 @@ async function uploadToCloudinary(
   });
 }
 
-// ─── ImgBB Upload ──────────────────────────────────────────────────────────
+// ─── ImgBB Upload (base64 ile tam kalite) ───────────────────────────────────
 
 async function uploadToImgBB(
   file: File,
@@ -97,41 +97,45 @@ async function uploadToImgBB(
   const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
   if (!apiKey) throw new Error('ImgBB API key eksik. Ayarlar → Entegrasyonlar bölümünden ekleyin.');
 
-  const formData = new FormData();
-  formData.append('image', file);
-
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-
-    xhr.upload.addEventListener('progress', (e) => {
-      if (e.lengthComputable && onProgress) {
-        onProgress({ percent: Math.round((e.loaded / e.total) * 100), loaded: e.loaded, total: e.total });
-      }
-    });
-
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
-        const data = JSON.parse(xhr.responseText);
-        if (data.success) {
-          resolve({
-            url: data.data.url,
-            deleteUrl: data.data.delete_url,
-            provider: 'imgbb',
-            width: data.data.width,
-            height: data.data.height,
-          });
-        } else {
-          reject(new Error('ImgBB yükleme başarısız'));
-        }
-      } else {
-        reject(new Error(`ImgBB hatası: ${xhr.statusText}`));
-      }
-    });
-
-    xhr.addEventListener('error', () => reject(new Error('Ağ hatası')));
-    xhr.open('POST', `https://api.imgbb.com/1/upload?key=${apiKey}`);
-    xhr.send(formData);
+  const base64 = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      resolve(result.includes(',') ? result.split(',')[1]! : result);
+    };
+    reader.onerror = () => reject(new Error('Dosya okunamadı'));
+    reader.readAsDataURL(file);
   });
+
+  onProgress?.({ percent: 50, loaded: 0, total: 100 });
+
+  const body = new URLSearchParams();
+  body.append('key', apiKey);
+  body.append('image', base64);
+  body.append('name', file.name);
+
+  const res = await fetch('https://api.imgbb.com/1/upload', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: body.toString(),
+  });
+
+  const data = await res.json();
+
+  if (!data.success) {
+    const msg = data.error?.message || data.status_txt || 'ImgBB yükleme başarısız';
+    throw new Error(msg);
+  }
+
+  onProgress?.({ percent: 100, loaded: 100, total: 100 });
+
+  return {
+    url: data.data.url,
+    deleteUrl: data.data.delete_url,
+    provider: 'imgbb',
+    width: data.data.width,
+    height: data.data.height,
+  };
 }
 
 // ─── Ana Upload Fonksiyonu ─────────────────────────────────────────────────

@@ -65,8 +65,9 @@ export function GeneralSettings() {
       const result = await uploadFile(file, 'logo');
       updateGeneral(type, result.url);
       toast.success('Görsel yüklendi');
-    } catch {
-      toast.error('Yükleme başarısız');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Yükleme başarısız';
+      toast.error(msg);
     } finally {
       type === 'logo' ? setLogoUploading(false) : setFaviconUploading(false);
     }
@@ -150,35 +151,56 @@ export function GeneralSettings() {
       {/* Logo & Favicon */}
       <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
         <h3 className="font-bold text-gray-900">Logo & Favicon</h3>
-        <div className="grid grid-cols-2 gap-4">
+        <p className="text-xs text-gray-500">
+          Yükleme için Ayarlar → Entegrasyonlar&apos;dan Cloudinary veya ImgBB yapılandırın. Alternatif: görsel URL&apos;si yapıştırın.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <p className="text-sm font-medium text-gray-700 mb-2">Logo</p>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               {general.logo && (
-                <div className="w-12 h-12 rounded-xl overflow-hidden border border-gray-100">
-                  <Image src={general.logo} alt="Logo" width={48} height={48} className="object-contain" />
+                <div className="w-12 h-12 rounded-xl overflow-hidden border border-gray-100 shrink-0">
+                  <Image src={general.logo} alt="Logo" width={48} height={48} className="object-contain" unoptimized />
                 </div>
               )}
-              <label className="flex items-center gap-1.5 px-3 py-2 border border-dashed border-gray-300 rounded-xl text-xs text-gray-500 cursor-pointer hover:border-orange-400 hover:text-orange-500 transition-colors">
-                {logoUploading ? <Loader2 size={14} className="animate-spin" /> : <ImagePlus size={14} />}
-                {logoUploading ? 'Yükleniyor...' : 'Seç'}
-                <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleLogoUpload(e.target.files[0], 'logo')} />
-              </label>
+              <div className="flex flex-col gap-1.5">
+                <label className="flex items-center gap-1.5 px-3 py-2 w-fit border border-dashed border-gray-300 rounded-xl text-xs text-gray-500 cursor-pointer hover:border-orange-400 hover:text-orange-500 transition-colors">
+                  {logoUploading ? <Loader2 size={14} className="animate-spin" /> : <ImagePlus size={14} />}
+                  {logoUploading ? 'Yükleniyor...' : 'Dosya seç'}
+                  <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleLogoUpload(e.target.files[0], 'logo')} />
+                </label>
+                <input
+                  type="url"
+                  placeholder="veya URL yapıştır"
+                  value={general.logo || ''}
+                  onChange={(e) => updateGeneral('logo', e.target.value)}
+                  className="px-3 py-2 border border-gray-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-500/30"
+                />
+              </div>
             </div>
           </div>
           <div>
             <p className="text-sm font-medium text-gray-700 mb-2">Favicon</p>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               {general.favicon && (
-                <div className="w-12 h-12 rounded-xl overflow-hidden border border-gray-100">
-                  <Image src={general.favicon} alt="Favicon" width={48} height={48} className="object-contain" />
+                <div className="w-12 h-12 rounded-xl overflow-hidden border border-gray-100 shrink-0">
+                  <Image src={general.favicon} alt="Favicon" width={48} height={48} className="object-contain" unoptimized />
                 </div>
               )}
-              <label className="flex items-center gap-1.5 px-3 py-2 border border-dashed border-gray-300 rounded-xl text-xs text-gray-500 cursor-pointer hover:border-orange-400 hover:text-orange-500 transition-colors">
-                {faviconUploading ? <Loader2 size={14} className="animate-spin" /> : <ImagePlus size={14} />}
-                {faviconUploading ? 'Yükleniyor...' : 'Seç'}
-                <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleLogoUpload(e.target.files[0], 'favicon')} />
-              </label>
+              <div className="flex flex-col gap-1.5">
+                <label className="flex items-center gap-1.5 px-3 py-2 w-fit border border-dashed border-gray-300 rounded-xl text-xs text-gray-500 cursor-pointer hover:border-orange-400 hover:text-orange-500 transition-colors">
+                  {faviconUploading ? <Loader2 size={14} className="animate-spin" /> : <ImagePlus size={14} />}
+                  {faviconUploading ? 'Yükleniyor...' : 'Dosya seç'}
+                  <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleLogoUpload(e.target.files[0], 'favicon')} />
+                </label>
+                <input
+                  type="url"
+                  placeholder="veya URL yapıştır"
+                  value={general.favicon || ''}
+                  onChange={(e) => updateGeneral('favicon', e.target.value)}
+                  className="px-3 py-2 border border-gray-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-orange-500/30"
+                />
+              </div>
             </div>
           </div>
         </div>
