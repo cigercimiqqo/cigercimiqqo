@@ -72,9 +72,9 @@ export function AdminSidebar() {
   }
 
   return (
-    <aside className="w-64 min-h-screen bg-gray-900 text-white flex flex-col fixed left-0 top-0 z-40">
+    <aside className="w-64 h-screen bg-gray-900 text-white flex flex-col fixed left-0 top-0 z-40 overflow-hidden">
       {/* Logo */}
-      <div className="p-6 border-b border-gray-700/50">
+      <div className="p-6 border-b border-gray-700/50 shrink-0">
         <Link href="/admin/dashboard" className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-orange-500 flex items-center justify-center">
             <UtensilsCrossed size={20} />
@@ -87,7 +87,7 @@ export function AdminSidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+      <nav className="flex-1 min-h-0 p-4 space-y-1 overflow-y-auto overflow-x-hidden">
         {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -151,7 +151,7 @@ export function AdminSidebar() {
       </nav>
 
       {/* Logout */}
-      <div className="p-4 border-t border-gray-700/50">
+      <div className="p-4 border-t border-gray-700/50 shrink-0">
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-all"
