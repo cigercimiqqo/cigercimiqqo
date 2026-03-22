@@ -13,7 +13,7 @@ import { uploadToCloudinary } from '@/lib/cloudinary';
 import { slugify, estimateReadingTime } from '@/lib/utils';
 import { toast } from 'sonner';
 import { Plus, Pencil, Trash2, Eye, EyeOff, Loader2, ImagePlus, ArrowLeft } from 'lucide-react';
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore/lite';
 import type { BlogPost } from '@/types';
 
 const RichEditor = dynamic(() => import('./RichEditor'), { ssr: false, loading: () => <div className="h-64 bg-gray-50 rounded-xl flex items-center justify-center"><Loader2 size={20} className="animate-spin text-gray-400" /></div> });

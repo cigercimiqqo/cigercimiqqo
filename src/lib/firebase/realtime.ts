@@ -10,7 +10,7 @@ import {
   increment,
   serverTimestamp,
 } from 'firebase/database';
-import { rtdb } from './client';
+import { rtdb } from './rtdb';
 import type { ActiveOrder, Notification, OrderStatus } from '@/types';
 
 // ─── Active Orders ─────────────────────────────────────────────────────────

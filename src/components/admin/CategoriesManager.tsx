@@ -31,7 +31,7 @@ import { slugify } from '@/lib/utils';
 import { toast } from 'sonner';
 import { Plus, GripVertical, Pencil, Trash2, Loader2, Eye, EyeOff, ImagePlus } from 'lucide-react';
 import type { Category } from '@/types';
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore/lite';
 
 interface SortableCategoryProps {
   category: Category;

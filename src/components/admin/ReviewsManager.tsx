@@ -6,7 +6,7 @@ import { getReviews, createReview, updateReview, deleteReview } from '@/lib/fire
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { toast } from 'sonner';
 import { Plus, Pencil, Trash2, Eye, EyeOff, Loader2, Star, ImagePlus } from 'lucide-react';
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore/lite';
 import type { Review } from '@/types';
 
 const defaultForm = { authorName: '', text: '', rating: 5, platform: 'google' as 'google' | 'custom', authorAvatar: '', order: 0, isVisible: true };

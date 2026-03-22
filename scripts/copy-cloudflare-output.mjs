@@ -20,4 +20,9 @@ if (!fs.existsSync(src)) {
 
 fs.rmSync(dest, { recursive: true, force: true });
 fs.cpSync(src, dest, { recursive: true });
+// Worker derleme günlüğü (~5MB) — deploy’da gereksiz; yükleme boyutunu düşürür.
+const logPath = path.join(dest, '_worker.js', 'nop-build-log.json');
+if (fs.existsSync(logPath)) {
+  fs.rmSync(logPath);
+}
 console.log('Tamam → cloudflare-pages-dist/ (Wrangler ile bunu deploy et)');

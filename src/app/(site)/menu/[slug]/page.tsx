@@ -3,7 +3,7 @@ import { SiteHeader } from '@/components/site/SiteHeader';
 import { ProductDetail } from '@/components/site/ProductDetail';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { where } from 'firebase/firestore';
+import { where } from 'firebase/firestore/lite';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'edge';

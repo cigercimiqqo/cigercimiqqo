@@ -5,7 +5,7 @@ import { getCoupons, createCoupon, updateCoupon, deleteCoupon } from '@/lib/fire
 import { formatPrice } from '@/lib/utils';
 import { toast } from 'sonner';
 import { Plus, Pencil, Trash2, Loader2, Tag } from 'lucide-react';
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore/lite';
 import type { Coupon } from '@/types';
 
 const defaultForm = { code: '', discountType: 'percent' as 'percent' | 'amount', discountValue: '', minOrderAmount: '', maxUsage: '', isActive: true };

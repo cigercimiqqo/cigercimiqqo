@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar } from 'lucide-react';
 import { estimateReadingTime, truncateText } from '@/lib/utils';
-import type { Timestamp } from 'firebase/firestore';
+import type { Timestamp } from 'firebase/firestore/lite';
 
 function formatDate(ts: Timestamp | null): string {
   if (!ts) return '';

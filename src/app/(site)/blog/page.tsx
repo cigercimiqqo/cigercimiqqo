@@ -5,7 +5,7 @@ import { Calendar } from 'lucide-react';
 import { SiteHeader } from '@/components/site/SiteHeader';
 import { estimateReadingTime } from '@/lib/utils';
 import type { Metadata } from 'next';
-import type { Timestamp } from 'firebase/firestore';
+import type { Timestamp } from 'firebase/firestore/lite';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'edge';

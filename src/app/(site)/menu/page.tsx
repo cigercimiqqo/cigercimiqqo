@@ -4,7 +4,7 @@ import { SiteFooter } from '@/components/site/SiteFooter';
 import { MenuClient } from '@/components/site/MenuClient';
 import { getSettings } from '@/lib/firebase/firestore';
 import type { Metadata } from 'next';
-import { where } from 'firebase/firestore';
+import { where } from 'firebase/firestore/lite';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'edge';

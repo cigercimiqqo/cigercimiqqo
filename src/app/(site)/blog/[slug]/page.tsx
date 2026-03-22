@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 import { Calendar, Clock, ArrowLeft, Share2 } from 'lucide-react';
 import { estimateReadingTime } from '@/lib/utils';
 import type { Metadata } from 'next';
-import type { Timestamp } from 'firebase/firestore';
+import type { Timestamp } from 'firebase/firestore/lite';
 
 function formatDate(ts: Timestamp | null): string {
   if (!ts) return '';
