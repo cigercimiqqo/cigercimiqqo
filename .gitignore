@@ -23,8 +23,9 @@ yarn-error.log*
 .DS_Store
 *.pem
 
-# Vercel
+# Next / adapter ara çıktıları
 .vercel
+cloudflare-pages-dist/
 
 # TypeScript
 *.tsbuildinfo

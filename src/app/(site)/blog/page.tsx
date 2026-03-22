@@ -8,6 +8,7 @@ import type { Metadata } from 'next';
 import type { Timestamp } from 'firebase/firestore';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Haberler, tarifler ve daha fazlası',

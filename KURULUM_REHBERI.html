@@ -1052,12 +1052,19 @@ service cloud.firestore {
         </label>
         <div class="substep-body">
           <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Terminal aç → proje klasörüne git:</li>
+            <li><span class="step-arrow">→</span> Terminal aç → proje klasörünün <strong>içinde</strong> olduğundan emin ol (komut satırında klasör adı görünür).</li>
+            <li><span class="step-arrow">→</span> <strong>macOS:</strong> Finder'da proje klasörüne sağ tık → <kbd>Services</kbd> / <kbd>Quick Actions</kbd> ile "Terminal'de Aç" veya <kbd>cd</kbd> ile klasöre gir.</li>
+            <li><span class="step-arrow">→</span> <strong>Windows:</strong> Proje klasöründe adres çubuğuna <kbd>cmd</kbd> yazıp Enter, veya klasörde boş alana Shift+sağ tık → "PowerShell penceresini burada aç".</li>
+            <li><span class="step-arrow">→</span> İstersen önce <kbd>cd</kbd> ile klasöre gir, sonra tek satır:</li>
           </ul>
           <div class="code-wrap">
-            <span class="code-lang">Terminal</span>
+            <span class="code-lang">Terminal (proje klasöründeyken)</span>
             <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
-            <pre>cd /Users/furkangunduz/CursorProjects/MiqqoSite && npm install</pre>
+            <pre>npm install</pre>
+          </div>
+          <div class="info-box orange" style="margin-top:10px">
+            <span class="icon">📌</span>
+            <span>Tam yol yazmana gerek yok: klasörün içinde olduğun sürece sadece <code>npm install</code> yeter.</span>
           </div>
         </div>
       </div>
@@ -1069,15 +1076,15 @@ service cloud.firestore {
         </label>
         <div class="substep-body">
           <ul class="instruction-list">
-            <li><span class="step-arrow">→</span> Bu komut projeyi Cloudflare Pages formatına dönüştürür:</li>
+            <li><span class="step-arrow">→</span> Yine proje klasöründeyken şunu çalıştır (tek komut — derleme + çıktı klasörü hazırlanır):</li>
           </ul>
           <div class="code-wrap">
             <span class="code-lang">Terminal</span>
             <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
-            <pre>npx @cloudflare/next-on-pages@1</pre>
+            <pre>npm run cf:build</pre>
           </div>
           <ul class="instruction-list" style="margin-top:8px">
-            <li><span class="step-arrow">→</span> Bittikten sonra <kbd>.vercel/output/static</kbd> klasörü oluşur — burası deploy edilecek</li>
+            <li><span class="step-arrow">→</span> Bittikten sonra proje kökünde <kbd>cloudflare-pages-dist/</kbd> klasörü oluşur — deploy edeceğin şey burası.</li>
           </ul>
         </div>
       </div>
@@ -1085,7 +1092,7 @@ service cloud.firestore {
       <div class="substep" data-key="s8c">
         <label class="substep-header">
           <input type="checkbox" class="substep-check" data-key="s8c" />
-          <span class="substep-title">Cloudflare'e deploy et</span>
+          <span class="substep-title">Cloudflare'e deploy et — Terminal (Wrangler)</span>
         </label>
         <div class="substep-body">
           <ul class="instruction-list">
@@ -1094,7 +1101,7 @@ service cloud.firestore {
           <div class="code-wrap">
             <span class="code-lang">Terminal — ilk deploy</span>
             <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
-            <pre>npx wrangler pages deploy .vercel/output/static --project-name miqqo-musteri-adi</pre>
+            <pre>npx wrangler pages deploy cloudflare-pages-dist --project-name miqqo-musteri-adi</pre>
           </div>
           <ul class="instruction-list" style="margin-top:8px">
             <li><span class="step-arrow">→</span> İlk çalıştırmada Cloudflare hesabıyla giriş isteyecek — tarayıcı açılır, onayla</li>
@@ -1103,12 +1110,37 @@ service cloud.firestore {
           </ul>
           <div class="info-box orange" style="margin-top:12px">
             <span class="icon">🔄</span>
-            <span><strong>Sonraki güncellemelerde</strong> sadece şu 2 komutu çalıştır:</span>
+            <span><strong>Sonraki güncellemelerde</strong> şu iki komutu sırayla çalıştır:</span>
           </div>
           <div class="code-wrap">
             <span class="code-lang">Terminal — güncelleme deploy</span>
             <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
-            <pre>npx @cloudflare/next-on-pages@1 && npx wrangler pages deploy .vercel/output/static --project-name miqqo-musteri-adi</pre>
+            <pre>npm run cf:build</pre>
+          </div>
+          <div class="code-wrap">
+            <span class="code-lang">Terminal — ardından</span>
+            <button class="btn-copy" onclick="copyCode(this)">Kopyala</button>
+            <pre>npx wrangler pages deploy cloudflare-pages-dist --project-name miqqo-musteri-adi</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="substep" data-key="s8d">
+        <label class="substep-header">
+          <input type="checkbox" class="substep-check" data-key="s8d" />
+          <span class="substep-title">Cloudflare'e deploy et — Manuel (tarayıcıdan, Wrangler istemezsen)</span>
+        </label>
+        <div class="substep-body">
+          <ul class="instruction-list">
+            <li><span class="step-arrow">→</span> Önce yukarıda <kbd>npm run cf:build</kbd> ile <kbd>cloudflare-pages-dist/</kbd> klasörünü oluştur.</li>
+            <li><span class="step-arrow">→</span> Bu klasörü <strong>ZIP</strong> yap: Finder'da klasöre sağ tık → <kbd>Sıkıştır</kbd> / Windows'ta <kbd>İndir</kbd> → <kbd>Sıkıştırılmış klasöre gönder</kbd>.</li>
+            <li><span class="step-arrow">→</span> <a href="https://dash.cloudflare.com" target="_blank">dash.cloudflare.com</a> → <kbd>Workers &amp; Pages</kbd> → <kbd>Create</kbd> → <kbd>Pages</kbd> → <strong>Upload assets</strong> veya <strong>Direct upload</strong> seçeneğini seç.</li>
+            <li><span class="step-arrow">→</span> ZIP dosyasını sürükle-bırak veya seç → Proje adı gir (<kbd>miqqo-musteri-adi</kbd>) → <kbd>Deploy site</kbd>.</li>
+            <li><span class="step-arrow">→</span> <strong>Var olan projeyi güncelliyorsan:</strong> Aynı sayfada projen → <kbd>Deployments</kbd> → <kbd>Upload assets</kbd> / yeni sürüm yükle (arayüzdeki adım biraz değişebilir; ana fikir: yeni build ZIP'ini yükle).</li>
+          </ul>
+          <div class="info-box green" style="margin-top:12px">
+            <span class="icon">✅</span>
+            <span>İlk kurulumda proje yoksa "Create" ile oluştur; sonrasında aynı projeye yeni ZIP ile güncelleme atarsın.</span>
           </div>
         </div>
       </div>
@@ -1162,19 +1194,6 @@ service cloud.firestore {
         </div>
       </div>
 
-      <div class="substep" data-key="s9c" style="display:none" data-hidden="true">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s9c" checked />
-          <span class="substep-title">— (bu adım atlandı)</span>
-        </label>
-      </div>
-
-      <div class="substep" data-key="s9d" style="display:none" data-hidden="true">
-        <label class="substep-header">
-          <input type="checkbox" class="substep-check" data-key="s9d" checked />
-          <span class="substep-title">— (bu adım atlandı)</span>
-        </label>
-      </div>
     </div>
   </section>
 
@@ -1381,7 +1400,7 @@ TTL:    Auto</pre>
       <input type="checkbox" class="fc-check" id="fc-7-cb" /><span class="fc-label">Cloudinary veya ImgBB hesabı açıldı, bilgiler not alındı</span>
     </div>
     <div class="final-check-item" id="fc-8" onclick="toggleFC('fc-8')">
-      <input type="checkbox" class="fc-check" id="fc-8-cb" /><span class="fc-label">npm install → npx @cloudflare/next-on-pages@1 → npx wrangler pages deploy çalıştırıldı</span>
+      <input type="checkbox" class="fc-check" id="fc-8-cb" /><span class="fc-label">npm install → npm run cf:build → Cloudflare'e deploy (Wrangler veya Dashboard ZIP) tamamlandı</span>
     </div>
     <div class="final-check-item" id="fc-9" onclick="toggleFC('fc-9')">
       <input type="checkbox" class="fc-check" id="fc-9-cb" /><span class="fc-label">Cloudflare Dashboard'dan nodejs_compat flag eklendi ve Retry deployment yapıldı</span>
@@ -1494,8 +1513,8 @@ TTL:    Auto</pre>
   const SUBSTEP_KEYS = [
     's1a','s2a','s2b','s2c','s2d',
     's3a','s4a','s5a','s6a',
-    's7a','s7b','s8a','s8b','s8c',
-    's9a','s9b','s9c','s9d',
+    's7a','s7b','s8a','s8b','s8c','s8d',
+    's9a','s9b',
     's10a','s10b','s10c',
     's11a','s11b','s12a'
   ];
@@ -1508,8 +1527,8 @@ TTL:    Auto</pre>
     5:  ['s5a'],
     6:  ['s6a'],
     7:  ['s7a','s7b'],
-    8:  ['s8a','s8b','s8c'],
-    9:  ['s9a','s9b','s9c','s9d'],
+    8:  ['s8a','s8b','s8c','s8d'],
+    9:  ['s9a','s9b'],
     10: ['s10a','s10b','s10c'],
     '11b': ['s11a','s11b'],
     12: ['s12a'],

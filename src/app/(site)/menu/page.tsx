@@ -7,6 +7,7 @@ import type { Metadata } from 'next';
 import { where } from 'firebase/firestore';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
 
 export const metadata: Metadata = {
   title: 'Menü',

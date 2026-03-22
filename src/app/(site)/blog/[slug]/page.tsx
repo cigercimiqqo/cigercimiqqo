@@ -1,4 +1,4 @@
-import { getBlogPostBySlug, getBlogPosts } from '@/lib/firebase/firestore';
+import { getBlogPostBySlug } from '@/lib/firebase/firestore';
 import { SiteHeader } from '@/components/site/SiteHeader';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,11 +14,7 @@ function formatDate(ts: Timestamp | null): string {
 }
 
 export const dynamic = 'force-dynamic';
-
-export async function generateStaticParams() {
-  const posts = await getBlogPosts(true).catch(() => []);
-  return posts.map((p) => ({ slug: p.slug }));
-}
+export const runtime = 'edge';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;

@@ -3,6 +3,7 @@ import { getSettings } from '@/lib/firebase/firestore';
 import { HeroBanner } from '@/components/site/HeroBanner';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
 import { FeaturedProducts } from '@/components/site/FeaturedProducts';
 import { BestSellers } from '@/components/site/BestSellers';
 import { CategoryNav } from '@/components/site/CategoryNav';

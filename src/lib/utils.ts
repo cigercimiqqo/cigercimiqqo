@@ -60,18 +60,19 @@ export function generateOrderNumber(): string {
 }
 
 export async function hashIP(ip: string): Promise<string> {
-  if (typeof window !== 'undefined' && window.crypto?.subtle) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(ip + process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID);
-    const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+  const salt =
+    typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_FIREBASE_PROJECT_ID
+      ? process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
+      : '';
+  const encoder = new TextEncoder();
+  const data = encoder.encode(ip + salt);
+  const subtle = globalThis.crypto?.subtle;
+  if (!subtle) {
+    throw new Error('Web Crypto API kullanılamıyor');
   }
-  // Server-side fallback
-  const { createHash } = await import('crypto');
-  return createHash('sha256')
-    .update(ip + (process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || ''))
-    .digest('hex');
+  const hashBuffer = await subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
 export function isRestaurantOpen(

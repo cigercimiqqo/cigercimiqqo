@@ -6,11 +6,7 @@ import type { Metadata } from 'next';
 import { where } from 'firebase/firestore';
 
 export const dynamic = 'force-dynamic';
-
-export async function generateStaticParams() {
-  const products = await getProducts([where('isActive', '==', true)]).catch(() => []);
-  return products.map((p) => ({ slug: p.slug }));
-}
+export const runtime = 'edge';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
