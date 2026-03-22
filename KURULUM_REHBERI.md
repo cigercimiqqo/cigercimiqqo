@@ -169,6 +169,32 @@ git remote add origin https://github.com/KULLANICI_ADIN/REPO_ADI.git
 git push -u origin main
 ```
 
+### 5a. Farklı Hesaba Push — Token ile Yetkilendirme
+
+Eğer müşterinin GitHub hesabına kendi bilgisayarından push yapıyorsan ve **"Permission denied"** veya **"403"** hatası alıyorsan:
+
+**Token Oluşturma:**
+1. Müşterinin GitHub hesabıyla giriş yap
+2. Profil → **Settings** → **Developer settings** → **Personal access tokens** → **Tokens (classic)**
+3. **Generate new token (classic)** → Not: `miqqo-deploy`
+4. Expiration: **No expiration**
+5. Scopes: **repo** kutusunu işaretle
+6. **Generate token** → çıkan token'ı hemen kopyala! (bir kere gösterilir, `ghp_` ile başlar)
+
+**Token ile Push:**
+
+```bash
+git remote set-url origin https://MUSTERI_KULLANICI:TOKEN@github.com/MUSTERI_KULLANICI/REPO_ADI.git
+git push -u origin main
+```
+
+Örnek: Müşteri `cigercimiqqo`, token `ghp_abc123...` ise:
+```
+git remote set-url origin https://cigercimiqqo:ghp_abc123@github.com/cigercimiqqo/cigercimiqqo.git
+```
+
+Token bir kere URL'e eklendikten sonra sonraki push'lar otomatik çalışır.
+
 ---
 
 ## 6. GitHub Pages ile Deploy

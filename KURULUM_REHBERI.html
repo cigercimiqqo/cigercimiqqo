@@ -867,10 +867,50 @@ git push -u origin main</pre>
         <div class="info-box">ℹ️ <code>KULLANICI</code> ve <code>REPO-ADI</code> kısımlarını kendi bilgilerinizle değiştirin.</div>
       </div>
 
+      <div class="sub-step">
+        <h5>🔑 Farklı Hesaba Push — Token ile Yetkilendirme</h5>
+        <div class="card">
+          <p>Eğer müşterinin GitHub hesabına kendi bilgisayarından push yapıyorsan ve <strong>"Permission denied"</strong> veya <strong>"403"</strong> hatası alıyorsan, müşteri hesabının <strong>Personal Access Token (PAT)</strong>'ını kullanman gerekir:</p>
+
+          <h4 style="margin-top:16px">1. Token Oluşturma</h4>
+          <ol>
+            <li>Müşterinin GitHub hesabıyla giriş yap</li>
+            <li>Sağ üst profil resmi → <strong>Settings</strong></li>
+            <li>Sol menüde en alta in → <strong>Developer settings</strong></li>
+            <li><strong>Personal access tokens</strong> → <strong>Tokens (classic)</strong></li>
+            <li><strong>Generate new token (classic)</strong>'e tıkla</li>
+            <li>Not: <span class="highlight">miqqo-deploy</span></li>
+            <li>Expiration: <strong>No expiration</strong> (veya istediğin süre)</li>
+            <li>Scopes: <strong>repo</strong> kutusunu işaretle (tüm alt kutular otomatik seçilir)</li>
+            <li><strong>Generate token</strong> → çıkan token'ı hemen kopyala!</li>
+          </ol>
+          <div class="warn-box">⚠️ Token sadece <strong>bir kere</strong> gösterilir! Kaybedersen yenisini oluşturman gerekir. Token <span class="highlight">ghp_</span> ile başlar.</div>
+
+          <h4 style="margin-top:16px">2. Token ile Push</h4>
+          <p>Remote URL'e token'ı ekleyerek push yap:</p>
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>git remote set-url origin https://MUSTERI_KULLANICI:TOKEN@github.com/MUSTERI_KULLANICI/REPO-ADI.git
+git push -u origin main</pre>
+          </div>
+          <div class="info-box">ℹ️ Örnek: Müşteri hesabı <span class="highlight">cigercimiqqo</span>, token <span class="highlight">ghp_abc123...</span> ise:<br><br>
+<code style="font-size:12px;word-break:break-all">git remote set-url origin https://cigercimiqqo:ghp_abc123@github.com/cigercimiqqo/cigercimiqqo.git</code></div>
+
+          <h4 style="margin-top:16px">3. Sonraki Push'lar</h4>
+          <p>Token bir kere URL'e eklendikten sonra sonraki push'lar otomatik çalışır:</p>
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Kopyala</button>
+<pre>git add .
+git commit -m "🔧 güncelleme"
+git push</pre>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
         <div class="check-item">
           <input type="checkbox" id="c5" data-step="5" onchange="saveCheck(this)">
-          <label for="c5">GitHub repository oluşturuldu ve kod push edildi<small>main branch'e başarılı push</small></label>
+          <label for="c5">GitHub repository oluşturuldu ve kod push edildi<small>main branch'e başarılı push (gerekiyorsa token ile)</small></label>
         </div>
       </div>
 
