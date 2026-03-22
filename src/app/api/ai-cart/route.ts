@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { where } from 'firebase/firestore';
 
-export const runtime = 'nodejs';
+export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {

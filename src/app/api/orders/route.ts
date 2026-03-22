@@ -3,7 +3,7 @@ import { Timestamp } from 'firebase/firestore';
 import type { Order } from '@/types';
 import { generateOrderNumber } from '@/lib/utils';
 
-export const runtime = 'nodejs';
+export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
