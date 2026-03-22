@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { getSettings, updateSettings } from '@/lib/firebase/firestore';
-import { uploadToCloudinary } from '@/lib/cloudinary';
+import { uploadFile } from '@/lib/upload';
 import { toast } from 'sonner';
 import { Loader2, Plus, X, ImagePlus } from 'lucide-react';
 import type { SiteSettings } from '@/types';
@@ -53,8 +53,8 @@ export function GeneralSettings() {
   async function handleLogoUpload(file: File, type: 'logo' | 'favicon') {
     type === 'logo' ? setLogoUploading(true) : setFaviconUploading(true);
     try {
-      const result = await uploadToCloudinary(file, 'logo');
-      updateGeneral(type, result.secure_url);
+      const result = await uploadFile(file, 'logo');
+      updateGeneral(type, result.url);
       toast.success('Görsel yüklendi');
     } catch {
       toast.error('Yükleme başarısız');

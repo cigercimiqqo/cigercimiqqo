@@ -1,28 +1,51 @@
 'use client';
 
-import { useState } from 'react';
-import { CheckCircle2, ExternalLink, Image, Video, Map, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { getSettings, updateSettings } from '@/lib/firebase/firestore';
+import { CheckCircle2, ExternalLink, Image, Video, Map, MessageSquare, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 import { PROVIDER_INFO, type UploadProvider } from '@/lib/upload';
+import { toast } from 'sonner';
+import type { SiteSettings } from '@/types';
 
 type SectionKey = 'media' | 'maps' | 'sms' | 'video';
 
 export function IntegrationSettings() {
   const [expanded, setExpanded] = useState<SectionKey>('media');
-  const [mediaProvider, setMediaProvider] = useState<UploadProvider>(() => {
-    if (typeof window !== 'undefined') {
-      return (localStorage.getItem('miqqo_upload_provider') as UploadProvider) ?? 'cloudinary';
-    }
-    return 'cloudinary';
-  });
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    getSettings().then((s) => {
+      setSettings(s);
+      setIsLoading(false);
+    });
+  }, []);
+
+  const mediaProvider = (settings?.integrations?.mediaProvider ?? 'cloudinary') as UploadProvider;
 
   const toggle = (key: SectionKey) => setExpanded((p) => (p === key ? ('' as SectionKey) : key));
 
-  const handleProviderChange = (p: UploadProvider) => {
-    setMediaProvider(p);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('miqqo_upload_provider', p);
+  async function handleProviderChange(p: UploadProvider) {
+    setSettings((prev) => ({
+      ...(prev || {}),
+      integrations: { ...(prev?.integrations || {}), mediaProvider: p },
+    } as SiteSettings));
+    try {
+      await updateSettings({ integrations: { mediaProvider: p } });
+      if (typeof window !== 'undefined') localStorage.setItem('miqqo_upload_provider', p);
+      toast.success('Medya sağlayıcısı kaydedildi');
+    } catch {
+      toast.error('Kaydedilemedi');
     }
-  };
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-12">
+        <Loader2 size={24} className="animate-spin text-gray-300" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl space-y-4">

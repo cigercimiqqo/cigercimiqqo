@@ -25,19 +25,18 @@ export type UploadFolder = 'products' | 'blog' | 'hero' | 'logo' | 'categories' 
 // ─── Aktif Provider Tespiti ────────────────────────────────────────────────
 
 export function getActiveProvider(): UploadProvider {
+  // Önce admin tercihi (Firestore/IntegrationSettings → localStorage’a senkron)
+  if (typeof window !== 'undefined') {
+    const pref = localStorage.getItem('miqqo_upload_provider') as UploadProvider | null;
+    if (pref === 'cloudinary' || pref === 'imgbb') return pref;
+  }
+
   const imgbbKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
   const cloudinaryName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
   const cloudinaryPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
-  // Cloudinary öncelikli; yoksa ImgBB
   if (cloudinaryName && cloudinaryPreset) return 'cloudinary';
   if (imgbbKey) return 'imgbb';
-
-  // LocalStorage'dan admin tercihi (client-side)
-  if (typeof window !== 'undefined') {
-    const pref = localStorage.getItem('miqqo_upload_provider') as UploadProvider | null;
-    if (pref) return pref;
-  }
 
   return 'cloudinary';
 }

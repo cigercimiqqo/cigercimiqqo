@@ -12,6 +12,10 @@ export function useSettings() {
     const unsubscribe = subscribeToSettings((s) => {
       setSettings(s);
       applyThemeCssVariables(s);
+      // Medya sağlayıcı tercihini localStorage ile senkronize et
+      if (s?.integrations?.mediaProvider && typeof window !== 'undefined') {
+        localStorage.setItem('miqqo_upload_provider', s.integrations.mediaProvider);
+      }
     });
     return () => unsubscribe();
   }, [setSettings]);
@@ -20,7 +24,7 @@ export function useSettings() {
 }
 
 function applyThemeCssVariables(settings: SiteSettings) {
-  if (typeof document === 'undefined') return;
+  if (typeof document === 'undefined' || !settings?.appearance) return;
   const root = document.documentElement;
   const { primaryColor, secondaryColor, accentColor, fontFamily } = settings.appearance;
   root.style.setProperty('--color-primary', primaryColor || '#e85d04');

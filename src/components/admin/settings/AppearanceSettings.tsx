@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { getSettings, updateSettings } from '@/lib/firebase/firestore';
-import { uploadToCloudinary } from '@/lib/cloudinary';
+import { uploadFile } from '@/lib/upload';
 import { toast } from 'sonner';
 import { Loader2, ImagePlus, X, Plus } from 'lucide-react';
 import type { SiteSettings } from '@/types';
@@ -45,9 +45,9 @@ export function AppearanceSettings() {
   async function handleHeroUpload(file: File) {
     setHeroUploading(true);
     try {
-      const result = await uploadToCloudinary(file, 'hero');
+      const result = await uploadFile(file, 'hero');
       const current = settings?.appearance?.heroImages || [];
-      updateAppearance('heroImages', [...current, result.secure_url]);
+      updateAppearance('heroImages', [...current, result.url]);
     } catch {
       toast.error('Yükleme başarısız');
     } finally {

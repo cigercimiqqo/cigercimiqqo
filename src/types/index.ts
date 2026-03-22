@@ -89,12 +89,44 @@ export interface NotificationSettings {
   whatsappTemplate: string;
 }
 
+/** Medya yükleme sağlayıcısı – Firestore’da saklanır */
+export type MediaUploadProvider = 'cloudinary' | 'imgbb';
+
+export interface IntegrationSettings {
+  mediaProvider: MediaUploadProvider;
+}
+
+/** Ana sayfa bölüm ID’leri – sıra ve görünürlük için */
+export type HomeSectionId =
+  | 'hero'
+  | 'bestSellers'
+  | 'featured'
+  | 'categoryNav'
+  | 'reviews'
+  | 'restaurantInfo'
+  | 'blogPreview';
+
+export interface SectionLayoutConfig {
+  order: number;
+  visible: boolean;
+}
+
+export interface LayoutSettings {
+  mobile: Record<HomeSectionId, SectionLayoutConfig>;
+  tablet: Record<HomeSectionId, SectionLayoutConfig>;
+  desktop: Record<HomeSectionId, SectionLayoutConfig>;
+  headerStyle: 'full' | 'compact' | 'minimal';
+  footerColumns: 2 | 3 | 4;
+}
+
 export interface SiteSettings {
   general: GeneralSettings;
   appearance: AppearanceSettings;
   ordering: OrderingSettings;
   delivery: DeliverySettings;
   notifications: NotificationSettings;
+  integrations?: IntegrationSettings;
+  layout?: LayoutSettings;
 }
 
 // ─── Category ──────────────────────────────────────────────────────────────

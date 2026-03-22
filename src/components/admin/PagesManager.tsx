@@ -26,9 +26,20 @@ export function PagesManager() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!form.title?.trim()) {
+      toast.error('Başlık gerekli');
+      return;
+    }
     setIsSubmitting(true);
     try {
-      const data = { ...form, slug: form.slug || slugify(form.title) };
+      const slug = (form.slug || slugify(form.title)).trim().toLowerCase();
+      const data = {
+        title: form.title.trim(),
+        slug: slug || 'sayfa',
+        content: form.content || '',
+        isPublished: Boolean(form.isPublished),
+        order: Number(form.order) || 0,
+      };
       if (editingId) {
         await updatePage(editingId, data);
         setPages((prev) => prev.map((p) => p.id === editingId ? { ...p, ...data } : p));
@@ -38,8 +49,15 @@ export function PagesManager() {
         setPages((prev) => [...prev, { id, ...data }]);
         toast.success('Sayfa oluşturuldu');
       }
-      setForm(defaultForm); setEditingId(null); setView('list');
-    } catch { toast.error('İşlem başarısız'); } finally { setIsSubmitting(false); }
+      setForm(defaultForm);
+      setEditingId(null);
+      setView('list');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'İşlem başarısız';
+      toast.error(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   if (view === 'form') {
