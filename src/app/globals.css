@@ -211,6 +211,19 @@ html.light,
   font-family: var(--font-body, "Inter"), system-ui, sans-serif;
 }
 
+/* Admin panel – input'lar okunabilir (site teması etkilemesin) */
+.admin-panel input,
+.admin-panel textarea,
+.admin-panel select {
+  color: #111827 !important;
+  background-color: #fff !important;
+}
+
+.admin-panel input::placeholder,
+.admin-panel textarea::placeholder {
+  color: #9ca3af !important;
+}
+
 /* Custom CSS injection area for admin */
 .custom-css-injection {
   display: none;
