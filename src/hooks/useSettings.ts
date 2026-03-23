@@ -1,12 +1,24 @@
 'use client';
 
-import { useEffect } from 'react';
-import { loadSettingsForSite } from '@/lib/settingsLoader';
+import { useEffect, useLayoutEffect } from 'react';
+import { loadSettingsForSite, readCache, normalizeSettings } from '@/lib/settingsLoader';
 import { useSettingsStore } from '@/store/settingsStore';
 import type { SiteSettings } from '@/types';
 
 export function useSettings() {
   const { settings, isLoading, setSettings } = useSettingsStore();
+
+  // Cache'ten sync hydrate – ilk paint öncesi, default flash önlenir
+  useLayoutEffect(() => {
+    const cached = readCache();
+    if (cached?.data) {
+      const normalized = normalizeSettings(cached.data);
+      if (normalized) {
+        setSettings(normalized);
+        applyThemeCssVariables(normalized);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     let mounted = true;

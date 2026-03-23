@@ -26,6 +26,8 @@ function readCache(): CachedSettings | null {
   }
 }
 
+export { readCache };
+
 function writeCache(data: SiteSettings, version: number): void {
   if (typeof window === 'undefined') return;
   try {
@@ -37,7 +39,7 @@ function writeCache(data: SiteSettings, version: number): void {
   }
 }
 
-function normalizeSettings(raw: SiteSettings | null): SiteSettings | null {
+export function normalizeSettings(raw: SiteSettings | null): SiteSettings | null {
   if (!raw) return null;
   const { _version, ...rest } = raw as SiteSettings & { _version?: number };
   const merged = {

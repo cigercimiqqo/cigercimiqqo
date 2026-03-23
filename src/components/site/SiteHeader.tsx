@@ -10,7 +10,6 @@ import { useCartStore } from '@/store/cartStore';
 import { useSettingsStore } from '@/store/settingsStore';
 import { CartDrawer } from './CartDrawer';
 import { MobileNav } from './MobileNav';
-import { useVisitorPreferences } from '@/context/VisitorPreferencesContext';
 
 const NAV_LINKS = [
   { href: '/', label: 'Ana Sayfa' },
@@ -31,9 +30,6 @@ export function SiteHeader() {
   const siteName = settings?.general?.siteName || 'Restoran';
   const logo = settings?.general?.logo;
   const phone = settings?.general?.phone?.[0];
-  const { preferences } = useVisitorPreferences();
-  const isLight = preferences.theme === 'light';
-
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -42,22 +38,21 @@ export function SiteHeader() {
 
   useEffect(() => setMobileOpen(false), [pathname]);
 
-  const headerBg = scrolled
-    ? isLight
-      ? 'bg-white/80 backdrop-blur-md shadow-sm py-3'
-      : 'bg-stone-900/80 backdrop-blur-md shadow-sm py-3'
+  // Scroll sonrası: opak arka plan, net okunabilir text
+  const isScrolled = scrolled;
+  const headerBg = isScrolled
+    ? 'bg-white/95 backdrop-blur-md shadow-md py-3'
     : 'bg-transparent py-5';
 
-  const textClass = scrolled && isLight
-    ? 'text-stone-900'
-    : 'text-white';
-
-  const linkClass = (isActive: boolean) =>
-    isActive
-      ? 'text-brand-600 font-bold border-b-2 border-brand-600 pb-1'
-      : scrolled && isLight
-        ? 'text-stone-600 hover:text-brand-600 transition-colors'
-        : 'text-stone-200 hover:text-white transition-colors';
+  const textClass = isScrolled ? 'text-stone-800' : 'text-white';
+  const linkClass = (isActive: boolean) => {
+    if (isActive) {
+      return `font-bold border-b-2 border-brand-600 pb-1 ${isScrolled ? 'text-brand-700' : 'text-white'}`;
+    }
+    return isScrolled
+      ? 'text-stone-600 hover:text-brand-700 transition-colors'
+      : 'text-white/90 hover:text-white transition-colors';
+  };
 
   return (
     <>
