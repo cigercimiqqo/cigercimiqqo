@@ -37,17 +37,29 @@ function removeJunk(s: string): string {
   return out.replace(/\s+/g, ' ').trim();
 }
 
-/** Ana yorum metnini detay bloğundan ayırır. Export edildi - display'de eski veri için kullanılır. */
+/** Başlıktan metadata’yı temizleyip sadece yorum cümlesini bırakır */
+function stripLeadingMetadata(s: string): string {
+  let t = s.trim();
+  t = t.replace(/^Yerel Rehber\s*·\s*\d+\s*yorum\s*·\s*\d+\s*fotoğraf\s*/i, '');
+  t = t.replace(/^bir gün önce\s+|^\d+ gün önce\s+|^dün\s+|^bugün\s+|^bir hafta önce\s+|^\d+ hafta önce\s+|^bir ay önce\s+|^\d+ ay önce\s+/gi, '');
+  t = t.replace(/^Yeni\s+/i, '');
+  t = t.replace(/^₺[\d,\s\-–]+\s*/u, '');
+  t = t.replace(/^Önerilen yemekler\s+[^\n]+?\s+/i, '');
+  return t.trim();
+}
+
+/** Ana yorum metnini detay bloğundan ayırır. mainText = sadece anlatı, detailsBlock = gri kutu. */
 export function splitReviewText(raw: string): { mainText: string; detailsBlock?: string } {
   const cleaned = removeJunk(raw);
   const detailsStart = cleaned.search(/Yiyecek\s*:\s*\d+/i);
   if (detailsStart >= 0) {
+    const before = removeJunk(cleaned.slice(0, detailsStart)).trim();
     return {
-      mainText: removeJunk(cleaned.slice(0, detailsStart)).trim(),
+      mainText: stripLeadingMetadata(before),
       detailsBlock: removeJunk(cleaned.slice(detailsStart)).trim(),
     };
   }
-  return { mainText: cleaned };
+  return { mainText: stripLeadingMetadata(cleaned) };
 }
 
 /** Türkçe göreli tarih metnini gerçek tarihe çevirir */

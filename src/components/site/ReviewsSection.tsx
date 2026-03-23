@@ -47,16 +47,16 @@ function formatDetailsBlock(block: string): { categoryRatings?: string; lines: s
 
 function ReviewCard({ review }: { review: Review }) {
   const dateStr = review.createdAt ? formatReviewDate(review.createdAt) : '';
-  const { mainText, detailsBlock } = review.detailsBlock
-    ? { mainText: review.text, detailsBlock: review.detailsBlock }
-    : splitReviewText(review.text);
+  const split = splitReviewText(review.text);
+  const mainText = split.mainText;
+  const detailsBlock = review.detailsBlock || split.detailsBlock;
   const details = detailsBlock ? formatDetailsBlock(detailsBlock) : null;
 
   return (
     <div className="shrink-0 w-[min(340px,90vw)] snap-center">
       <div className="bg-surface-900 border border-surface-800/50 rounded-2xl p-6 h-full flex flex-col text-left">
-        {/* Üst: avatar + isim + Google logosu */}
-        <div className="flex items-start gap-3 mb-3">
+        {/* Üst satır: avatar + isim + yıldız + tarih + Yeni + fiyat + Google */}
+        <div className="flex items-start gap-3 mb-2">
           {review.authorAvatar ? (
             <div className="relative w-11 h-11 rounded-full overflow-hidden shrink-0 ring-2 ring-surface-700">
               <Image src={review.authorAvatar} alt={review.authorName} fill className="object-cover" sizes="44px" />
@@ -68,7 +68,18 @@ function ReviewCard({ review }: { review: Review }) {
           )}
           <div className="flex-1 min-w-0">
             <p className="font-heading font-semibold text-surface-100 text-sm">{review.authorName}</p>
-            {review.badge ? <p className="text-surface-500 text-xs mt-1">{review.badge}</p> : null}
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1">
+              <div className="flex gap-0.5" role="img" aria-label={`${review.rating}/5 puan`}>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} size={11} className={i < review.rating ? 'text-amber-400 fill-amber-400' : 'text-surface-600'} />
+                ))}
+              </div>
+              {dateStr ? <span className="text-surface-500 text-xs">{dateStr}</span> : null}
+              {review.tags?.map((t) => (
+                <span key={t} className="text-[10px] bg-surface-800 text-surface-400 px-1 py-0.5 rounded">{t}</span>
+              ))}
+              {review.priceRange ? <span className="text-surface-400 text-xs">{review.priceRange}</span> : null}
+            </div>
           </div>
           {review.platform === 'google' && (
             <div className="shrink-0 w-6 h-6" title="Google">
@@ -82,26 +93,23 @@ function ReviewCard({ review }: { review: Review }) {
           )}
         </div>
 
-        {/* Yıldız | tarih | Yeni | fiyat — ayrı satır, net ayrım */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-3">
-          <div className="flex gap-0.5" role="img" aria-label={`${review.rating}/5 puan`}>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star key={i} size={12} className={i < review.rating ? 'text-amber-400 fill-amber-400' : 'text-surface-600'} />
+        {/* Badge: Yerel Rehber · 48 yorum · 4 fotoğraf — net ayrım */}
+        {review.badge ? (
+          <p className="text-surface-500 text-xs mb-3 [&>*]:mr-1.5">
+            {review.badge.split(/\s*·\s*/).filter(Boolean).map((part, i, arr) => (
+              <span key={i}>{part}{i < arr.length - 1 ? ' · ' : ''}</span>
             ))}
-          </div>
-          {dateStr ? <span className="text-surface-500 text-xs">{dateStr}</span> : null}
-          {review.tags?.map((t) => (
-            <span key={t} className="text-xs bg-surface-800 text-surface-400 px-1.5 py-0.5 rounded">{t}</span>
-          ))}
-          {review.priceRange ? <span className="text-surface-400 text-xs">{review.priceRange}</span> : null}
-        </div>
+          </p>
+        ) : null}
 
-        {/* Ana yorum metni */}
-        <p className="text-surface-200 text-sm leading-relaxed mb-3">
-          {mainText ? `"${mainText}"` : ''}
-        </p>
+        {/* Sadece ana yorum — detay yok, tekrar yok */}
+        {mainText ? (
+          <p className="text-surface-200 text-sm leading-relaxed mb-3">
+            &ldquo;{mainText}&rdquo;
+          </p>
+        ) : null}
 
-        {/* Gri kutu: detaylar (Google tarzı) */}
+        {/* Gri kutu: Sadece detaylar (Yiyecek/Hizmet/Atmosfer, Önerilen, Gürültü, Bekleme) */}
         {details && (details.categoryRatings || details.lines.length > 0) ? (
           <div className="mt-auto rounded-xl bg-surface-800/60 border border-surface-700/50 p-3 text-xs space-y-2">
             {details.categoryRatings ? <p className="font-semibold text-surface-200">{details.categoryRatings}</p> : null}
