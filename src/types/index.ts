@@ -398,6 +398,12 @@ export interface Review {
   isVisible: boolean;
   order: number;
   createdAt: Timestamp;
+  /** Google: Yerel Rehber · 48 yorum · 4 fotoğraf */
+  badge?: string;
+  /** Google: ₺400–₺600 */
+  priceRange?: string;
+  /** Google: Yeni, vb. */
+  tags?: string[];
 }
 
 // ─── Page ──────────────────────────────────────────────────────────────────

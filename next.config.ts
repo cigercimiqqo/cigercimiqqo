@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   assetPrefix: basePath ? `${basePath}/` : undefined,
   images: {
     unoptimized: true,
+    remotePatterns: [{ protocol: 'https', hostname: 'lh3.googleusercontent.com', pathname: '/**' }],
   },
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion'],

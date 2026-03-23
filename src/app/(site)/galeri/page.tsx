@@ -48,7 +48,7 @@ export default function GalleryPage() {
                 <div className="text-6xl mb-4">📷</div>
                 <h2 className="text-xl font-heading font-bold text-surface-200 mb-2">Galeri henüz boş</h2>
                 <p className="text-surface-400 text-sm max-w-md mx-auto">
-                  Admin paneli > Görünüm ayarlarından galeri fotoğraflarını ekleyebilirsiniz.
+                  Admin paneli &gt; Görünüm ayarlarından galeri fotoğraflarını ekleyebilirsiniz.
                 </p>
               </div>
             ) : (
