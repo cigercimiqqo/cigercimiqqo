@@ -324,7 +324,11 @@ export async function getReviews(visibleOnly = true): Promise<Review[]> {
   const snap = await getDocs(collection(getDb(), 'reviews'));
   let items = snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Review);
   if (visibleOnly) items = items.filter((r) => r.isVisible !== false);
-  items.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  items.sort((a, b) => {
+    const ta = a.createdAt?.toMillis?.() ?? 0;
+    const tb = b.createdAt?.toMillis?.() ?? 0;
+    return tb - ta;
+  });
   return items;
 }
 
