@@ -32,6 +32,13 @@ function formatReviewDate(ts: { toDate: () => Date } | null): string {
   return d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
+/** Sadece "Yerel Rehber · X yorum · X fotoğraf" kısmını alır, junk temizler */
+function extractCleanBadge(val: string | undefined): string | null {
+  if (!val) return null;
+  const m = val.match(/(Yerel Rehber\s*·\s*\d+\s*yorum\s*·\s*\d+\s*fotoğraf)/i);
+  return m ? m[1].replace(/\s+/g, ' ').trim() : null;
+}
+
 /** Detay bloğunu kategori puanları + diğer satırlara ayırır */
 function formatDetailsBlock(block: string): { categoryRatings?: string; lines: string[] } {
   const trimmed = block.trim();
@@ -51,6 +58,7 @@ function ReviewCard({ review }: { review: Review }) {
   const mainText = split.mainText;
   const detailsBlock = review.detailsBlock || split.detailsBlock;
   const details = detailsBlock ? formatDetailsBlock(detailsBlock) : null;
+  const cleanBadge = extractCleanBadge(review.badge);
 
   return (
     <div className="shrink-0 w-[min(340px,90vw)] snap-center">
@@ -93,14 +101,7 @@ function ReviewCard({ review }: { review: Review }) {
           )}
         </div>
 
-        {/* Badge: Yerel Rehber · 48 yorum · 4 fotoğraf — net ayrım */}
-        {review.badge ? (
-          <p className="text-surface-500 text-xs mb-3 [&>*]:mr-1.5">
-            {review.badge.split(/\s*·\s*/).filter(Boolean).map((part, i, arr) => (
-              <span key={i}>{part}{i < arr.length - 1 ? ' · ' : ''}</span>
-            ))}
-          </p>
-        ) : null}
+        {cleanBadge ? <p>{cleanBadge}</p> : null}
 
         {/* Sadece ana yorum — detay yok, tekrar yok */}
         {mainText ? (
