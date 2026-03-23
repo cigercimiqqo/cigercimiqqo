@@ -31,8 +31,12 @@ const THEME_PRESETS: Record<string, { primary: string; secondary: string; accent
 };
 
 function applyThemeCssVariables(settings: SiteSettings) {
-  if (typeof document === 'undefined' || !settings?.appearance) return;
+  if (typeof document === 'undefined') return;
   const root = document.documentElement;
+  if (!settings?.appearance) {
+    root.classList.add('light');
+    return;
+  }
   const { theme, primaryColor, secondaryColor, accentColor, fontFamily, siteTheme, sitePrimaryColor } = settings.appearance;
   const preset = THEME_PRESETS[theme || 'modern'] || THEME_PRESETS.modern;
 
