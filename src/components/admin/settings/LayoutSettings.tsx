@@ -22,11 +22,11 @@ import { getSettings, updateSettings } from '@/lib/firebase/firestore';
 import { toast } from 'sonner';
 import { Loader2, Smartphone, Tablet, Monitor, Eye, EyeOff, GripVertical } from 'lucide-react';
 import {
-  getDefaultLayoutSettings,
   mergeLayoutWithDefaults,
   HOME_SECTION_IDS,
   HOME_SECTION_LABELS,
 } from '@/lib/defaultLayout';
+import { SitePreview } from '@/components/admin/SitePreview';
 import type { SiteSettings, HomeSectionId, LayoutSettings } from '@/types';
 
 type DeviceKey = 'mobile' | 'tablet' | 'desktop';
@@ -84,6 +84,11 @@ export function LayoutSettings() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [activeDevice, setActiveDevice] = useState<DeviceKey>('desktop');
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
 
   useEffect(() => {
     getSettings().then((s) => {
@@ -164,11 +169,6 @@ export function LayoutSettings() {
   const sortedSections = [...HOME_SECTION_IDS]
     .map((id) => ({ id, ...deviceConfig[id] }))
     .sort((a, b) => a.order - b.order);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  );
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
@@ -271,21 +271,7 @@ export function LayoutSettings() {
 
       {/* Önizleme */}
       <div className="xl:col-span-1">
-        <div className="bg-white rounded-2xl border border-gray-100 p-4 sticky top-4">
-          <h3 className="font-bold text-gray-900 mb-3">Site Önizleme</h3>
-          <p className="text-xs text-gray-500 mb-3">Kaydettikten sonra güncellenir</p>
-          <div className="rounded-xl overflow-hidden border border-gray-200 h-[400px] bg-gray-50">
-            <iframe src="/" title="Site önizleme" className="w-full h-full" />
-          </div>
-          <a
-            href="/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-3 block text-center text-sm text-orange-500 hover:text-orange-600 font-medium"
-          >
-            Yeni sekmede aç →
-          </a>
-        </div>
+        <SitePreview />
       </div>
     </div>
   );

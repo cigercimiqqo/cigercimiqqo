@@ -6,6 +6,7 @@ import { getSettings, updateSettings } from '@/lib/firebase/firestore';
 import { uploadFile } from '@/lib/upload';
 import { toast } from 'sonner';
 import { Loader2, ImagePlus, X, Plus, Sun, Moon, LayoutGrid, List } from 'lucide-react';
+import { SitePreview } from '@/components/admin/SitePreview';
 import type { SiteSettings } from '@/types';
 
 const SITE_COLORS = [
@@ -416,25 +417,7 @@ export function AppearanceSettings() {
 
       {/* Önizleme */}
       <div className="xl:col-span-1">
-        <div className="bg-white rounded-2xl border border-gray-100 p-4 sticky top-4">
-          <h3 className="font-bold text-gray-900 mb-3">Site Önizleme</h3>
-          <p className="text-xs text-gray-500 mb-3">Kaydettikten sonra güncellenir</p>
-          <div className="rounded-xl overflow-hidden border border-gray-200 h-[400px] bg-gray-50">
-            <iframe
-              src="/"
-              title="Site önizleme"
-              className="w-full h-full"
-            />
-          </div>
-          <a
-            href="/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-3 block text-center text-sm text-orange-500 hover:text-orange-600 font-medium"
-          >
-            Yeni sekmede aç →
-          </a>
-        </div>
+        <SitePreview />
       </div>
     </div>
   );

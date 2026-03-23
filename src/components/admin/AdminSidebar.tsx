@@ -135,6 +135,7 @@ export function AdminSidebar() {
                   <Link
                     key={item.href}
                     href={item.href}
+                    scroll={false}
                     className={cn(
                       'flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs transition-all',
                       isActive ? 'text-orange-400 font-medium' : 'text-gray-500 hover:text-gray-300'
