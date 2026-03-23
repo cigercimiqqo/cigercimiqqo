@@ -7,11 +7,18 @@ export interface AiCartResponse {
   message?: string;
 }
 
+const API_KEY_HELP =
+  'AI Sepet için API key gerekli. enter.pollinations.ai üzerinden ücretsiz alıp .env.local dosyasına NEXT_PUBLIC_POLLINATIONS_API_KEY olarak ekleyin.';
+
 export async function getAiCartSuggestion(
   products: Product[],
   userRequest: string
 ): Promise<AiCartResponse> {
-  const apiKey = process.env.NEXT_PUBLIC_POLLINATIONS_API_KEY;
+  const apiKey = process.env.NEXT_PUBLIC_POLLINATIONS_API_KEY?.trim();
+
+  if (!apiKey) {
+    throw new Error(API_KEY_HELP);
+  }
 
   const productList = products
     .filter((p) => p.isActive)
@@ -39,8 +46,8 @@ Maksimum 5 farklı ürün öner. Sadece mevcut ürün ID'lerini kullan. Başka m
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
+    Authorization: `Bearer ${apiKey}`,
   };
-  if (apiKey) headers['Authorization'] = `Bearer ${apiKey}`;
 
   const res = await fetch(POLLINATIONS_URL, {
     method: 'POST',
@@ -50,6 +57,9 @@ Maksimum 5 farklı ürün öner. Sadece mevcut ürün ID'lerini kullan. Başka m
   });
 
   if (!res.ok) {
+    if (res.status === 401) {
+      throw new Error(API_KEY_HELP);
+    }
     const err = await res.json().catch(() => ({}));
     const msg = err?.error?.message || res.statusText || 'AI servisine ulaşılamadı';
     throw new Error(msg);

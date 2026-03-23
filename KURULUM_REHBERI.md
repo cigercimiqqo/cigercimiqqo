@@ -144,7 +144,13 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=
 
 ### AI Sepet
 
-Menüdeki "AI Sepet" butonu Pollinations.ai üzerinden metinle sipariş önerisi yapar. **API key gerekmez** — temel kullanım ücretsiz. Key varsa daha yüksek limit için [enter.pollinations.ai](https://enter.pollinations.ai) üzerinden alıp `NEXT_PUBLIC_POLLINATIONS_API_KEY` ekleyebilirsin.
+Menüdeki "AI Sepet" butonu Pollinations.ai üzerinden metinle sipariş önerisi yapar.
+
+**Kurulum:**
+1. [enter.pollinations.ai](https://enter.pollinations.ai) → **API Key** (App Key değil!)
+2. **Create New API Key** → **Publishable Key (pk_)** seç (client-side için; Secret Key backend içindir, sitede kullanılmaz)
+3. **Local:** `.env.local` dosyasına `NEXT_PUBLIC_POLLINATIONS_API_KEY=pk_xxx` ekle
+4. **Deploy:** GitHub Secrets'a `NEXT_PUBLIC_POLLINATIONS_API_KEY` ekle, değer olarak pk_ ile başlayan key'i yapıştır
 
 ---
 

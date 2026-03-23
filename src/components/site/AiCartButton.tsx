@@ -33,8 +33,9 @@ export function AiCartButton({ products }: AiCartButtonProps) {
       const { getAiCartSuggestion } = await import('@/lib/pollinations');
       const result = await getAiCartSuggestion(products, message);
       setSuggestion(result.items);
-    } catch {
-      toast.error('Öneri şu an yüklenemiyor, manuel eklemeye devam edebilirsin');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Öneri şu an yüklenemiyor';
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
