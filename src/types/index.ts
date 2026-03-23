@@ -404,6 +404,8 @@ export interface Review {
   priceRange?: string;
   /** Google: Yeni, vb. */
   tags?: string[];
+  /** Gri kutu: Yiyecek: 5/5 | Önerilen yemekler: X | Gürültü: X | Bekleme: X */
+  detailsBlock?: string;
 }
 
 // ─── Page ──────────────────────────────────────────────────────────────────

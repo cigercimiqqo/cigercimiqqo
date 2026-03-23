@@ -9,10 +9,45 @@ export interface ParsedGoogleReview {
   authorAvatar: string;
   rating: number;
   text: string;
+  detailsBlock?: string;
   badge?: string;
   priceRange?: string;
   tags: string[];
   createdAt: Date;
+}
+
+const JUNK_STRINGS = [
+  'Yorumu bildir',
+  'Yanıtla',
+  'Tepki eklemek için imleçle üzerine gelin',
+  'Tepki ver',
+  'Diğer',
+  '_',
+  'Paylaş',
+  'report',
+  'Reply',
+  'React',
+];
+
+function removeJunk(s: string): string {
+  let out = s;
+  for (const j of JUNK_STRINGS) {
+    out = out.replace(new RegExp(j.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), ' ');
+  }
+  return out.replace(/\s+/g, ' ').trim();
+}
+
+/** Ana yorum metnini detay bloğundan ayırır. Export edildi - display'de eski veri için kullanılır. */
+export function splitReviewText(raw: string): { mainText: string; detailsBlock?: string } {
+  const cleaned = removeJunk(raw);
+  const detailsStart = cleaned.search(/Yiyecek\s*:\s*\d+/i);
+  if (detailsStart >= 0) {
+    return {
+      mainText: removeJunk(cleaned.slice(0, detailsStart)).trim(),
+      detailsBlock: removeJunk(cleaned.slice(detailsStart)).trim(),
+    };
+  }
+  return { mainText: cleaned };
 }
 
 /** Türkçe göreli tarih metnini gerçek tarihe çevirir */
@@ -135,14 +170,10 @@ export function parseGoogleReviewHtml(html: string): ParsedGoogleReview | null {
     if (gMatch) authorAvatar = gMatch[0];
   }
 
-  // ─── Badge ───
+  // ─── Badge (sadece Yerel Rehber · X yorum · X fotoğraf) ───
   let badge: string | undefined;
-  const gsmMatch = cleanHtml.match(/class="[^"]*GSM50[^"]*"[^>]*>([^<]+(?:<[^>]+>[^<]*)*)/);
-  if (gsmMatch) badge = gsmMatch[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-  if (!badge && /Yerel Rehber|yorum|fotoğraf/.test(cleanHtml)) {
-    const badgeBlock = cleanHtml.match(/(Yerel Rehber[^<]*\d+\s*yorum[^<]*\d+\s*fotoğraf)/);
-    if (badgeBlock) badge = badgeBlock[1].replace(/\s+/g, ' ').trim();
-  }
+  const badgeMatch = cleanHtml.match(/(Yerel Rehber\s*·\s*\d+\s*yorum\s*·\s*\d+\s*fotoğraf)/);
+  if (badgeMatch) badge = badgeMatch[1].replace(/\s+/g, ' ').trim();
 
   // ─── Date ───
   let dateText = '';
@@ -206,9 +237,10 @@ export function parseGoogleReviewHtml(html: string): ParsedGoogleReview | null {
     if (anySentence) text = anySentence[1].replace(/\s+/g, ' ').trim();
   }
 
-  // En az metin veya isim olmalı (metin öncelikli, çünkü yorumun özü)
+  // En az metin veya isim olmalı
   if (!text && !authorName) return null;
 
+  const { mainText, detailsBlock } = splitReviewText(text);
   const rating = parseRating(cleanHtml);
   const createdAt = parseRelativeDateTR(dateText || 'bugün');
 
@@ -216,7 +248,8 @@ export function parseGoogleReviewHtml(html: string): ParsedGoogleReview | null {
     authorName: authorName || 'Anonim',
     authorAvatar,
     rating,
-    text: text || '(Yorum metni bulunamadı - lütfen manuel girin)',
+    text: mainText || '(Yorum metni bulunamadı - lütfen manuel girin)',
+    detailsBlock: detailsBlock || undefined,
     badge: badge || undefined,
     priceRange: priceRange || undefined,
     tags,

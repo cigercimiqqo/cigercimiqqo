@@ -20,6 +20,7 @@ const defaultForm = {
   badge: '',
   priceRange: '',
   tags: [] as string[],
+  detailsBlock: '',
 };
 
 export function ReviewsManager() {
@@ -53,6 +54,7 @@ export function ReviewsManager() {
       authorAvatar: parsed.authorAvatar,
       rating: parsed.rating,
       text: parsed.text,
+      detailsBlock: parsed.detailsBlock || '',
       platform: 'google',
       badge: parsed.badge || '',
       priceRange: parsed.priceRange || '',
@@ -70,6 +72,7 @@ export function ReviewsManager() {
         badge: form.badge || undefined,
         priceRange: form.priceRange || undefined,
         tags: form.tags?.length ? form.tags : undefined,
+        detailsBlock: form.detailsBlock || undefined,
       };
 
       if (editingId) {
@@ -181,7 +184,11 @@ export function ReviewsManager() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">Yorum Metni</label>
-            <textarea value={form.text} onChange={(e) => setForm((p) => ({ ...p, text: e.target.value }))} required rows={3} className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-orange-500/30 resize-none" />
+            <textarea value={form.text} onChange={(e) => setForm((p) => ({ ...p, text: e.target.value }))} required rows={3} placeholder="Ciğer oldukça lezzetli fakat çorba su gibiydi..." className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-orange-500/30 resize-none" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">Detay bloğu (gri kutu) — opsiyonel</label>
+            <textarea value={form.detailsBlock} onChange={(e) => setForm((p) => ({ ...p, detailsBlock: e.target.value }))} rows={2} placeholder="Yiyecek : 5/5 | Hizmet : 3/5 | Atmosfer : 4/5 — Önerilen yemekler: Ciğé Şiş" className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-orange-500/30 resize-none" />
           </div>
 
           {parsedPreview && (
@@ -220,7 +227,7 @@ export function ReviewsManager() {
                 <button onClick={() => updateReview(review.id, { isVisible: !review.isVisible }).then(() => setReviews((prev) => prev.map((r) => r.id === review.id ? { ...r, isVisible: !r.isVisible } : r)))} className={`p-1.5 rounded-lg transition-colors ${review.isVisible ? 'text-green-500 hover:bg-green-50' : 'text-gray-300 hover:bg-gray-100'}`}>
                   {review.isVisible ? <Eye size={15} /> : <EyeOff size={15} />}
                 </button>
-                <button onClick={() => { setForm({ ...defaultForm, authorName: review.authorName, text: review.text, rating: review.rating, platform: review.platform, authorAvatar: review.authorAvatar, order: review.order, isVisible: review.isVisible, badge: review.badge ?? '', priceRange: review.priceRange ?? '', tags: review.tags ?? [] }); setEditingId(review.id); setAddMode('manual'); setShowForm(true); }} className="p-1.5 rounded-lg text-gray-400 hover:text-blue-500 hover:bg-blue-50">
+                <button onClick={() => { setForm({ ...defaultForm, authorName: review.authorName, text: review.text, rating: review.rating, platform: review.platform, authorAvatar: review.authorAvatar, order: review.order, isVisible: review.isVisible, badge: review.badge ?? '', priceRange: review.priceRange ?? '', tags: review.tags ?? [], detailsBlock: review.detailsBlock ?? '' }); setEditingId(review.id); setAddMode('manual'); setShowForm(true); }} className="p-1.5 rounded-lg text-gray-400 hover:text-blue-500 hover:bg-blue-50">
                   <Pencil size={15} />
                 </button>
                 <button onClick={() => { if (confirm('Sil?')) deleteReview(review.id).then(() => setReviews((prev) => prev.filter((r) => r.id !== review.id))); }} className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50">

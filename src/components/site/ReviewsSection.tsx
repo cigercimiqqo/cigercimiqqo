@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getReviews } from '@/lib/firebase/firestore';
+import { splitReviewText } from '@/lib/parseGoogleReviewHtml';
 import SectionHeading from '@/components/ui/SectionHeading';
 import type { Review } from '@/types';
 
@@ -31,12 +32,31 @@ function formatReviewDate(ts: { toDate: () => Date } | null): string {
   return d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
+/** Detay bloğunu kategori puanları + diğer satırlara ayırır */
+function formatDetailsBlock(block: string): { categoryRatings?: string; lines: string[] } {
+  const trimmed = block.trim();
+  const catMatch = trimmed.match(/^(Yiyecek\s*:\s*\d+\s*\/\s*\d+\s*\|\s*Hizmet\s*:\s*\d+\s*\/\s*\d+\s*\|\s*Atmosfer\s*:\s*\d+\s*\/\s*\d+)/i);
+  const categoryRatings = catMatch ? catMatch[1].replace(/\s+/g, ' ').trim() : undefined;
+  let rest = catMatch ? trimmed.slice(catMatch[1].length).trim() : trimmed;
+  const lines = rest
+    .split(/(?=Önerilen yemekler|Gürültü seviyesi|Bekleme süresi|Mekân özellikleri)/i)
+    .map((s) => s.replace(/\s+/g, ' ').trim())
+    .filter((s) => s.length > 2);
+  return { categoryRatings, lines };
+}
+
 function ReviewCard({ review }: { review: Review }) {
   const dateStr = review.createdAt ? formatReviewDate(review.createdAt) : '';
+  const { mainText, detailsBlock } = review.detailsBlock
+    ? { mainText: review.text, detailsBlock: review.detailsBlock }
+    : splitReviewText(review.text);
+  const details = detailsBlock ? formatDetailsBlock(detailsBlock) : null;
+
   return (
-    <div className="shrink-0 w-[min(320px,85vw)] snap-center">
+    <div className="shrink-0 w-[min(340px,90vw)] snap-center">
       <div className="bg-surface-900 border border-surface-800/50 rounded-2xl p-6 h-full flex flex-col text-left">
-        <div className="flex items-start gap-3 mb-4">
+        {/* Üst: avatar + isim + Google logosu */}
+        <div className="flex items-start gap-3 mb-3">
           {review.authorAvatar ? (
             <div className="relative w-11 h-11 rounded-full overflow-hidden shrink-0 ring-2 ring-surface-700">
               <Image src={review.authorAvatar} alt={review.authorName} fill className="object-cover" sizes="44px" />
@@ -48,7 +68,7 @@ function ReviewCard({ review }: { review: Review }) {
           )}
           <div className="flex-1 min-w-0">
             <p className="font-heading font-semibold text-surface-100 text-sm">{review.authorName}</p>
-            {review.badge ? <p className="text-surface-500 text-xs mt-0.5">{review.badge}</p> : null}
+            {review.badge ? <p className="text-surface-500 text-xs mt-1">{review.badge}</p> : null}
           </div>
           {review.platform === 'google' && (
             <div className="shrink-0 w-6 h-6" title="Google">
@@ -61,7 +81,9 @@ function ReviewCard({ review }: { review: Review }) {
             </div>
           )}
         </div>
-        <div className="flex flex-wrap items-center gap-2 mb-3">
+
+        {/* Yıldız | tarih | Yeni | fiyat — ayrı satır, net ayrım */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-3">
           <div className="flex gap-0.5" role="img" aria-label={`${review.rating}/5 puan`}>
             {Array.from({ length: 5 }).map((_, i) => (
               <Star key={i} size={12} className={i < review.rating ? 'text-amber-400 fill-amber-400' : 'text-surface-600'} />
@@ -71,11 +93,29 @@ function ReviewCard({ review }: { review: Review }) {
           {review.tags?.map((t) => (
             <span key={t} className="text-xs bg-surface-800 text-surface-400 px-1.5 py-0.5 rounded">{t}</span>
           ))}
+          {review.priceRange ? <span className="text-surface-400 text-xs">{review.priceRange}</span> : null}
         </div>
-        {review.priceRange ? <p className="text-surface-400 text-xs mb-2">{review.priceRange}</p> : null}
-        <p className="text-surface-200 text-sm leading-relaxed line-clamp-4 flex-1">
-          &ldquo;{review.text}&rdquo;
+
+        {/* Ana yorum metni */}
+        <p className="text-surface-200 text-sm leading-relaxed mb-3">
+          {mainText ? `"${mainText}"` : ''}
         </p>
+
+        {/* Gri kutu: detaylar (Google tarzı) */}
+        {details && (details.categoryRatings || details.lines.length > 0) ? (
+          <div className="mt-auto rounded-xl bg-surface-800/60 border border-surface-700/50 p-3 text-xs space-y-2">
+            {details.categoryRatings ? <p className="font-semibold text-surface-200">{details.categoryRatings}</p> : null}
+            {details.lines.map((line, i) => (
+              <p key={i} className="text-surface-400">
+                {line.replace(/\s*:\s*/, ': ')}
+              </p>
+            ))}
+          </div>
+        ) : detailsBlock ? (
+          <div className="mt-auto rounded-xl bg-surface-800/60 border border-surface-700/50 p-3 text-xs text-surface-400 whitespace-pre-line">
+            {detailsBlock}
+          </div>
+        ) : null}
       </div>
     </div>
   );
