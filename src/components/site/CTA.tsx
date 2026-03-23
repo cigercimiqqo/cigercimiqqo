@@ -32,7 +32,7 @@ export function CTA() {
           {phone && (
             <a
               href={`tel:${phone}`}
-              className="bg-white text-brand-600 px-10 py-5 rounded-2xl text-xl font-bold flex items-center justify-center gap-3 hover:scale-105 transition-transform active:scale-95 shadow-xl"
+              className="bg-white text-brand-600 px-10 py-5 rounded-3xl text-xl font-bold flex items-center justify-center gap-3 hover:scale-105 transition-transform active:scale-95 shadow-xl"
             >
               <Phone size={24} />
               {cta.buttonCall}
@@ -40,7 +40,7 @@ export function CTA() {
           )}
           <Link
             href="/menu"
-            className="bg-brand-700 text-white border border-white/30 px-10 py-5 rounded-2xl text-xl font-bold hover:bg-brand-800 transition-all flex items-center justify-center gap-3"
+            className="bg-brand-700 text-white border border-white/30 px-10 py-5 rounded-3xl text-xl font-bold hover:bg-brand-800 transition-all flex items-center justify-center gap-3"
           >
             <ShoppingBag size={24} />
             {cta.buttonOrder}

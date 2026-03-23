@@ -18,7 +18,7 @@ export function Story() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
           <div className="relative">
             <div className="absolute -top-10 -left-10 w-40 h-40 bg-brand-500/20 rounded-full blur-3xl" />
-            <div className="relative z-10 rounded-2xl overflow-hidden aspect-[4/5] shadow-2xl">
+            <div className="relative z-10 rounded-3xl overflow-hidden aspect-[4/5] shadow-2xl">
               {storyImage ? (
                 <div
                   className="w-full h-full bg-cover bg-center"
@@ -28,7 +28,7 @@ export function Story() {
                 <div className="w-full h-full bg-gradient-to-br from-brand-800 to-stone-900" />
               )}
             </div>
-            <div className="absolute -bottom-6 -right-6 bg-gold-400 text-stone-900 p-8 rounded-xl z-20 shadow-xl hidden md:block">
+            <div className="absolute -bottom-6 -right-6 bg-gold-400 text-stone-900 p-8 rounded-2xl z-20 shadow-xl hidden md:block">
               <p className="font-heading text-3xl font-bold">{story.yearsValue}+</p>
               <p className="text-sm font-medium opacity-80 uppercase tracking-widest">{story.yearsLabel}</p>
             </div>

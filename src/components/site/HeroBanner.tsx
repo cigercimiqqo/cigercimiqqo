@@ -43,13 +43,13 @@ export function HeroBanner() {
         <div className="flex flex-col md:flex-row items-center justify-center gap-4">
           <Link
             href="/menu"
-            className="w-full md:w-auto px-10 py-4 bg-brand-500 text-white rounded-xl text-lg font-semibold hover:bg-brand-600 transition-all shadow-xl shadow-black/20"
+            className="w-full md:w-auto px-10 py-4 bg-brand-500 text-white rounded-2xl text-lg font-semibold hover:bg-brand-600 transition-all shadow-xl shadow-black/20"
           >
             {hero.buttonMenu}
           </Link>
           <Link
             href="/iletisim"
-            className="w-full md:w-auto px-10 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl text-lg font-semibold hover:bg-white/20 transition-all"
+            className="w-full md:w-auto px-10 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-2xl text-lg font-semibold hover:bg-white/20 transition-all"
           >
             {hero.buttonReservation}
           </Link>

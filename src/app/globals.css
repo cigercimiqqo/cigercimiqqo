@@ -4,7 +4,7 @@
   --color-primary: #c8102e;
   --color-secondary: #0f172a;
   --color-accent: #b8944a;
-  --radius-theme: 1rem;
+  --radius-theme: 1.25rem;
   --font-family: var(--font-body);
   --background: #fafaf9;
   --foreground: #111111;
@@ -61,18 +61,18 @@
   --font-mono: ui-monospace, monospace;
 }
 
-/* Tema modları – farklı görünümler */
-[data-theme="classic"] { --radius-theme: 0.75rem; }
-[data-theme="classic"] .rounded-2xl { border-radius: 0.75rem; }
-[data-theme="classic"] .rounded-xl { border-radius: 0.5rem; }
+/* Tema modları – yumuşak köşeler (varsayılan daha yuvarlak) */
+[data-theme="classic"] { --radius-theme: 1rem; }
+[data-theme="classic"] .rounded-2xl { border-radius: 1rem; }
+[data-theme="classic"] .rounded-xl { border-radius: 0.75rem; }
 
-[data-theme="minimal"] { --radius-theme: 0.5rem; }
-[data-theme="minimal"] .rounded-2xl { border-radius: 0.5rem; }
-[data-theme="minimal"] .rounded-xl { border-radius: 0.375rem; }
+[data-theme="minimal"] { --radius-theme: 0.75rem; }
+[data-theme="minimal"] .rounded-2xl { border-radius: 0.75rem; }
+[data-theme="minimal"] .rounded-xl { border-radius: 0.5rem; }
 
-[data-theme="luxury"] { --radius-theme: 0.25rem; }
-[data-theme="luxury"] .rounded-2xl { border-radius: 0.25rem; }
-[data-theme="luxury"] .rounded-xl { border-radius: 0.25rem; }
+[data-theme="luxury"] { --radius-theme: 0.5rem; }
+[data-theme="luxury"] .rounded-2xl { border-radius: 0.5rem; }
+[data-theme="luxury"] .rounded-xl { border-radius: 0.5rem; }
 
 * {
   box-sizing: border-box;

@@ -31,27 +31,28 @@ export function SiteHeader() {
   const logo = settings?.general?.logo;
   const phone = settings?.general?.phone?.[0];
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    const update = () => setScrolled(window.scrollY > 50);
+    update(); // ilk yüklemede kontrol
+    window.addEventListener('scroll', update, { passive: true });
+    return () => window.removeEventListener('scroll', update);
   }, []);
 
   useEffect(() => setMobileOpen(false), [pathname]);
 
-  // Scroll sonrası: opak arka plan, net okunabilir text
-  const isScrolled = scrolled;
-  const headerBg = isScrolled
-    ? 'bg-white/95 backdrop-blur-md shadow-md py-3'
-    : 'bg-transparent py-5';
+  // Ana sayfa + en üstte = hero üzerinde (koyu bg, açık text). Diğer tüm durumlar = açık bg, koyu text.
+  const isOverHero = pathname === '/' && !scrolled;
+  const headerBg = isOverHero
+    ? 'bg-black/30 backdrop-blur-sm py-5'
+    : 'bg-white/98 backdrop-blur-md shadow-sm py-3';
 
-  const textClass = isScrolled ? 'text-stone-800' : 'text-white';
+  const textClass = isOverHero ? 'text-white' : 'text-stone-800';
   const linkClass = (isActive: boolean) => {
     if (isActive) {
-      return `font-bold border-b-2 border-brand-600 pb-1 ${isScrolled ? 'text-brand-700' : 'text-white'}`;
+      return `font-bold border-b-2 pb-1 ${isOverHero ? 'text-white border-white' : 'text-brand-700 border-brand-600'}`;
     }
-    return isScrolled
-      ? 'text-stone-600 hover:text-brand-700 transition-colors'
-      : 'text-white/90 hover:text-white transition-colors';
+    return isOverHero
+      ? 'text-white/90 hover:text-white transition-colors'
+      : 'text-stone-600 hover:text-brand-700 transition-colors';
   };
 
   return (
@@ -98,7 +99,7 @@ export function SiteHeader() {
               {phone && (
                 <a
                   href={`tel:${phone}`}
-                  className="hidden sm:flex items-center gap-2 px-6 py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-sm font-medium transition-all shadow-lg shadow-brand-500/20"
+                  className="hidden sm:flex items-center gap-2 px-6 py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-2xl text-sm font-medium transition-all shadow-lg shadow-brand-500/20"
                 >
                   <Phone size={14} />
                   Sipariş Ver
@@ -106,7 +107,7 @@ export function SiteHeader() {
               )}
               <button
                 onClick={openCart}
-                className="relative p-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white transition-colors"
+                className="relative p-2.5 rounded-2xl bg-brand-500 hover:bg-brand-600 text-white transition-colors"
                 aria-label="Sepet"
               >
                 <ShoppingCart size={18} />
