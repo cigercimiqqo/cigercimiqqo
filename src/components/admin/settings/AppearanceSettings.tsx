@@ -110,23 +110,52 @@ export function AppearanceSettings() {
       {/* Hero images */}
       <div className="bg-white rounded-2xl border border-gray-100 p-6">
         <h3 className="font-bold text-gray-900 mb-4">Hero Banner Görselleri</h3>
-        <div className="flex gap-3 flex-wrap">
-          {(appearance.heroImages || []).map((img, i) => (
-            <div key={i} className="relative w-28 h-20 rounded-xl overflow-hidden">
-              <Image src={img} alt="" fill className="object-cover" />
-              <button
-                onClick={() => updateAppearance('heroImages', (appearance.heroImages || []).filter((_, idx) => idx !== i))}
-                className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center"
-              >
-                <X size={10} />
-              </button>
-            </div>
-          ))}
-          <label className="w-28 h-20 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-orange-400 transition-colors">
-            {heroUploading ? <Loader2 size={18} className="animate-spin text-orange-500" /> : <Plus size={18} className="text-gray-400" />}
-            <span className="text-xs text-gray-400">Ekle</span>
-            <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleHeroUpload(e.target.files[0])} />
-          </label>
+        <div className="flex flex-col gap-3">
+          <div className="flex gap-3 flex-wrap">
+            {(appearance.heroImages || []).map((img, i) => (
+              <div key={i} className="relative w-28 h-20 rounded-xl overflow-hidden">
+                <Image src={img} alt="" fill className="object-cover" />
+                <button
+                  onClick={() => updateAppearance('heroImages', (appearance.heroImages || []).filter((_, idx) => idx !== i))}
+                  className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center"
+                >
+                  <X size={10} />
+                </button>
+              </div>
+            ))}
+            <label className="w-28 h-20 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-orange-400 transition-colors">
+              {heroUploading ? <Loader2 size={18} className="animate-spin text-orange-500" /> : <Plus size={18} className="text-gray-400" />}
+              <span className="text-xs text-gray-400">Ekle</span>
+              <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleHeroUpload(e.target.files[0])} />
+            </label>
+          </div>
+          <div className="flex gap-2">
+            <input
+              type="url"
+              placeholder="veya görsel linki yapıştır"
+              id="hero-url"
+              className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-orange-500/30"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  const input = e.target as HTMLInputElement;
+                  const url = input.value.trim();
+                  if (url) { updateAppearance('heroImages', [...(appearance.heroImages || []), url]); input.value = ''; }
+                }
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                const input = document.getElementById('hero-url') as HTMLInputElement;
+                const url = input?.value?.trim();
+                if (url) { updateAppearance('heroImages', [...(appearance.heroImages || []), url]); input.value = ''; }
+              }}
+              className="px-4 py-2 bg-orange-100 text-orange-600 rounded-lg text-sm font-medium hover:bg-orange-200"
+            >
+              Link Ekle
+            </button>
+          </div>
         </div>
       </div>
 
@@ -140,14 +169,72 @@ export function AppearanceSettings() {
         ].map(({ key, label }) => (
           <div key={key}>
             <p className="text-sm font-medium text-gray-700 mb-2">{label}</p>
-            <div className="flex gap-3 items-center">
-              {(appearance[key] && typeof appearance[key] === 'string') && (
-                <div className="relative w-24 h-16 rounded-lg overflow-hidden">
-                  <Image src={appearance[key] as string} alt="" fill className="object-cover" />
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-3 items-center">
+                {(appearance[key] && typeof appearance[key] === 'string') && (
+                  <div className="relative w-24 h-16 rounded-lg overflow-hidden">
+                    <Image src={appearance[key] as string} alt="" fill className="object-cover" />
+                  </div>
+                )}
+                <label className="border-2 border-dashed border-gray-200 rounded-lg px-4 py-2 text-sm cursor-pointer hover:border-orange-400">
+                  {appearance[key] ? 'Değiştir' : 'Yükle'}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      try {
+                        const result = await uploadFile(file, 'general');
+                        updateAppearance(key, result.url);
+                      } catch {
+                        toast.error('Yükleme başarısız');
+                      }
+                    }}
+                  />
+                </label>
+                {appearance[key] && (
+                  <button
+                    onClick={() => updateAppearance(key, '')}
+                    className="text-red-500 text-sm hover:underline"
+                  >
+                    Kaldır
+                  </button>
+                )}
+              </div>
+              <input
+                type="url"
+                placeholder="veya görsel linki yapıştır"
+                value={(appearance[key] as string) || ''}
+                onChange={(e) => updateAppearance(key, e.target.value)}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-orange-500/30"
+              />
+            </div>
+          </div>
+        ))}
+        <div>
+          <p className="text-sm font-medium text-gray-700 mb-2">Galeri Görselleri</p>
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-3 flex-wrap">
+              {(appearance.galleryImages || []).map((img: string, i: number) => (
+                <div key={i} className="relative w-20 h-16 rounded-lg overflow-hidden">
+                  <Image src={img} alt="" fill className="object-cover" />
+                  <button
+                    onClick={() =>
+                      updateAppearance(
+                        'galleryImages',
+                        (appearance.galleryImages || []).filter((_: string, idx: number) => idx !== i)
+                      )
+                    }
+                    className="absolute top-0.5 right-0.5 w-4 h-4 bg-red-500 text-white rounded flex items-center justify-center"
+                  >
+                    <X size={10} />
+                  </button>
                 </div>
-              )}
-              <label className="border-2 border-dashed border-gray-200 rounded-lg px-4 py-2 text-sm cursor-pointer hover:border-orange-400">
-                {appearance[key] ? 'Değiştir' : 'Yükle'}
+              ))}
+              <label className="w-20 h-16 border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center cursor-pointer hover:border-orange-400">
+                <Plus size={16} className="text-gray-400" />
                 <input
                   type="file"
                   accept="image/*"
@@ -157,61 +244,41 @@ export function AppearanceSettings() {
                     if (!file) return;
                     try {
                       const result = await uploadFile(file, 'general');
-                      updateAppearance(key, result.url);
+                      updateAppearance('galleryImages', [...(appearance.galleryImages || []), result.url]);
                     } catch {
                       toast.error('Yükleme başarısız');
                     }
                   }}
                 />
               </label>
-              {appearance[key] && (
-                <button
-                  onClick={() => updateAppearance(key, '')}
-                  className="text-red-500 text-sm hover:underline"
-                >
-                  Kaldır
-                </button>
-              )}
             </div>
-          </div>
-        ))}
-        <div>
-          <p className="text-sm font-medium text-gray-700 mb-2">Galeri Görselleri</p>
-          <div className="flex gap-3 flex-wrap">
-            {(appearance.galleryImages || []).map((img: string, i: number) => (
-              <div key={i} className="relative w-20 h-16 rounded-lg overflow-hidden">
-                <Image src={img} alt="" fill className="object-cover" />
-                <button
-                  onClick={() =>
-                    updateAppearance(
-                      'galleryImages',
-                      (appearance.galleryImages || []).filter((_: string, idx: number) => idx !== i)
-                    )
-                  }
-                  className="absolute top-0.5 right-0.5 w-4 h-4 bg-red-500 text-white rounded flex items-center justify-center"
-                >
-                  <X size={10} />
-                </button>
-              </div>
-            ))}
-            <label className="w-20 h-16 border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center cursor-pointer hover:border-orange-400">
-              <Plus size={16} className="text-gray-400" />
+            <div className="flex gap-2">
               <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={async (e) => {
-                  const file = e.target.files?.[0];
-                  if (!file) return;
-                  try {
-                    const result = await uploadFile(file, 'general');
-                    updateAppearance('galleryImages', [...(appearance.galleryImages || []), result.url]);
-                  } catch {
-                    toast.error('Yükleme başarısız');
+                type="url"
+                placeholder="veya görsel linki yapıştır"
+                id="gallery-url"
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-orange-500/30"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const input = e.target as HTMLInputElement;
+                    const url = input.value.trim();
+                    if (url) { updateAppearance('galleryImages', [...(appearance.galleryImages || []), url]); input.value = ''; }
                   }
                 }}
               />
-            </label>
+              <button
+                type="button"
+                onClick={() => {
+                  const input = document.getElementById('gallery-url') as HTMLInputElement;
+                  const url = input?.value?.trim();
+                  if (url) { updateAppearance('galleryImages', [...(appearance.galleryImages || []), url]); input.value = ''; }
+                }}
+                className="px-4 py-2 bg-orange-100 text-orange-600 rounded-lg text-sm font-medium hover:bg-orange-200"
+              >
+                Link Ekle
+              </button>
+            </div>
           </div>
         </div>
       </div>

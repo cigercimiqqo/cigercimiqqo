@@ -23,7 +23,7 @@ export interface VisitorPreferences {
 }
 
 const DEFAULT: VisitorPreferences = {
-  theme: 'dark',
+  theme: 'light',
   primaryColor: '#c8102e',
   heroStyle: 'full',
   menuLayout: 'grid',

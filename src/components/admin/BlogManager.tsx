@@ -200,17 +200,26 @@ export function BlogManager() {
           {/* Cover image */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">Kapak Görseli</label>
-            <div className="flex items-center gap-3">
-              {form.coverImage && (
-                <div className="relative w-24 h-16 rounded-xl overflow-hidden">
-                  <Image src={form.coverImage} alt="" fill className="object-cover" />
-                </div>
-              )}
-              <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-gray-300 rounded-xl text-sm text-gray-500 cursor-pointer hover:border-orange-400 hover:text-orange-500 transition-colors">
-                {coverUploading ? <Loader2 size={16} className="animate-spin" /> : <ImagePlus size={16} />}
-                {coverUploading ? 'Yükleniyor...' : 'Görsel Seç'}
-                <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleCoverUpload(e.target.files[0])} />
-              </label>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                {form.coverImage && (
+                  <div className="relative w-24 h-16 rounded-xl overflow-hidden">
+                    <Image src={form.coverImage} alt="" fill className="object-cover" />
+                  </div>
+                )}
+                <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-gray-300 rounded-xl text-sm text-gray-500 cursor-pointer hover:border-orange-400 hover:text-orange-500 transition-colors">
+                  {coverUploading ? <Loader2 size={16} className="animate-spin" /> : <ImagePlus size={16} />}
+                  {coverUploading ? 'Yükleniyor...' : 'Görsel Seç'}
+                  <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleCoverUpload(e.target.files[0])} />
+                </label>
+              </div>
+              <input
+                type="url"
+                placeholder="veya görsel linki yapıştır"
+                value={form.coverImage || ''}
+                onChange={(e) => update('coverImage', e.target.value)}
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-orange-500/30"
+              />
             </div>
           </div>
 

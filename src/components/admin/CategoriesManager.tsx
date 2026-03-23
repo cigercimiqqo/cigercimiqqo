@@ -252,22 +252,31 @@ export function CategoriesManager() {
           {/* Image upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">Kategori Görseli</label>
-            <div className="flex items-center gap-3">
-              {form.image && (
-                <div className="w-16 h-16 rounded-xl overflow-hidden">
-                  <Image src={form.image} alt="" width={64} height={64} className="w-full h-full object-cover" />
-                </div>
-              )}
-              <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-gray-300 rounded-xl text-sm text-gray-500 cursor-pointer hover:border-orange-400 hover:text-orange-500 transition-colors">
-                {imageUploading ? <Loader2 size={16} className="animate-spin" /> : <ImagePlus size={16} />}
-                {imageUploading ? 'Yükleniyor...' : 'Görsel Seç'}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0])}
-                />
-              </label>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                {form.image && (
+                  <div className="w-16 h-16 rounded-xl overflow-hidden">
+                    <Image src={form.image} alt="" width={64} height={64} className="w-full h-full object-cover" />
+                  </div>
+                )}
+                <label className="flex items-center gap-2 px-4 py-2.5 border border-dashed border-gray-300 rounded-xl text-sm text-gray-500 cursor-pointer hover:border-orange-400 hover:text-orange-500 transition-colors">
+                  {imageUploading ? <Loader2 size={16} className="animate-spin" /> : <ImagePlus size={16} />}
+                  {imageUploading ? 'Yükleniyor...' : 'Görsel Seç'}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0])}
+                  />
+                </label>
+              </div>
+              <input
+                type="url"
+                placeholder="veya görsel linki yapıştır"
+                value={form.image || ''}
+                onChange={(e) => setForm((p) => ({ ...p, image: e.target.value }))}
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-orange-500/30"
+              />
             </div>
           </div>
 

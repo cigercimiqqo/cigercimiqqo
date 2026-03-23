@@ -428,35 +428,66 @@ export function ProductsManager() {
           {/* Images */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">Ürün Görselleri (max 5)</label>
-            <div className="flex gap-3 flex-wrap">
-              {form.images.map((img, i) => (
-                <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden">
-                  <Image src={img} alt="" fill className="object-cover" />
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-3 flex-wrap">
+                {form.images.map((img, i) => (
+                  <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden">
+                    <Image src={img} alt="" fill className="object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setForm((p) => ({ ...p, images: p.images.filter((_, idx) => idx !== i) }))}
+                      className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center"
+                    >
+                      <X size={10} />
+                    </button>
+                  </div>
+                ))}
+                {form.images.length < 5 && (
+                  <label className="w-20 h-20 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-orange-400 transition-colors">
+                    {Object.keys(uploadProgress).length > 0 ? (
+                      <Loader2 size={20} className="animate-spin text-orange-500" />
+                    ) : (
+                      <ImagePlus size={20} className="text-gray-400" />
+                    )}
+                    <span className="text-xs text-gray-400">Ekle</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className="hidden"
+                      onChange={(e) => e.target.files && handleImageFiles(e.target.files)}
+                    />
+                  </label>
+                )}
+              </div>
+              {form.images.length < 5 && (
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    id="product-image-url"
+                    placeholder="veya görsel linki yapıştır"
+                    className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-orange-500/30"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const input = e.target as HTMLInputElement;
+                        const url = input.value.trim();
+                        if (url && form.images.length < 5) { setForm((p) => ({ ...p, images: [...p.images, url] })); input.value = ''; }
+                      }
+                    }}
+                  />
                   <button
                     type="button"
-                    onClick={() => setForm((p) => ({ ...p, images: p.images.filter((_, idx) => idx !== i) }))}
-                    className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center"
+                    onClick={() => {
+                      const input = document.getElementById('product-image-url') as HTMLInputElement;
+                      const url = input?.value?.trim();
+                      if (url && form.images.length < 5) { setForm((p) => ({ ...p, images: [...p.images, url] })); input.value = ''; }
+                    }}
+                    className="px-4 py-2.5 bg-orange-100 text-orange-600 rounded-xl text-sm font-medium hover:bg-orange-200"
                   >
-                    <X size={10} />
+                    Link Ekle
                   </button>
                 </div>
-              ))}
-              {form.images.length < 5 && (
-                <label className="w-20 h-20 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-orange-400 transition-colors">
-                  {Object.keys(uploadProgress).length > 0 ? (
-                    <Loader2 size={20} className="animate-spin text-orange-500" />
-                  ) : (
-                    <ImagePlus size={20} className="text-gray-400" />
-                  )}
-                  <span className="text-xs text-gray-400">Ekle</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    className="hidden"
-                    onChange={(e) => e.target.files && handleImageFiles(e.target.files)}
-                  />
-                </label>
               )}
             </div>
           </div>
