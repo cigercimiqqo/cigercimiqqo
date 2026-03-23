@@ -95,7 +95,7 @@ async function uploadToImgBB(
   onProgress?: (p: UploadProgress) => void
 ): Promise<UploadResult> {
   const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
-  if (!apiKey) throw new Error('ImgBB API key eksik. Ayarlar → Entegrasyonlar bölümünden ekleyin.');
+  if (!apiKey) throw new Error('ImgBB API key eksik. Local: .env.local → NEXT_PUBLIC_IMGBB_API_KEY. Deploy: GitHub Secrets ekleyin.');
 
   const base64 = await new Promise<string>((resolve, reject) => {
     const reader = new FileReader();

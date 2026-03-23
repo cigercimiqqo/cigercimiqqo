@@ -140,6 +140,18 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=
 1. [imgbb.com](https://imgbb.com) → Hesap oluştur
 2. Account → API → API Key al
 3. `.env.local`'e ekle: `NEXT_PUBLIC_IMGBB_API_KEY=xxx`
+4. **Deploy için:** GitHub Secrets'a da `NEXT_PUBLIC_IMGBB_API_KEY` ekle
+
+### AI Sepet (isteğe bağlı)
+
+Menüdeki "AI Sepet" butonu müşterilere metinle sipariş önermesi yapar. Çalışması için:
+
+1. [enter.pollinations.ai](https://enter.pollinations.ai) → Ücretsiz kayıt
+2. Publishable key al (`pk_` ile başlar — client-side için)
+3. `.env.local`'e ekle: `NEXT_PUBLIC_POLLINATIONS_API_KEY=pk_xxx`
+4. **Deploy için:** GitHub Secrets'a `NEXT_PUBLIC_POLLINATIONS_API_KEY` ekle
+
+Key yoksa AI Sepet butonu hata verir; diğer özellikler çalışır.
 
 ---
 
@@ -261,7 +273,8 @@ jobs:
 ```
 
 2. GitHub repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**
-3. Her bir environment variable için secret ekle (toplam 7-9 adet):
+3. Her bir environment variable için secret ekle:
+   - `NEXT_PUBLIC_BASE_PATH` — GitHub Pages alt dizin (örn. `/repo-adi`)
    - `NEXT_PUBLIC_FIREBASE_API_KEY`
    - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
    - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
@@ -269,8 +282,10 @@ jobs:
    - `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
    - `NEXT_PUBLIC_FIREBASE_APP_ID`
    - `NEXT_PUBLIC_FIREBASE_DATABASE_URL`
-   - `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` (varsa)
-   - `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` (varsa)
+   - `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` (Cloudinary kullanıyorsan)
+   - `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` (Cloudinary kullanıyorsan)
+   - `NEXT_PUBLIC_IMGBB_API_KEY` (ImgBB kullanıyorsan — [imgbb.com](https://imgbb.com) API)
+   - `NEXT_PUBLIC_POLLINATIONS_API_KEY` (AI Sepet için — [enter.pollinations.ai](https://enter.pollinations.ai) ücretsiz key)
 
 4. GitHub repo → **Settings** → **Pages** → Source: **GitHub Actions** seç
 

@@ -60,12 +60,18 @@ export function HeroBanner() {
           transition={{ delay: 0.3, duration: 0.6 }}
         >
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
-            Lezzetin Tam
-            <br />
-            <span className="text-orange-400">Adresi</span>
+            {settings?.general?.siteName ? (
+              settings.general.siteName
+            ) : (
+              <>
+                Lezzetin Tam
+                <br />
+                <span className="text-orange-400">Adresi</span>
+              </>
+            )}
           </h1>
           <p className="text-white/80 text-lg md:text-xl mb-8 max-w-lg mx-auto">
-            Taze malzemeler, özenli hazırlık ve kapınıza hızlı teslimat
+            {settings?.general?.siteDescription || 'Taze malzemeler, özenli hazırlık ve kapınıza hızlı teslimat'}
           </p>
           <div className="flex gap-4 justify-center">
             <Link

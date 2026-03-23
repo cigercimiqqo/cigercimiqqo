@@ -1,6 +1,6 @@
 import type { Product, CartItem } from '@/types';
 
-const POLLINATIONS_URL = 'https://text.pollinations.ai/';
+const POLLINATIONS_URL = 'https://gen.pollinations.ai/v1/chat/completions';
 
 export interface AiCartResponse {
   items: { productId: string; quantity: number }[];
@@ -11,6 +11,8 @@ export async function getAiCartSuggestion(
   products: Product[],
   userRequest: string
 ): Promise<AiCartResponse> {
+  const apiKey = process.env.NEXT_PUBLIC_POLLINATIONS_API_KEY;
+
   const productList = products
     .filter((p) => p.isActive)
     .map((p) => ({
@@ -24,30 +26,43 @@ export async function getAiCartSuggestion(
   const systemPrompt = `Sen bir restoran sipariş asistanısın. Müşterinin isteğine göre menüden uygun ürünler öneriyorsun.
 Menüdeki ürünler: ${JSON.stringify(productList)}
 Sadece JSON formatında cevap ver: { "items": [{ "productId": "...", "quantity": 1 }] }
-Maksimum 5 farklı ürün öner. Sadece mevcut ürün ID'lerini kullan.`;
+Maksimum 5 farklı ürün öner. Sadece mevcut ürün ID'lerini kullan. Başka metin yazma.`;
 
   const body = {
+    model: 'openai',
     messages: [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userRequest },
     ],
-    model: 'openai',
-    seed: 42,
-    json: true,
+    response_format: { type: 'json_object' },
   };
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  if (apiKey) {
+    headers['Authorization'] = `Bearer ${apiKey}`;
+  }
 
   const res = await fetch(POLLINATIONS_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(body),
     signal: AbortSignal.timeout(15000),
   });
 
-  if (!res.ok) {
-    throw new Error('AI servisine ulaşılamadı');
+  if (res.status === 401) {
+    throw new Error('AI Sepet için Pollinations API key gerekli. GitHub Secrets\'a NEXT_PUBLIC_POLLINATIONS_API_KEY ekleyin (enter.pollinations.ai).');
   }
 
-  const text = await res.text();
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    const msg = err?.error?.message || res.statusText || 'AI servisine ulaşılamadı';
+    throw new Error(msg);
+  }
+
+  const data = await res.json();
+  const text = data.choices?.[0]?.message?.content?.trim() || '';
 
   try {
     const parsed = JSON.parse(text);
