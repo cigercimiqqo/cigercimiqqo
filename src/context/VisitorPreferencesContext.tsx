@@ -1,16 +1,9 @@
 'use client';
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-  ReactNode,
-} from 'react';
+import { createContext, useContext, ReactNode } from 'react';
+import { useSettingsStore } from '@/store/settingsStore';
 
-const STORAGE_KEY = 'miqqo-visitor-config';
-
+/** Admin'den yönetilir, ziyaretçi paneli kaldırıldı */
 export interface VisitorPreferences {
   theme: 'dark' | 'light';
   primaryColor: string;
@@ -35,8 +28,6 @@ const DEFAULT: VisitorPreferences = {
 
 interface VisitorPreferencesContextType {
   preferences: VisitorPreferences;
-  updatePreferences: (updates: Partial<VisitorPreferences>) => void;
-  resetPreferences: () => void;
 }
 
 const VisitorPreferencesContext = createContext<VisitorPreferencesContextType | undefined>(
@@ -44,44 +35,22 @@ const VisitorPreferencesContext = createContext<VisitorPreferencesContextType | 
 );
 
 export function VisitorPreferencesProvider({ children }: { children: ReactNode }) {
-  const [preferences, setPreferences] = useState<VisitorPreferences>(DEFAULT);
-  const [mounted, setMounted] = useState(false);
+  const settings = useSettingsStore((s) => s.settings);
+  const app = settings?.appearance;
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        setPreferences({ ...DEFAULT, ...parsed });
-      }
-    } catch {
-      /* ignore */
-    }
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
-
-    const root = document.documentElement;
-    root.classList.toggle('light', preferences.theme === 'light');
-    root.style.setProperty('--color-primary', preferences.primaryColor);
-  }, [preferences, mounted]);
-
-  const updatePreferences = useCallback((updates: Partial<VisitorPreferences>) => {
-    setPreferences((prev) => ({ ...prev, ...updates }));
-  }, []);
-
-  const resetPreferences = useCallback(() => {
-    setPreferences(DEFAULT);
-    localStorage.removeItem(STORAGE_KEY);
-  }, []);
+  const preferences: VisitorPreferences = {
+    theme: (app?.siteTheme as 'light' | 'dark') ?? 'light',
+    primaryColor: app?.sitePrimaryColor ?? app?.primaryColor ?? DEFAULT.primaryColor,
+    heroStyle: app?.heroStyle ?? 'full',
+    menuLayout: app?.menuLayout ?? 'grid',
+    showFeatures: app?.showFeatures ?? true,
+    showStats: app?.showStats ?? true,
+    showTestimonials: app?.showTestimonials ?? true,
+    showGallery: app?.showGallery ?? true,
+  };
 
   return (
-    <VisitorPreferencesContext.Provider
-      value={{ preferences, updatePreferences, resetPreferences }}
-    >
+    <VisitorPreferencesContext.Provider value={{ preferences }}>
       {children}
     </VisitorPreferencesContext.Provider>
   );

@@ -5,8 +5,16 @@ import Image from 'next/image';
 import { getSettings, updateSettings } from '@/lib/firebase/firestore';
 import { uploadFile } from '@/lib/upload';
 import { toast } from 'sonner';
-import { Loader2, ImagePlus, X, Plus } from 'lucide-react';
+import { Loader2, ImagePlus, X, Plus, Sun, Moon, LayoutGrid, List } from 'lucide-react';
 import type { SiteSettings } from '@/types';
+
+const SITE_COLORS = [
+  { name: 'Kırmızı', value: '#c8102e' },
+  { name: 'Bordo', value: '#800020' },
+  { name: 'Turuncu', value: '#ea580c' },
+  { name: 'Koyu Yeşil', value: '#2d5016' },
+  { name: 'Lacivert', value: '#1b2a4a' },
+];
 
 const THEMES = [
   { value: 'classic', label: 'Klasik', description: 'Geleneksel restoran görünümü' },
@@ -64,7 +72,111 @@ export function AppearanceSettings() {
   const appearance = settings?.appearance || {} as SiteSettings['appearance'];
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+      <div className="xl:col-span-2 space-y-6">
+      {/* Site Tercihleri - Ziyaretçiye ayar gösterilmez, admin'den yönetilir */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-6">
+        <h3 className="font-bold text-gray-900 mb-4">Site Tercihleri</h3>
+        <p className="text-sm text-gray-500 mb-4">Tema, renk ve bölüm görünürlüğü. Ziyaretçilere ayar paneli gösterilmez.</p>
+        <div className="space-y-4">
+          <div>
+            <p className="text-sm font-medium text-gray-700 mb-2">Açık / Koyu Tema</p>
+            <div className="flex gap-2">
+              {(['light', 'dark'] as const).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => updateAppearance('siteTheme', t)}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    (appearance.siteTheme ?? 'light') === t
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {t === 'light' ? <Sun size={18} /> : <Moon size={18} />}
+                  {t === 'light' ? 'Açık' : 'Koyu'}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-700 mb-2">Ana Renk</p>
+            <div className="flex gap-2 flex-wrap">
+              {SITE_COLORS.map((c) => (
+                <button
+                  key={c.value}
+                  onClick={() => updateAppearance('sitePrimaryColor', c.value)}
+                  className={`w-9 h-9 rounded-full border-2 transition-all ${
+                    (appearance.sitePrimaryColor || appearance.primaryColor || '#c8102e') === c.value
+                      ? 'border-orange-500 scale-110'
+                      : 'border-transparent hover:scale-105'
+                  }`}
+                  style={{ backgroundColor: c.value }}
+                  title={c.name}
+                />
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-700 mb-2">Hero Stili</p>
+            <div className="flex gap-2">
+              {(['full', 'split'] as const).map((s) => (
+                <button
+                  key={s}
+                  onClick={() => updateAppearance('heroStyle', s)}
+                  className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    (appearance.heroStyle ?? 'full') === s
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {s === 'full' ? 'Tam Ekran' : 'Bölünmüş'}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-700 mb-2">Menü Düzeni</p>
+            <div className="flex gap-2">
+              {(['grid', 'list'] as const).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => updateAppearance('menuLayout', l)}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    (appearance.menuLayout ?? 'grid') === l
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {l === 'grid' ? <LayoutGrid size={18} /> : <List size={18} />}
+                  {l === 'grid' ? 'Izgara' : 'Liste'}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-700 mb-2">Bölümler</p>
+            <div className="space-y-2">
+              {[
+                { key: 'showFeatures' as const, label: 'Özellikler Barı' },
+                { key: 'showStats' as const, label: 'İstatistikler' },
+                { key: 'showTestimonials' as const, label: 'Müşteri Yorumları' },
+                { key: 'showGallery' as const, label: 'Galeri Önizleme' },
+              ].map(({ key, label }) => (
+                <label key={key} className="flex items-center justify-between p-3 rounded-xl bg-gray-50 cursor-pointer hover:bg-gray-100">
+                  <span className="text-sm font-medium text-gray-700">{label}</span>
+                  <input
+                    type="checkbox"
+                    checked={appearance[key] !== false}
+                    onChange={(e) => updateAppearance(key, e.target.checked)}
+                    className="rounded border-gray-300 text-orange-500"
+                  />
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Theme */}
       <div className="bg-white rounded-2xl border border-gray-100 p-6">
         <h3 className="font-bold text-gray-900 mb-4">Tema Seçimi</h3>
@@ -300,6 +412,30 @@ export function AppearanceSettings() {
         {isSaving && <Loader2 size={16} className="animate-spin" />}
         Kaydet
       </button>
+      </div>
+
+      {/* Önizleme */}
+      <div className="xl:col-span-1">
+        <div className="bg-white rounded-2xl border border-gray-100 p-4 sticky top-4">
+          <h3 className="font-bold text-gray-900 mb-3">Site Önizleme</h3>
+          <p className="text-xs text-gray-500 mb-3">Kaydettikten sonra güncellenir</p>
+          <div className="rounded-xl overflow-hidden border border-gray-200 h-[400px] bg-gray-50">
+            <iframe
+              src="/"
+              title="Site önizleme"
+              className="w-full h-full"
+            />
+          </div>
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 block text-center text-sm text-orange-500 hover:text-orange-600 font-medium"
+          >
+            Yeni sekmede aç →
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

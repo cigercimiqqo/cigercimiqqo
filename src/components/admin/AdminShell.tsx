@@ -32,9 +32,9 @@ export function AdminShell({ children, title }: AdminShellProps) {
   if (!user) return null;
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 overflow-x-hidden">
       <AdminSidebar />
-      <main className="flex-1 ml-64">
+      <main className="flex-1 ml-64 min-w-0">
         {title && (
           <header className="bg-white border-b border-gray-100 px-8 py-5">
             <h1 className="text-xl font-bold text-gray-900">{title}</h1>

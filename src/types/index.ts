@@ -42,6 +42,15 @@ export interface AppearanceSettings {
   storyImage?: string;
   statsImage?: string;
   ctaImage?: string;
+  /** Admin'den yönetilen site görünümü (ziyaretçiye ayar gösterilmez) */
+  siteTheme?: 'light' | 'dark';
+  sitePrimaryColor?: string;
+  heroStyle?: 'full' | 'split';
+  menuLayout?: 'grid' | 'list';
+  showFeatures?: boolean;
+  showStats?: boolean;
+  showTestimonials?: boolean;
+  showGallery?: boolean;
 }
 
 export interface OrderingSettings {

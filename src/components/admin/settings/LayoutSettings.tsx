@@ -1,9 +1,26 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { getSettings, updateSettings } from '@/lib/firebase/firestore';
 import { toast } from 'sonner';
-import { Loader2, Smartphone, Tablet, Monitor, Eye, EyeOff, ChevronUp, ChevronDown } from 'lucide-react';
+import { Loader2, Smartphone, Tablet, Monitor, Eye, EyeOff, GripVertical } from 'lucide-react';
 import {
   getDefaultLayoutSettings,
   mergeLayoutWithDefaults,
@@ -21,6 +38,46 @@ const DEVICE_LABELS: Record<DeviceKey, string> = {
 };
 
 const DEVICE_ICONS = { mobile: Smartphone, tablet: Tablet, desktop: Monitor };
+
+interface SortableSectionProps {
+  id: HomeSectionId;
+  label: string;
+  visible: boolean;
+  onToggle: () => void;
+}
+
+function SortableSection({ id, label, visible, onToggle }: SortableSectionProps) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const style = { transform: CSS.Transform.toString(transform), transition };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
+        isDragging ? 'border-orange-400 bg-orange-50 shadow-lg' : 'border-gray-100 hover:border-gray-200'
+      }`}
+    >
+      <button
+        {...attributes}
+        {...listeners}
+        className="text-gray-300 hover:text-gray-500 cursor-grab active:cursor-grabbing p-1"
+      >
+        <GripVertical size={18} />
+      </button>
+      <span className="flex-1 text-sm font-medium text-gray-900">{label}</span>
+      <button
+        onClick={onToggle}
+        className={`p-1.5 rounded-lg transition-colors ${
+          visible ? 'text-green-500 hover:bg-green-50' : 'text-gray-300 hover:bg-gray-50'
+        }`}
+        title={visible ? 'Gizle' : 'Göster'}
+      >
+        {visible ? <Eye size={16} /> : <EyeOff size={16} />}
+      </button>
+    </div>
+  );
+}
 
 export function LayoutSettings() {
   const [settings, setSettings] = useState<SiteSettings | null>(null);
@@ -58,20 +115,29 @@ export function LayoutSettings() {
     });
   }
 
-  function moveSection(id: HomeSectionId, dir: 'up' | 'down') {
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
     const entries = HOME_SECTION_IDS.map((sid) => ({
       id: sid,
       ...deviceConfig[sid],
     })).sort((a, b) => a.order - b.order);
-    const idx = entries.findIndex((e) => e.id === id);
-    if (idx < 0) return;
-    const swapIdx = dir === 'up' ? idx - 1 : idx + 1;
-    if (swapIdx < 0 || swapIdx >= entries.length) return;
-    [entries[idx].order, entries[swapIdx].order] = [entries[swapIdx].order, entries[idx].order];
-    const next = { ...deviceConfig };
-    entries.forEach((e) => {
-      next[e.id as HomeSectionId] = { order: e.order, visible: next[e.id as HomeSectionId].visible };
+
+    const oldIdx = entries.findIndex((e) => e.id === active.id);
+    const newIdx = entries.findIndex((e) => e.id === over.id);
+    if (oldIdx < 0 || newIdx < 0) return;
+
+    const reordered = arrayMove(entries, oldIdx, newIdx);
+    reordered.forEach((e, i) => {
+      e.order = i;
     });
+
+    const next = { ...deviceConfig };
+    reordered.forEach((e) => {
+      next[e.id as HomeSectionId] = { order: e.order, visible: next[e.id].visible };
+    });
+
     updateLayout((prev) => ({ ...prev, [activeDevice]: next }));
   }
 
@@ -99,124 +165,128 @@ export function LayoutSettings() {
     .map((id) => ({ id, ...deviceConfig[id] }))
     .sort((a, b) => a.order - b.order);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
+
   return (
-    <div className="space-y-6 max-w-2xl">
-      <div className="bg-white rounded-2xl border border-gray-100 p-6">
-        <h3 className="font-bold text-gray-900 mb-4">Cihaz Seçimi</h3>
-        <p className="text-sm text-gray-500 mb-4">
-          Mobil, tablet ve masaüstü için bölüm sırası ve görünürlüğünü ayrı ayrı ayarlayın.
-        </p>
-        <div className="flex gap-2">
-          {(['mobile', 'tablet', 'desktop'] as DeviceKey[]).map((d) => {
-            const Icon = DEVICE_ICONS[d];
-            return (
-              <button
-                key={d}
-                onClick={() => setActiveDevice(d)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                  activeDevice === d
-                    ? 'bg-orange-500 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                <Icon size={18} />
-                {DEVICE_LABELS[d]}
-              </button>
-            );
-          })}
+    <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+      <div className="xl:col-span-2 space-y-6">
+        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+          <h3 className="font-bold text-gray-900 mb-4">Cihaz Seçimi</h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Mobil, tablet ve masaüstü için bölüm sırası ve görünürlüğünü ayrı ayrı ayarlayın.
+          </p>
+          <div className="flex gap-2">
+            {(['mobile', 'tablet', 'desktop'] as DeviceKey[]).map((d) => {
+              const Icon = DEVICE_ICONS[d];
+              return (
+                <button
+                  key={d}
+                  onClick={() => setActiveDevice(d)}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    activeDevice === d
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  <Icon size={18} />
+                  {DEVICE_LABELS[d]}
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 p-6">
-        <h3 className="font-bold text-gray-900 mb-2">{DEVICE_LABELS[activeDevice]} Düzeni</h3>
-        <p className="text-xs text-gray-500 mb-4">
-          Bölümlerin sırasını değiştirin veya gizleyin.
-        </p>
-        <div className="space-y-2">
-          {sortedSections.map(({ id }, i) => (
-            <div
-              key={id}
-              className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:border-gray-200"
+        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+          <h3 className="font-bold text-gray-900 mb-2">{DEVICE_LABELS[activeDevice]} Düzeni</h3>
+          <p className="text-xs text-gray-500 mb-4">
+            Bölümleri sürükleyip bırakarak sıralayın. Göz ikonu ile göster/gizle.
+          </p>
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={sortedSections.map((s) => s.id)} strategy={verticalListSortingStrategy}>
+              <div className="space-y-2">
+                {sortedSections.map(({ id, visible }) => (
+                  <SortableSection
+                    key={id}
+                    id={id}
+                    label={HOME_SECTION_LABELS[id]}
+                    visible={visible}
+                    onToggle={() => toggleVisibility(id)}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
+          <h3 className="font-bold text-gray-900">Header & Footer</h3>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Header Stili</label>
+            <select
+              value={layout.headerStyle}
+              onChange={(e) =>
+                updateLayout((prev) => ({
+                  ...prev,
+                  headerStyle: e.target.value as 'full' | 'compact' | 'minimal',
+                }))
+              }
+              className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"
             >
-              <button
-                onClick={() => moveSection(id as HomeSectionId, 'up')}
-                disabled={i === 0}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 disabled:opacity-30"
-              >
-                <ChevronUp size={16} />
-              </button>
-              <button
-                onClick={() => moveSection(id as HomeSectionId, 'down')}
-                disabled={i === sortedSections.length - 1}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 disabled:opacity-30"
-              >
-                <ChevronDown size={16} />
-              </button>
-              <span className="flex-1 text-sm font-medium text-gray-900">
-                {HOME_SECTION_LABELS[id as HomeSectionId]}
-              </span>
-              <button
-                onClick={() => toggleVisibility(id as HomeSectionId)}
-                className={`p-1.5 rounded-lg transition-colors ${
-                  deviceConfig[id as HomeSectionId].visible
-                    ? 'text-green-500 hover:bg-green-50'
-                    : 'text-gray-300 hover:bg-gray-50'
-                }`}
-                title={deviceConfig[id as HomeSectionId].visible ? 'Gizle' : 'Göster'}
-              >
-                {deviceConfig[id as HomeSectionId].visible ? <Eye size={16} /> : <EyeOff size={16} />}
-              </button>
-            </div>
-          ))}
+              <option value="full">Tam (Logo + Menü + Sepet)</option>
+              <option value="compact">Kompakt</option>
+              <option value="minimal">Minimal</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Footer Sütun Sayısı</label>
+            <select
+              value={layout.footerColumns}
+              onChange={(e) =>
+                updateLayout((prev) => ({
+                  ...prev,
+                  footerColumns: Number(e.target.value) as 2 | 3 | 4,
+                }))
+              }
+              className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"
+            >
+              <option value={2}>2 Sütun</option>
+              <option value={3}>3 Sütun</option>
+              <option value={4}>4 Sütun</option>
+            </select>
+          </div>
         </div>
+
+        <button
+          onClick={handleSave}
+          disabled={isSaving}
+          className="flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 disabled:opacity-60"
+        >
+          {isSaving && <Loader2 size={16} className="animate-spin" />}
+          Kaydet
+        </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
-        <h3 className="font-bold text-gray-900">Header & Footer</h3>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Header Stili</label>
-          <select
-            value={layout.headerStyle}
-            onChange={(e) =>
-              updateLayout((prev) => ({
-                ...prev,
-                headerStyle: e.target.value as 'full' | 'compact' | 'minimal',
-              }))
-            }
-            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"
+      {/* Önizleme */}
+      <div className="xl:col-span-1">
+        <div className="bg-white rounded-2xl border border-gray-100 p-4 sticky top-4">
+          <h3 className="font-bold text-gray-900 mb-3">Site Önizleme</h3>
+          <p className="text-xs text-gray-500 mb-3">Kaydettikten sonra güncellenir</p>
+          <div className="rounded-xl overflow-hidden border border-gray-200 h-[400px] bg-gray-50">
+            <iframe src="/" title="Site önizleme" className="w-full h-full" />
+          </div>
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 block text-center text-sm text-orange-500 hover:text-orange-600 font-medium"
           >
-            <option value="full">Tam (Logo + Menü + Sepet)</option>
-            <option value="compact">Kompakt</option>
-            <option value="minimal">Minimal</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Footer Sütun Sayısı</label>
-          <select
-            value={layout.footerColumns}
-            onChange={(e) =>
-              updateLayout((prev) => ({
-                ...prev,
-                footerColumns: Number(e.target.value) as 2 | 3 | 4,
-              }))
-            }
-            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"
-          >
-            <option value={2}>2 Sütun</option>
-            <option value={3}>3 Sütun</option>
-            <option value={4}>4 Sütun</option>
-          </select>
+            Yeni sekmede aç →
+          </a>
         </div>
       </div>
-
-      <button
-        onClick={handleSave}
-        disabled={isSaving}
-        className="flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 disabled:opacity-60"
-      >
-        {isSaving && <Loader2 size={16} className="animate-spin" />}
-        Kaydet
-      </button>
     </div>
   );
 }

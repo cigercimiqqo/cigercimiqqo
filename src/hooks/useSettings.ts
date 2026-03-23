@@ -33,13 +33,14 @@ const THEME_PRESETS: Record<string, { primary: string; secondary: string; accent
 function applyThemeCssVariables(settings: SiteSettings) {
   if (typeof document === 'undefined' || !settings?.appearance) return;
   const root = document.documentElement;
-  const { theme, primaryColor, secondaryColor, accentColor, fontFamily } = settings.appearance;
+  const { theme, primaryColor, secondaryColor, accentColor, fontFamily, siteTheme, sitePrimaryColor } = settings.appearance;
   const preset = THEME_PRESETS[theme || 'modern'] || THEME_PRESETS.modern;
 
-  root.style.setProperty('--color-primary', primaryColor || preset.primary);
+  root.style.setProperty('--color-primary', sitePrimaryColor || primaryColor || preset.primary);
   root.style.setProperty('--color-secondary', secondaryColor || preset.secondary);
   root.style.setProperty('--color-accent', accentColor || preset.accent);
   root.style.setProperty('--radius-theme', preset.radius);
   root.setAttribute('data-theme', theme || 'modern');
   if (fontFamily) root.style.setProperty('--font-family', fontFamily);
+  root.classList.toggle('light', (siteTheme ?? 'light') === 'light');
 }

@@ -72,7 +72,7 @@ export function AdminSidebar() {
   }
 
   return (
-    <aside className="w-64 h-screen bg-gray-900 text-white flex flex-col fixed left-0 top-0 z-40 overflow-hidden">
+    <aside className="w-64 h-screen max-h-screen bg-gray-900 text-white flex flex-col fixed left-0 top-0 z-40 overflow-hidden">
       {/* Logo */}
       <div className="p-6 border-b border-gray-700/50 shrink-0">
         <Link href="/admin/dashboard" className="flex items-center gap-3">
@@ -87,7 +87,7 @@ export function AdminSidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 min-h-0 p-4 space-y-1 overflow-y-auto overflow-x-hidden">
+      <nav className="flex-1 min-h-0 p-4 space-y-1 overflow-y-auto overflow-x-hidden overscroll-contain">
         {navItems.map((item) => {
           const isActive =
             pathname === item.href ||

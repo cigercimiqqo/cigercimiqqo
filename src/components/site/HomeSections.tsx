@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useSettingsStore } from '@/store/settingsStore';
-import { useVisitorPreferences } from '@/context/VisitorPreferencesContext';
 import { mergeLayoutWithDefaults, HOME_SECTION_IDS } from '@/lib/defaultLayout';
 import type { HomeSectionId, LayoutSettings } from '@/types';
 import { HeroBanner } from './HeroBanner';
@@ -51,7 +50,7 @@ function useDeviceType(): 'mobile' | 'tablet' | 'desktop' {
   return device;
 }
 
-const VISITOR_SECTION_PREFS: Partial<Record<HomeSectionId, keyof import('@/context/VisitorPreferencesContext').VisitorPreferences>> = {
+const SECTION_PREF_KEYS: Partial<Record<HomeSectionId, keyof import('@/types').AppearanceSettings>> = {
   features: 'showFeatures',
   stats: 'showStats',
   reviews: 'showTestimonials',
@@ -60,10 +59,10 @@ const VISITOR_SECTION_PREFS: Partial<Record<HomeSectionId, keyof import('@/conte
 
 export function HomeSections() {
   const { settings } = useSettingsStore();
-  const { preferences } = useVisitorPreferences();
   const device = useDeviceType();
   const layout: LayoutSettings = mergeLayoutWithDefaults(settings?.layout);
   const deviceConfig = layout[device];
+  const app = settings?.appearance;
 
   const sections = HOME_SECTION_IDS.map((id) => ({
     id,
@@ -71,8 +70,11 @@ export function HomeSections() {
   }))
     .filter((s) => {
       if (!s.visible) return false;
-      const prefKey = VISITOR_SECTION_PREFS[s.id];
-      if (prefKey && !preferences[prefKey]) return false;
+      const prefKey = SECTION_PREF_KEYS[s.id];
+      if (prefKey) {
+        const val = app?.[prefKey];
+        if (val === false) return false;
+      }
       return true;
     })
     .sort((a, b) => a.order - b.order);
