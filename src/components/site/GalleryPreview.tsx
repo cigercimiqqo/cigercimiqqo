@@ -26,7 +26,7 @@ export function GalleryPreview() {
           <div className="text-center py-16">
             <div className="text-5xl mb-4">📷</div>
             <p className="text-surface-400 text-sm max-w-md mx-auto">
-              Galeri henüz boş. Admin paneli &gt; Görünüm ayarlarından fotoğraf ekleyebilirsiniz.
+              Galeri henüz boş. Admin paneli{' > '}Görünüm ayarlarından fotoğraf ekleyebilirsiniz.
             </p>
           </div>
         ) : (
