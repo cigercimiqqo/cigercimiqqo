@@ -6,6 +6,7 @@ import {
   getProducts,
   getCategories,
   createProduct,
+  createCategory,
   updateProduct,
   deleteProduct,
 } from '@/lib/firebase/firestore';
@@ -25,8 +26,9 @@ import {
   ChevronDown,
   ChevronUp,
   PlusCircle,
+  FileJson,
 } from 'lucide-react';
-import type { Category, Product, ProductBadge, DiscountType } from '@/types';
+import type { Category, Product, ProductBadge, DiscountType, ProductVariant } from '@/types';
 import { Timestamp } from 'firebase/firestore';
 import { where } from 'firebase/firestore';
 
@@ -89,6 +91,9 @@ export function ProductsManager() {
   const [filterCategory, setFilterCategory] = useState('all');
   const [search, setSearch] = useState('');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [jsonImportOpen, setJsonImportOpen] = useState(false);
+  const [jsonInput, setJsonInput] = useState('');
+  const [jsonImporting, setJsonImporting] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -292,6 +297,163 @@ export function ProductsManager() {
 
   const getCategoryName = (id: string) => categories.find((c) => c.id === id)?.name || '—';
 
+  async function resolveOrCreateCategoryId(
+    raw: unknown,
+    createdMap: Map<string, string>
+  ): Promise<string | null> {
+    if (!raw || typeof raw !== 'string') return categories[0]?.id ?? null;
+    const s = (raw as string).trim();
+    if (!s) return categories[0]?.id ?? null;
+
+    const byId = categories.find((c) => c.id === s);
+    if (byId) return byId.id;
+    const byName = categories.find((c) => c.name.toLowerCase() === s.toLowerCase());
+    if (byName) return byName.id;
+    const bySlug = categories.find((c) => c.slug === s || c.slug === slugify(s));
+    if (bySlug) return bySlug.id;
+
+    const key = slugify(s).toLowerCase();
+    if (createdMap.has(key)) return createdMap.get(key)!;
+
+    const name = s;
+    const slug = slugify(name);
+    const order = categories.length + createdMap.size;
+    const newCat = {
+      name,
+      slug,
+      description: '',
+      image: '',
+      order,
+      isActive: true,
+      createdAt: Timestamp.now(),
+    };
+    const id = await createCategory(newCat);
+    createdMap.set(key, id);
+    createdMap.set(name.toLowerCase(), id);
+    setCategories((prev) => [...prev, { id, ...newCat }]);
+    return id;
+  }
+
+  async function handleJsonImport() {
+    if (!jsonInput.trim()) {
+      toast.error('JSON girin');
+      return;
+    }
+    setJsonImporting(true);
+    try {
+      const parsed = JSON.parse(jsonInput.trim());
+      const items: Record<string, unknown>[] = Array.isArray(parsed)
+        ? parsed
+        : parsed?.products
+          ? parsed.products
+          : [parsed];
+
+      if (!items.length) {
+        toast.error('Ürün bulunamadı');
+        return;
+      }
+
+      let added = 0;
+      const errors: string[] = [];
+      const createdCategoriesMap = new Map<string, string>();
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (!item || typeof item !== 'object') continue;
+
+        const categoryId = await resolveOrCreateCategoryId(
+          item.categoryId ?? item.category ?? item.kategori,
+          createdCategoriesMap
+        );
+        if (!categoryId) {
+          errors.push(`${i + 1}. ürün: Kategori belirtilmeli (${String(item.name || '?')})`);
+          continue;
+        }
+
+        const name = String(item.name ?? item.urun ?? '').trim();
+        if (!name) {
+          errors.push(`${i + 1}. ürün: Ad zorunlu`);
+          continue;
+        }
+
+        const price = Number(item.price ?? item.fiyat ?? 0) || 0;
+        const description = String(item.description ?? item.aciklama ?? '').trim();
+        const images: string[] = Array.isArray(item.images)
+          ? item.images
+          : Array.isArray(item.image)
+            ? item.image
+            : item.image
+              ? [String(item.image)]
+              : [];
+        const tags: string[] = Array.isArray(item.tags)
+          ? item.tags.map(String)
+          : item.tags
+            ? String(item.tags).split(/[,;]/).map((t: string) => t.trim()).filter(Boolean)
+            : [];
+        const badges: ProductBadge[] = Array.isArray(item.badges)
+          ? item.badges.filter((b): b is ProductBadge => BADGES.some((x) => x.value === b))
+          : [];
+        const allergens: string[] = Array.isArray(item.allergens)
+          ? item.allergens.map(String)
+          : item.allergens
+            ? String(item.allergens).split(/[,;]/).map((t: string) => t.trim()).filter(Boolean)
+            : [];
+        const comparePrice = item.comparePrice != null ? Number(item.comparePrice) : null;
+        const discountType = (item.discountType ?? item.indirimTipi ?? 'none') as DiscountType;
+        const discountValue = Number(item.discountValue ?? item.indirimDeger ?? 0) || 0;
+        const stock = item.stock != null ? Number(item.stock) : null;
+        const variants: ProductVariant[] = Array.isArray(item.variants)
+          ? item.variants.map((v: Record<string, unknown>) => ({
+              name: String(v.name ?? ''),
+              options: Array.isArray(v.options)
+                ? (v.options as Record<string, unknown>[]).map((o) => ({
+                    label: String(o.label ?? ''),
+                    priceModifier: Number(o.priceModifier ?? 0) || 0,
+                  }))
+                : [],
+            })).filter((v) => v.name)
+          : [];
+
+        const data: Omit<Product, 'id' | 'createdAt'> = {
+          categoryId,
+          name,
+          slug: slugify(name),
+          description,
+          images,
+          price,
+          comparePrice,
+          discountType: ['none', 'amount', 'percent'].includes(discountType) ? discountType : 'none',
+          discountValue,
+          badges,
+          tags,
+          isActive: item.isActive !== false,
+          isFeatured: Boolean(item.isFeatured),
+          stock: Number.isFinite(stock) ? stock : null,
+          orderCount: 0,
+          variants,
+          allergens,
+        };
+
+        await createProduct(data);
+        added++;
+      }
+
+      if (added > 0 || createdCategoriesMap.size > 0) await loadData();
+      setJsonInput('');
+      if (added > 0) {
+        const msg = createdCategoriesMap.size > 0
+          ? `${added} ürün eklendi, ${createdCategoriesMap.size} yeni kategori oluşturuldu`
+          : `${added} ürün eklendi`;
+        toast.success(msg);
+      }
+      if (errors.length) toast.error(errors.slice(0, 3).join(' '));
+    } catch (e) {
+      toast.error(e instanceof SyntaxError ? 'Geçersiz JSON' : 'İçe aktarma hatası');
+    } finally {
+      setJsonImporting(false);
+    }
+  }
+
   return (
     <div className="space-y-5">
       {/* Toolbar */}
@@ -318,7 +480,53 @@ export function ProductsManager() {
           <Plus size={16} />
           Yeni Ürün
         </button>
+        <button
+          type="button"
+          onClick={() => setJsonImportOpen(!jsonImportOpen)}
+          className="flex items-center gap-2 px-4 py-2.5 border border-orange-500 text-orange-600 rounded-xl text-sm font-semibold hover:bg-orange-50 transition-colors shrink-0"
+        >
+          <FileJson size={16} />
+          JSON ile Ekle
+        </button>
       </div>
+
+      {/* JSON Import */}
+      {jsonImportOpen && (
+        <div className="bg-white rounded-2xl border border-gray-200 p-4 space-y-3">
+          <h3 className="font-semibold text-gray-800 flex items-center gap-2">
+            <FileJson size={18} />
+            JSON ile Ürün Ekle
+          </h3>
+          <p className="text-xs text-gray-500">
+            Tek obje veya dizi formatında JSON yapıştırın. Eksik kategoriler otomatik oluşturulur. Alanlar: name, categoryId/category/kategori, description, price, images, tags, badges, allergens, variants, stock
+          </p>
+          <textarea
+            value={jsonInput}
+            onChange={(e) => setJsonInput(e.target.value)}
+            placeholder='[{"name":"Ürün Adı","categoryId":"...","price":50,"description":"..."}]'
+            rows={6}
+            className="w-full px-4 py-3 font-mono text-sm border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500 resize-none"
+          />
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={handleJsonImport}
+              disabled={jsonImporting}
+              className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-xl text-sm font-semibold hover:bg-orange-600 disabled:opacity-60"
+            >
+              {jsonImporting ? <Loader2 size={16} className="animate-spin" /> : <Plus size={16} />}
+              {jsonImporting ? 'Ekleniyor...' : 'İçe Aktar'}
+            </button>
+            <button
+              type="button"
+              onClick={() => { setJsonImportOpen(false); setJsonInput(''); }}
+              className="px-4 py-2 border border-gray-200 rounded-xl text-sm hover:bg-gray-50"
+            >
+              Kapat
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Bulk actions */}
       {selectedIds.size > 0 && (
