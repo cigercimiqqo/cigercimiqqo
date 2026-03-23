@@ -2,24 +2,35 @@
 
 import { useState, useEffect } from 'react';
 import { useSettingsStore } from '@/store/settingsStore';
-import { getDefaultLayoutSettings, HOME_SECTION_IDS } from '@/lib/defaultLayout';
+import { useVisitorPreferences } from '@/context/VisitorPreferencesContext';
+import { mergeLayoutWithDefaults, HOME_SECTION_IDS } from '@/lib/defaultLayout';
 import type { HomeSectionId, LayoutSettings } from '@/types';
 import { HeroBanner } from './HeroBanner';
+import { Features } from './Features';
 import { BestSellers } from './BestSellers';
 import { FeaturedProducts } from './FeaturedProducts';
 import { CategoryNav } from './CategoryNav';
+import { Story } from './Story';
+import { Stats } from './Stats';
+import { GalleryPreview } from './GalleryPreview';
 import { ReviewsSection } from './ReviewsSection';
 import { RestaurantInfo } from './RestaurantInfo';
 import { BlogPreview } from './BlogPreview';
+import { CTA } from './CTA';
 
 const SECTION_COMPONENTS: Record<HomeSectionId, React.ComponentType> = {
   hero: HeroBanner,
+  features: Features,
   bestSellers: BestSellers,
   featured: FeaturedProducts,
   categoryNav: CategoryNav,
+  story: Story,
+  stats: Stats,
+  galleryPreview: GalleryPreview,
   reviews: ReviewsSection,
   restaurantInfo: RestaurantInfo,
   blogPreview: BlogPreview,
+  cta: CTA,
 };
 
 function useDeviceType(): 'mobile' | 'tablet' | 'desktop' {
@@ -40,17 +51,30 @@ function useDeviceType(): 'mobile' | 'tablet' | 'desktop' {
   return device;
 }
 
+const VISITOR_SECTION_PREFS: Partial<Record<HomeSectionId, keyof import('@/context/VisitorPreferencesContext').VisitorPreferences>> = {
+  features: 'showFeatures',
+  stats: 'showStats',
+  reviews: 'showTestimonials',
+  galleryPreview: 'showGallery',
+};
+
 export function HomeSections() {
   const { settings } = useSettingsStore();
+  const { preferences } = useVisitorPreferences();
   const device = useDeviceType();
-  const layout: LayoutSettings = settings?.layout ?? getDefaultLayoutSettings();
+  const layout: LayoutSettings = mergeLayoutWithDefaults(settings?.layout);
   const deviceConfig = layout[device];
 
   const sections = HOME_SECTION_IDS.map((id) => ({
     id,
     ...deviceConfig[id],
   }))
-    .filter((s) => s.visible)
+    .filter((s) => {
+      if (!s.visible) return false;
+      const prefKey = VISITOR_SECTION_PREFS[s.id];
+      if (prefKey && !preferences[prefKey]) return false;
+      return true;
+    })
     .sort((a, b) => a.order - b.order);
 
   // Arka arkaya gelen ana bölümleri tek container'da grupla

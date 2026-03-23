@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { Loader2, Smartphone, Tablet, Monitor, Eye, EyeOff, ChevronUp, ChevronDown } from 'lucide-react';
 import {
   getDefaultLayoutSettings,
+  mergeLayoutWithDefaults,
   HOME_SECTION_IDS,
   HOME_SECTION_LABELS,
 } from '@/lib/defaultLayout';
@@ -34,8 +35,7 @@ export function LayoutSettings() {
     });
   }, []);
 
-  const layout: LayoutSettings =
-    settings?.layout ?? getDefaultLayoutSettings();
+  const layout: LayoutSettings = mergeLayoutWithDefaults(settings?.layout);
   const deviceConfig = layout[activeDevice];
 
   async function handleSave() {
@@ -53,7 +53,8 @@ export function LayoutSettings() {
   function updateLayout(updater: (prev: LayoutSettings) => LayoutSettings) {
     setSettings((prev) => {
       const base = prev ?? ({} as Partial<SiteSettings>);
-      return { ...base, layout: updater(base.layout ?? getDefaultLayoutSettings()) } as SiteSettings;
+      const merged = mergeLayoutWithDefaults(base.layout);
+      return { ...base, layout: updater(merged) } as SiteSettings;
     });
   }
 

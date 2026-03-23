@@ -1,68 +1,104 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { getReviews } from '@/lib/firebase/firestore';
-import Image from 'next/image';
-import { Star } from 'lucide-react';
+import SectionHeading from '@/components/ui/SectionHeading';
 import type { Review } from '@/types';
 
 export function ReviewsSection() {
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [current, setCurrent] = useState(0);
 
   useEffect(() => {
     getReviews(true).then(setReviews).catch(() => {});
   }, []);
 
+  const item = reviews[current];
+  const next = () => setCurrent((p) => (p + 1) % reviews.length);
+  const prev = () => setCurrent((p) => (p - 1 + reviews.length) % reviews.length);
+
   if (!reviews.length) return null;
 
-  return (
-    <section className="py-16">
-      <div className="text-center mb-10">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Müşteri Yorumları</h2>
-        <p className="text-gray-500 mt-2 text-sm">Gerçek müşteri deneyimleri</p>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {reviews.map((review) => (
-          <div key={review.id} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-            {review.platform === 'google' && (
-              <div className="flex items-center gap-1.5 mb-3">
-                <Image src="/google-logo.svg" alt="Google" width={14} height={14} />
-                <span className="text-xs text-gray-500 font-medium">Google Yorumu</span>
-              </div>
-            )}
+  function formatDate(ts: { toDate: () => Date } | null): string {
+    if (!ts) return '';
+    return ts.toDate().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
 
-            <div className="flex gap-0.5 mb-3">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
+  return (
+    <section className="py-20 md:py-28 bg-surface-900/30">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeading title="Misafirlerimizden" subtitle="Yorumlar" />
+
+        <div className="relative">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+              className="bg-surface-900 border border-surface-800/50 rounded-2xl p-8 md:p-12 text-center"
+            >
+              <Quote size={40} className="text-brand-500/20 mx-auto mb-6" />
+
+              <div className="flex items-center justify-center gap-1 mb-6">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    size={18}
+                    className={
+                      i < (item?.rating ?? 0) ? 'text-gold-400 fill-gold-400' : 'text-surface-700'
+                    }
+                  />
+                ))}
+              </div>
+
+              <p className="text-surface-200 text-lg md:text-xl leading-relaxed italic mb-8 max-w-2xl mx-auto">
+                &ldquo;{item?.text ?? ''}&rdquo;
+              </p>
+
+              <div>
+                <p className="text-surface-100 font-heading font-semibold text-lg">{item?.authorName ?? ''}</p>
+                <p className="text-surface-500 text-sm mt-1">
+                  {item?.createdAt ? formatDate(item.createdAt) : ''}
+                </p>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          <div className="flex items-center justify-center gap-4 mt-8">
+            <button
+              onClick={prev}
+              className="w-10 h-10 rounded-full border border-surface-700 flex items-center justify-center text-surface-400 hover:bg-brand-500 hover:border-brand-500 hover:text-white transition-all"
+              aria-label="Önceki yorum"
+            >
+              <ChevronLeft size={18} />
+            </button>
+
+            <div className="flex gap-2">
+              {reviews.map((_, i) => (
+                <button
                   key={i}
-                  size={14}
-                  className={i < review.rating ? 'text-amber-400 fill-amber-400' : 'text-gray-200 fill-gray-200'}
+                  onClick={() => setCurrent(i)}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    i === current ? 'bg-brand-500 w-6' : 'bg-surface-700 hover:bg-surface-600'
+                  }`}
+                  aria-label={`Yorum ${i + 1}`}
                 />
               ))}
             </div>
 
-            <p className="text-sm text-gray-700 leading-relaxed mb-4 line-clamp-4">&ldquo;{review.text}&rdquo;</p>
-
-            <div className="flex items-center gap-2.5">
-              {review.authorAvatar ? (
-                <Image
-                  src={review.authorAvatar}
-                  alt={review.authorName}
-                  width={36}
-                  height={36}
-                  className="rounded-full object-cover"
-                />
-              ) : (
-                <div className="w-9 h-9 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-sm">
-                  {review.authorName[0]}
-                </div>
-              )}
-              <div>
-                <p className="text-sm font-semibold text-gray-900">{review.authorName}</p>
-              </div>
-            </div>
+            <button
+              onClick={next}
+              className="w-10 h-10 rounded-full border border-surface-700 flex items-center justify-center text-surface-400 hover:bg-brand-500 hover:border-brand-500 hover:text-white transition-all"
+              aria-label="Sonraki yorum"
+            >
+              <ChevronRight size={18} />
+            </button>
           </div>
-        ))}
+        </div>
       </div>
     </section>
   );

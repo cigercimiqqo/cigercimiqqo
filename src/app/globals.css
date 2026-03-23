@@ -1,24 +1,58 @@
 @import "tailwindcss";
 
 :root {
-  --color-primary: #ea580c;
+  --color-primary: #c8102e;
   --color-secondary: #0f172a;
-  --color-accent: #38bdf8;
+  --color-accent: #b8944a;
   --radius-theme: 1rem;
-  --font-family: inherit;
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-family: var(--font-body);
+  --background: #0a0a0a;
+  --foreground: #f5f0eb;
 }
 
 @theme inline {
+  --font-heading: "Playfair Display", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  --color-brand-50: #fef2f2;
+  --color-brand-100: #fde6e6;
+  --color-brand-200: #f9baba;
+  --color-brand-300: #f28b8b;
+  --color-brand-400: #e04545;
+  --color-brand-500: #c8102e;
+  --color-brand-600: #a80d25;
+  --color-brand-700: #88091c;
+  --color-brand-800: #680614;
+  --color-brand-900: #4a040e;
+  --color-brand-950: #2d0208;
+
+  --color-gold-50: #fdf9f0;
+  --color-gold-100: #f9efd9;
+  --color-gold-200: #f0d9a8;
+  --color-gold-300: #e4bf73;
+  --color-gold-400: #c9a96e;
+  --color-gold-500: #b8944a;
+  --color-gold-600: #9a7a38;
+  --color-gold-700: #7a5f2c;
+  --color-gold-800: #5c4621;
+  --color-gold-900: #3e2f16;
+
+  --color-surface-50: #fafaf9;
+  --color-surface-100: #f5f0eb;
+  --color-surface-200: #e8e0d8;
+  --color-surface-800: #1c1c1c;
+  --color-surface-850: #161616;
+  --color-surface-900: #111111;
+  --color-surface-950: #0a0a0a;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--color-primary);
   --color-secondary: var(--color-secondary);
   --color-accent: var(--color-accent);
   --radius-theme: var(--radius-theme);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
+  --font-mono: ui-monospace, monospace;
 }
 
 /* Tema modları – farklı görünümler */
@@ -38,24 +72,92 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-family, Arial, Helvetica, sans-serif);
+  font-family: var(--font-body);
+  background: var(--color-surface-950);
+  color: var(--color-surface-100);
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+.light body {
+  background: var(--color-surface-50);
+  color: var(--color-surface-900);
+}
+
+::selection {
+  background: var(--color-brand-500);
+  color: #fff;
+}
+
+/* Grain overlay */
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--color-surface-950);
 }
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 3px;
+  background: var(--color-brand-700);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-500);
+}
+
+/* Menu dot leader */
+.dot-leader::after {
+  content: "";
+  flex: 1;
+  border-bottom: 2px dotted var(--color-surface-800);
+  margin: 0 12px;
+  position: relative;
+  top: -4px;
+}
+
+.light .dot-leader::after {
+  border-color: var(--color-surface-200);
+}
+
+/* Animations */
+@keyframes slow-zoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+@keyframes ember-rise {
+  0% { opacity: 0; transform: translateY(0) scale(0); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-150px) scale(1.2); }
+}
+
+.animate-slow-zoom {
+  animation: slow-zoom 20s ease-in-out infinite alternate;
+}
+
+/* Font utilities for Ciğerci design */
+.font-heading {
+  font-family: var(--font-heading, "Playfair Display"), Georgia, serif;
+}
+
+.font-body {
+  font-family: var(--font-body, "Inter"), system-ui, sans-serif;
 }
 
 /* Custom CSS injection area for admin */

@@ -58,17 +58,17 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
   }
 
   const badgeIcons = { bestseller: TrendingUp, new: Sparkles, featured: Star, spicy: Flame };
-  const badgeColors = { bestseller: 'bg-amber-500', new: 'bg-green-500', featured: 'bg-blue-500', spicy: 'bg-red-500' };
+  const badgeColors = { bestseller: 'bg-gold-400/90 text-surface-900', new: 'bg-green-500/90 text-white', featured: 'bg-brand-500/90 text-white', spicy: 'bg-red-600/90 text-white' };
 
   return (
     <div className="space-y-12">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-gray-400">
-        <Link href="/menu" className="hover:text-orange-500 flex items-center gap-1">
+      <div className="flex items-center gap-2 text-sm text-surface-400">
+        <Link href="/menu" className="hover:text-brand-500 flex items-center gap-1">
           <ChevronLeft size={14} />Menü
         </Link>
         <span>/</span>
-        <span className="text-gray-700">{product.name}</span>
+        <span className="text-surface-200">{product.name}</span>
       </div>
 
       {/* Product */}
@@ -76,7 +76,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
         {/* Images */}
         <div className="space-y-3">
           <div
-            className="relative aspect-square rounded-2xl overflow-hidden bg-gray-100 cursor-zoom-in"
+            className="relative aspect-square rounded-2xl overflow-hidden bg-surface-800 cursor-zoom-in"
             onClick={() => setLightboxOpen(true)}
           >
             {product.images[selectedImage] && (
@@ -100,7 +100,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
                 <button
                   key={i}
                   onClick={() => setSelectedImage(i)}
-                  className={cn('relative w-16 h-16 rounded-xl overflow-hidden border-2 transition-all', i === selectedImage ? 'border-orange-500' : 'border-transparent')}
+                  className={cn('relative w-16 h-16 rounded-xl overflow-hidden border-2 transition-all', i === selectedImage ? 'border-brand-500' : 'border-surface-700')}
                 >
                   <Image src={img} alt="" fill className="object-cover" />
                 </button>
@@ -117,7 +117,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
               {product.badges.map((badge) => {
                 const Icon = badgeIcons[badge];
                 return (
-                  <span key={badge} className={cn('inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-white', badgeColors[badge])}>
+                  <span key={badge} className={cn('inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold', badgeColors[badge])}>
                     <Icon size={11} />
                     {badge === 'bestseller' ? 'En Çok Satan' : badge === 'new' ? 'Yeni' : badge === 'featured' ? 'Öne Çıkan' : 'Acılı'}
                   </span>
@@ -126,19 +126,19 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
             </div>
           )}
 
-          <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
-          {product.description && <p className="text-gray-600 leading-relaxed">{product.description}</p>}
+          <h1 className="font-heading text-3xl font-bold text-surface-100">{product.name}</h1>
+          {product.description && <p className="text-surface-400 leading-relaxed">{product.description}</p>}
 
           {/* Price */}
           <div className="flex items-center gap-3">
-            <span className="text-3xl font-bold text-orange-500">{formatPrice(finalPrice)}</span>
-            {hasDiscount && <span className="text-lg text-gray-400 line-through">{formatPrice(product.price)}</span>}
+            <span className="text-3xl font-heading font-bold text-brand-500">{formatPrice(finalPrice)}</span>
+            {hasDiscount && <span className="text-lg text-surface-500 line-through">{formatPrice(product.price)}</span>}
           </div>
 
           {/* Variants */}
           {product.variants.map((variant) => (
             <div key={variant.name}>
-              <p className="text-sm font-semibold text-gray-700 mb-2">{variant.name}</p>
+              <p className="text-sm font-semibold text-surface-300 mb-2">{variant.name}</p>
               <div className="flex gap-2 flex-wrap">
                 {variant.options.map((opt) => (
                   <button
@@ -147,12 +147,12 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
                     className={cn(
                       'px-4 py-2 rounded-xl text-sm font-medium border-2 transition-all',
                       selectedVariants[variant.name]?.optionLabel === opt.label
-                        ? 'border-orange-500 bg-orange-50 text-orange-600'
-                        : 'border-gray-200 text-gray-700 hover:border-gray-300'
+                        ? 'border-brand-500 bg-brand-500/10 text-brand-400'
+                        : 'border-surface-700 text-surface-300 hover:border-surface-600'
                     )}
                   >
                     {opt.label}
-                    {opt.priceModifier > 0 && <span className="text-xs ml-1 text-gray-400">+{formatPrice(opt.priceModifier)}</span>}
+                    {opt.priceModifier > 0 && <span className="text-xs ml-1 text-surface-500">+{formatPrice(opt.priceModifier)}</span>}
                   </button>
                 ))}
               </div>
@@ -162,12 +162,12 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
           {/* Quantity + Add */}
           {product.stock !== 0 ? (
             <div className="flex gap-3 items-center">
-              <div className="flex items-center gap-3 bg-gray-100 rounded-xl p-1">
-                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm hover:shadow transition-all">
+              <div className="flex items-center gap-3 bg-surface-900 rounded-xl p-1">
+                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-8 h-8 rounded-lg bg-surface-800 flex items-center justify-center text-surface-200 hover:bg-surface-700 transition-all">
                   <Minus size={16} />
                 </button>
-                <span className="w-8 text-center font-bold">{quantity}</span>
-                <button onClick={() => setQuantity(quantity + 1)} className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm hover:shadow transition-all">
+                <span className="w-8 text-center font-bold text-surface-100">{quantity}</span>
+                <button onClick={() => setQuantity(quantity + 1)} className="w-8 h-8 rounded-lg bg-surface-800 flex items-center justify-center text-surface-200 hover:bg-surface-700 transition-all">
                   <Plus size={16} />
                 </button>
               </div>
@@ -175,21 +175,21 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
               <motion.button
                 onClick={handleAddToCart}
                 whileTap={{ scale: 0.95 }}
-                className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-semibold transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl font-semibold transition-colors"
               >
                 <ShoppingCart size={18} />
                 Sepete Ekle — {formatPrice(finalPrice * quantity)}
               </motion.button>
             </div>
           ) : (
-            <div className="py-4 bg-red-50 rounded-xl text-center text-red-500 font-semibold">Tükendi</div>
+            <div className="py-4 bg-red-500/10 rounded-xl text-center text-red-400 font-semibold">Tükendi</div>
           )}
 
           {/* Allergens */}
           {product.allergens.length > 0 && (
-            <div className="bg-amber-50 rounded-xl p-4">
-              <p className="text-sm font-semibold text-amber-800 mb-1">Alerjen Bilgisi</p>
-              <p className="text-sm text-amber-700">{product.allergens.join(', ')}</p>
+            <div className="bg-gold-500/10 rounded-xl p-4 border border-gold-500/20">
+              <p className="text-sm font-semibold text-gold-400 mb-1">Alerjen Bilgisi</p>
+              <p className="text-sm text-surface-300">{product.allergens.join(', ')}</p>
             </div>
           )}
         </div>
@@ -198,7 +198,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
       {/* Related products */}
       {relatedProducts.length > 0 && (
         <section>
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Bunları da Beğenebilirsiniz</h2>
+          <h2 className="font-heading text-xl font-bold text-surface-100 mb-6">Bunları da Beğenebilirsiniz</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {relatedProducts.map((p) => <ProductCard key={p.id} product={p} />)}
           </div>

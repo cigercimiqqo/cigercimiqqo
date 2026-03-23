@@ -38,6 +38,10 @@ export interface AppearanceSettings {
   heroImages: string[];
   heroTransitionSpeed: number;
   customCss: string;
+  galleryImages?: string[];
+  storyImage?: string;
+  statsImage?: string;
+  ctaImage?: string;
 }
 
 export interface OrderingSettings {
@@ -99,12 +103,17 @@ export interface IntegrationSettings {
 /** Ana sayfa bölüm ID’leri – sıra ve görünürlük için */
 export type HomeSectionId =
   | 'hero'
+  | 'features'
   | 'bestSellers'
   | 'featured'
   | 'categoryNav'
+  | 'story'
+  | 'stats'
+  | 'galleryPreview'
   | 'reviews'
   | 'restaurantInfo'
-  | 'blogPreview';
+  | 'blogPreview'
+  | 'cta';
 
 export interface SectionLayoutConfig {
   order: number;

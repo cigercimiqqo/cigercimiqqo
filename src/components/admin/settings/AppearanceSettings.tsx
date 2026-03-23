@@ -130,6 +130,92 @@ export function AppearanceSettings() {
         </div>
       </div>
 
+      {/* Story / Stats / CTA / Gallery images */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
+        <h3 className="font-bold text-gray-900 mb-4">Ek Görseller</h3>
+        {[
+          { key: 'storyImage' as const, label: 'Hikaye Bölümü Görseli' },
+          { key: 'statsImage' as const, label: 'İstatistik Arka Plan' },
+          { key: 'ctaImage' as const, label: 'CTA Arka Plan' },
+        ].map(({ key, label }) => (
+          <div key={key}>
+            <p className="text-sm font-medium text-gray-700 mb-2">{label}</p>
+            <div className="flex gap-3 items-center">
+              {(appearance[key] && typeof appearance[key] === 'string') && (
+                <div className="relative w-24 h-16 rounded-lg overflow-hidden">
+                  <Image src={appearance[key] as string} alt="" fill className="object-cover" />
+                </div>
+              )}
+              <label className="border-2 border-dashed border-gray-200 rounded-lg px-4 py-2 text-sm cursor-pointer hover:border-orange-400">
+                {appearance[key] ? 'Değiştir' : 'Yükle'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    try {
+                      const result = await uploadFile(file, 'general');
+                      updateAppearance(key, result.url);
+                    } catch {
+                      toast.error('Yükleme başarısız');
+                    }
+                  }}
+                />
+              </label>
+              {appearance[key] && (
+                <button
+                  onClick={() => updateAppearance(key, '')}
+                  className="text-red-500 text-sm hover:underline"
+                >
+                  Kaldır
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+        <div>
+          <p className="text-sm font-medium text-gray-700 mb-2">Galeri Görselleri</p>
+          <div className="flex gap-3 flex-wrap">
+            {(appearance.galleryImages || []).map((img: string, i: number) => (
+              <div key={i} className="relative w-20 h-16 rounded-lg overflow-hidden">
+                <Image src={img} alt="" fill className="object-cover" />
+                <button
+                  onClick={() =>
+                    updateAppearance(
+                      'galleryImages',
+                      (appearance.galleryImages || []).filter((_: string, idx: number) => idx !== i)
+                    )
+                  }
+                  className="absolute top-0.5 right-0.5 w-4 h-4 bg-red-500 text-white rounded flex items-center justify-center"
+                >
+                  <X size={10} />
+                </button>
+              </div>
+            ))}
+            <label className="w-20 h-16 border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center cursor-pointer hover:border-orange-400">
+              <Plus size={16} className="text-gray-400" />
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  try {
+                    const result = await uploadFile(file, 'general');
+                    updateAppearance('galleryImages', [...(appearance.galleryImages || []), result.url]);
+                  } catch {
+                    toast.error('Yükleme başarısız');
+                  }
+                }}
+              />
+            </label>
+          </div>
+        </div>
+      </div>
+
       {/* Custom CSS */}
       <div className="bg-white rounded-2xl border border-gray-100 p-6">
         <h3 className="font-bold text-gray-900 mb-2">Özel CSS</h3>

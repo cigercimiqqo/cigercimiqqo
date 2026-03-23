@@ -53,14 +53,14 @@ export function MenuPageContent() {
   if (isLoading) {
     return (
       <div className="py-20 flex justify-center">
-        <Loader2 size={32} className="animate-spin text-orange-500" />
+        <Loader2 size={32} className="animate-spin text-brand-500" />
       </div>
     );
   }
 
   if (slug && selectedProduct) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-surface-950">
         <ProductDetail product={selectedProduct} relatedProducts={relatedProducts} />
       </div>
     );

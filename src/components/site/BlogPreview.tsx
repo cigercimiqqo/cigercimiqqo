@@ -25,47 +25,52 @@ export function BlogPreview() {
   }
 
   return (
-    <section className="py-16">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Blog</h2>
-          <p className="text-gray-500 mt-1 text-sm">Haberler ve tarifler</p>
-        </div>
-        <Link href="/blog" className="text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors">
-          Tümünü gör →
-        </Link>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {posts.map((post) => (
-          <Link key={post.id} href={`/blog?slug=${post.slug}`} className="group">
-            <article className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-              {post.coverImage && (
-                <div className="relative h-48 overflow-hidden">
-                  <Image
-                    src={post.coverImage}
-                    alt={post.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </div>
-              )}
-              <div className="p-5">
-                <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
-                  <Calendar size={12} />
-                  {formatDate(post.publishedAt)}
-                  <span>·</span>
-                  <span>{estimateReadingTime(post.content)} dk okuma</span>
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-orange-500 transition-colors">
-                  {post.title}
-                </h3>
-                <p className="text-sm text-gray-500 line-clamp-2">{truncateText(post.excerpt, 100)}</p>
-              </div>
-            </article>
+    <section className="py-20 md:py-28 bg-surface-950">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="font-heading text-2xl md:text-3xl font-bold text-surface-100">Blog</h2>
+            <p className="text-surface-400 mt-1 text-sm">Haberler ve tarifler</p>
+          </div>
+          <Link
+            href="/blog"
+            className="text-sm font-medium text-brand-500 hover:text-brand-400 transition-colors"
+          >
+            Tümünü gör →
           </Link>
-        ))}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {posts.map((post) => (
+            <Link key={post.id} href={`/blog?slug=${post.slug}`} className="group">
+              <article className="bg-surface-900 rounded-2xl overflow-hidden border border-surface-800/50 hover:border-brand-500/30 transition-all">
+                {post.coverImage && (
+                  <div className="relative h-48 overflow-hidden">
+                    <Image
+                      src={post.coverImage}
+                      alt={post.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  </div>
+                )}
+                <div className="p-5">
+                  <div className="flex items-center gap-2 text-xs text-surface-500 mb-2">
+                    <Calendar size={12} />
+                    {formatDate(post.publishedAt)}
+                    <span>·</span>
+                    <span>{estimateReadingTime(post.content)} dk okuma</span>
+                  </div>
+                  <h3 className="font-heading font-semibold text-surface-100 mb-2 line-clamp-2 group-hover:text-brand-400 transition-colors">
+                    {post.title}
+                  </h3>
+                  <p className="text-sm text-surface-400 line-clamp-2">{truncateText(post.excerpt, 100)}</p>
+                </div>
+              </article>
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );

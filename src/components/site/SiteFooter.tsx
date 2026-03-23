@@ -2,8 +2,22 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Phone, MapPin, Instagram, Facebook, Youtube, Twitter } from 'lucide-react';
+import { Phone, MapPin, Clock, Instagram, Facebook, ArrowUp } from 'lucide-react';
 import { useSettingsStore } from '@/store/settingsStore';
+
+const FOOTER_LINKS = [
+  { href: '/', label: 'Ana Sayfa' },
+  { href: '/menu', label: 'Menümüz' },
+  { href: '/hakkimizda', label: 'Hakkımızda' },
+  { href: '/galeri', label: 'Galeri' },
+  { href: '/iletisim', label: 'İletişim' },
+  { href: '/blog', label: 'Blog' },
+];
+
+function formatWh(wh: { open: string; close: string; isClosed: boolean } | undefined): string {
+  if (!wh || wh.isClosed) return 'Kapalı';
+  return `${wh.open} - ${wh.close}`;
+}
 
 export function SiteFooter() {
   const { settings } = useSettingsStore();
@@ -13,77 +27,142 @@ export function SiteFooter() {
   const address = settings?.general?.address || '';
   const social = settings?.general?.socialMedia || {};
   const logo = settings?.general?.logo;
+  const wh = settings?.ordering?.workingHours;
+  const weekdays = wh?.mon ? formatWh(wh.mon) : '11:00 - 23:00';
+  const weekend = wh?.sat ? formatWh(wh.sat) : '10:00 - 00:00';
+  const footerColumns = settings?.layout?.footerColumns ?? 4;
+
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const socialLinks = [
+    { icon: Instagram, href: social.instagram },
+    { icon: Facebook, href: social.facebook },
+  ].filter((s) => s.href);
 
   return (
-    <footer className="bg-gray-900 text-gray-400 mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <div className="flex items-center gap-2.5 mb-4">
+    <footer className="bg-surface-950 border-t border-surface-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div
+          className={`grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-8 ${
+            footerColumns === 4 ? 'lg:grid-cols-4' : footerColumns === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'
+          }`}
+        >
+          <div className="lg:col-span-1">
+            <div className="flex items-center gap-3 mb-5">
               {logo ? (
-                <Image src={logo} alt={siteName} width={36} height={36} className="object-contain rounded" />
+                <Image src={logo} alt={siteName} width={40} height={40} className="object-contain rounded-full" />
               ) : (
-                <div className="w-9 h-9 rounded-lg bg-orange-500 flex items-center justify-center text-white font-bold">
-                  {siteName[0]}
+                <div className="w-10 h-10 rounded-full bg-brand-500 flex items-center justify-center">
+                  <span className="text-white font-heading font-bold text-lg">{siteName[0]}</span>
                 </div>
               )}
-              <span className="font-bold text-white text-lg">{siteName}</span>
+              <div>
+                <h3 className="text-surface-100 font-heading text-lg font-bold">{siteName}</h3>
+                <p className="text-gold-400 text-[10px] tracking-[0.2em] uppercase">Lezzet</p>
+              </div>
             </div>
-            {description && <p className="text-sm leading-relaxed mb-4">{description}</p>}
-            <div className="flex gap-3">
-              {social.instagram && (
-                <a href={social.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">
-                  <Instagram size={18} />
-                </a>
-              )}
-              {social.facebook && (
-                <a href={social.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">
-                  <Facebook size={18} />
-                </a>
-              )}
-              {social.youtube && (
-                <a href={social.youtube} target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">
-                  <Youtube size={18} />
-                </a>
-              )}
-              {social.twitter && (
-                <a href={social.twitter} target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">
-                  <Twitter size={18} />
-                </a>
-              )}
-            </div>
+            {description && (
+              <p className="text-surface-400 text-sm leading-relaxed mb-6">{description}</p>
+            )}
+            {socialLinks.length > 0 && (
+              <div className="flex gap-3">
+                {socialLinks.map(({ icon: Icon, href }) => (
+                  <a
+                    key={href}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full bg-surface-900 border border-surface-800 flex items-center justify-center text-surface-400 hover:bg-brand-500 hover:border-brand-500 hover:text-white transition-all"
+                  >
+                    <Icon size={16} />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-4">Hızlı Linkler</h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/" className="hover:text-orange-400 transition-colors">Anasayfa</Link></li>
-              <li><Link href="/menu" className="hover:text-orange-400 transition-colors">Menü</Link></li>
-              <li><Link href="/blog" className="hover:text-orange-400 transition-colors">Blog</Link></li>
+            <h4 className="text-surface-100 font-heading text-base font-semibold mb-5 flex items-center gap-2">
+              <span className="h-px w-4 bg-brand-500" />
+              Hızlı Erişim
+            </h4>
+            <ul className="space-y-3">
+              {FOOTER_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-surface-400 hover:text-brand-400 text-sm transition-colors inline-flex items-center gap-2 group"
+                  >
+                    <span className="w-0 group-hover:w-3 h-px bg-brand-500 transition-all" />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-4">İletişim</h3>
-            <ul className="space-y-3 text-sm">
-              {phones.map((phone: string, i: number) => (
-                <li key={i} className="flex items-center gap-2">
-                  <Phone size={14} className="text-orange-400 shrink-0" />
-                  <a href={`tel:${phone}`} className="hover:text-orange-400 transition-colors">{phone}</a>
+            <h4 className="text-surface-100 font-heading text-base font-semibold mb-5 flex items-center gap-2">
+              <span className="h-px w-4 bg-brand-500" />
+              İletişim
+            </h4>
+            <ul className="space-y-4">
+              {phones.map((phone, i) => (
+                <li key={i}>
+                  <a
+                    href={`tel:${phone}`}
+                    className="flex items-center gap-3 text-surface-400 hover:text-brand-400 text-sm transition-colors"
+                  >
+                    <Phone size={15} className="text-brand-500 shrink-0" />
+                    {phone}
+                  </a>
                 </li>
               ))}
               {address && (
-                <li className="flex items-start gap-2">
-                  <MapPin size={14} className="text-orange-400 shrink-0 mt-0.5" />
-                  <span>{address}</span>
+                <li className="flex items-start gap-3 text-surface-400 text-sm">
+                  <MapPin size={15} className="text-brand-500 shrink-0 mt-0.5" />
+                  {address}
                 </li>
               )}
             </ul>
           </div>
-        </div>
 
-        <div className="border-t border-gray-800 mt-10 pt-6 text-center text-xs text-gray-600">
-          <p>© {new Date().getFullYear()} {siteName}. Tüm hakları saklıdır.</p>
+          <div>
+            <h4 className="text-surface-100 font-heading text-base font-semibold mb-5 flex items-center gap-2">
+              <span className="h-px w-4 bg-brand-500" />
+              Çalışma Saatleri
+            </h4>
+            <ul className="space-y-3">
+              <li className="flex items-center gap-3 text-sm">
+                <Clock size={15} className="text-brand-500 shrink-0" />
+                <div>
+                  <p className="text-surface-300 font-medium">Hafta İçi</p>
+                  <p className="text-surface-500">{weekdays}</p>
+                </div>
+              </li>
+              <li className="flex items-center gap-3 text-sm">
+                <Clock size={15} className="text-brand-500 shrink-0" />
+                <div>
+                  <p className="text-surface-300 font-medium">Hafta Sonu</p>
+                  <p className="text-surface-500">{weekend}</p>
+                </div>
+              </li>
+            </ul>
+            <button
+              onClick={scrollToTop}
+              className="mt-8 w-10 h-10 rounded-full border border-surface-700 flex items-center justify-center text-surface-400 hover:bg-brand-500 hover:border-brand-500 hover:text-white transition-all"
+              aria-label="Yukarı çık"
+            >
+              <ArrowUp size={16} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="border-t border-surface-800/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-surface-500">
+          <p>&copy; {new Date().getFullYear()} {siteName}. Tüm hakları saklıdır.</p>
+          <p>Sevgiyle tasarlandı.</p>
         </div>
       </div>
     </footer>

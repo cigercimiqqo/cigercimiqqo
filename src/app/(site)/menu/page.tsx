@@ -9,8 +9,8 @@ export default function MenuPage() {
   return (
     <>
       <SiteHeader />
-      <main className="min-h-screen bg-gray-50">
-        <Suspense fallback={<div className="py-20 text-center text-gray-400">Yükleniyor...</div>}>
+      <main className="min-h-screen bg-surface-950">
+        <Suspense fallback={<div className="py-20 text-center text-surface-400">Yükleniyor...</div>}>
           <MenuPageContent />
         </Suspense>
       </main>

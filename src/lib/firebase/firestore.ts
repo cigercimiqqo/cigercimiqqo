@@ -399,3 +399,21 @@ export async function removeFromBlacklist(type: 'phone' | 'address', value: stri
     await setDoc(ref, { ...current, addresses: current.addresses.filter((a) => a !== value) });
   }
 }
+
+// ─── Contact Messages ────────────────────────────────────────────────────────
+
+export interface ContactMessage {
+  name: string;
+  phone: string;
+  email: string;
+  subject: string;
+  message: string;
+  createdAt: Timestamp;
+}
+
+export async function addContact(data: Omit<ContactMessage, 'createdAt'>): Promise<void> {
+  await addDoc(collection(getDb(), 'contacts'), {
+    ...data,
+    createdAt: Timestamp.now(),
+  });
+}

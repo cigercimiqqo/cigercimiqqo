@@ -20,7 +20,7 @@ export interface UploadProgress {
   total: number;
 }
 
-export type UploadFolder = 'products' | 'blog' | 'hero' | 'logo' | 'categories' | 'reviews' | 'avatars';
+export type UploadFolder = 'products' | 'blog' | 'hero' | 'logo' | 'categories' | 'reviews' | 'avatars' | 'general';
 
 // ─── Aktif Provider Tespiti ────────────────────────────────────────────────
 

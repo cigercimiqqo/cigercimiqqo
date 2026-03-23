@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import { getBestSellerProducts } from '@/lib/firebase/firestore';
 import { ProductCard } from './ProductCard';
-import { TrendingUp } from 'lucide-react';
+import SectionHeading from '@/components/ui/SectionHeading';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import type { Product } from '@/types';
 
 export function BestSellers() {
@@ -17,25 +18,23 @@ export function BestSellers() {
   if (!products.length) return null;
 
   return (
-    <section className="py-16">
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
-            <TrendingUp size={20} className="text-amber-500" />
-          </div>
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">En Çok Satanlar</h2>
-            <p className="text-gray-500 text-sm">Müşterilerimizin favorileri</p>
-          </div>
+    <section className="py-20 md:py-28 bg-surface-950">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeading title="En Çok Satanlar" subtitle="Lezzetler" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {products.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
         </div>
-        <Link href="/menu" className="text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors">
-          Tümünü gör →
-        </Link>
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {products.map((p) => (
-          <ProductCard key={p.id} product={p} />
-        ))}
+        <div className="mt-12 text-center">
+          <Link
+            href="/menu"
+            className="group inline-flex items-center gap-2 px-8 py-3.5 border border-brand-500 text-brand-500 font-medium rounded-full hover:bg-brand-500 hover:text-white transition-all duration-300"
+          >
+            Tüm Menüyü Gör
+            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
       </div>
     </section>
   );
