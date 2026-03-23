@@ -15,7 +15,7 @@ export function CTA() {
     : 'https://maps.google.com';
 
   return (
-    <section className="relative py-24 md:py-32 overflow-hidden">
+    <section className="cta-section relative py-24 md:py-32 overflow-hidden">
       <div className="absolute inset-0">
         {ctaImage ? (
           <div

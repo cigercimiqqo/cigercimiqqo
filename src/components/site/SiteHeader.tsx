@@ -10,6 +10,7 @@ import { useCartStore } from '@/store/cartStore';
 import { useSettingsStore } from '@/store/settingsStore';
 import { CartDrawer } from './CartDrawer';
 import { MobileNav } from './MobileNav';
+import { useVisitorPreferences } from '@/context/VisitorPreferencesContext';
 
 const NAV_LINKS = [
   { href: '/', label: 'Ana Sayfa' },
@@ -42,6 +43,23 @@ export function SiteHeader() {
   const logo = settings?.general?.logo;
   const phones = settings?.general?.phone || [];
   const phone = phones[0];
+  const { preferences } = useVisitorPreferences();
+  const isLight = preferences.theme === 'light';
+
+  const headerBg = scrolled
+    ? isLight
+      ? 'bg-white/95 backdrop-blur-xl shadow-lg shadow-black/5 py-3'
+      : 'bg-surface-950/90 backdrop-blur-xl shadow-2xl shadow-black/20 py-3'
+    : 'bg-transparent py-5';
+
+  const navLinkClass = (isActive: boolean) =>
+    isActive
+      ? 'text-brand-500'
+      : scrolled && isLight
+        ? 'text-surface-700 hover:text-surface-900'
+        : 'text-surface-200 hover:text-white';
+
+  const siteNameClass = scrolled && isLight ? 'text-surface-900' : 'text-white';
 
   return (
     <>
@@ -49,11 +67,7 @@ export function SiteHeader() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? 'bg-surface-950/90 backdrop-blur-xl shadow-2xl shadow-black/20 py-3'
-            : 'bg-transparent py-5'
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${headerBg}`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
@@ -69,7 +83,7 @@ export function SiteHeader() {
                 </div>
               )}
               <div className="flex flex-col">
-                <span className="text-surface-100 font-heading text-xl font-bold leading-tight tracking-wide">
+                <span className={`font-heading text-xl font-bold leading-tight tracking-wide ${siteNameClass}`}>
                   {siteName}
                 </span>
                 <span className="text-gold-400 text-[10px] tracking-[0.25em] uppercase font-medium leading-none">
@@ -85,9 +99,7 @@ export function SiteHeader() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`relative px-4 py-2 text-sm font-medium tracking-wide transition-colors ${
-                      isActive ? 'text-brand-500' : 'text-surface-200 hover:text-white'
-                    }`}
+                    className={`relative px-4 py-2 text-sm font-medium tracking-wide transition-colors ${navLinkClass(isActive)}`}
                   >
                     {link.label}
                     {isActive && (
@@ -126,7 +138,9 @@ export function SiteHeader() {
               </button>
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="lg:hidden w-10 h-10 flex items-center justify-center text-surface-200 hover:text-white transition-colors"
+                className={`lg:hidden w-10 h-10 flex items-center justify-center transition-colors ${
+                  scrolled && isLight ? 'text-surface-700 hover:text-surface-900' : 'text-surface-200 hover:text-white'
+                }`}
                 aria-label="Menüyü aç"
               >
                 {mobileOpen ? <X size={22} /> : <Menu size={22} />}
