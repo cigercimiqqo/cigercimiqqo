@@ -142,16 +142,9 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=
 3. `.env.local`'e ekle: `NEXT_PUBLIC_IMGBB_API_KEY=xxx`
 4. **Deploy için:** GitHub Secrets'a da `NEXT_PUBLIC_IMGBB_API_KEY` ekle
 
-### AI Sepet (isteğe bağlı)
+### AI Sepet
 
-Menüdeki "AI Sepet" butonu müşterilere metinle sipariş önermesi yapar. Çalışması için:
-
-1. [enter.pollinations.ai](https://enter.pollinations.ai) → Ücretsiz kayıt
-2. Publishable key al (`pk_` ile başlar — client-side için)
-3. `.env.local`'e ekle: `NEXT_PUBLIC_POLLINATIONS_API_KEY=pk_xxx`
-4. **Deploy için:** GitHub Secrets'a `NEXT_PUBLIC_POLLINATIONS_API_KEY` ekle
-
-Key yoksa AI Sepet butonu hata verir; diğer özellikler çalışır.
+Menüdeki "AI Sepet" butonu Pollinations.ai üzerinden metinle sipariş önerisi yapar. **API key gerekmez** — temel kullanım ücretsiz. Key varsa daha yüksek limit için [enter.pollinations.ai](https://enter.pollinations.ai) üzerinden alıp `NEXT_PUBLIC_POLLINATIONS_API_KEY` ekleyebilirsin.
 
 ---
 
@@ -285,7 +278,6 @@ jobs:
    - `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` (Cloudinary kullanıyorsan)
    - `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` (Cloudinary kullanıyorsan)
    - `NEXT_PUBLIC_IMGBB_API_KEY` (ImgBB kullanıyorsan — [imgbb.com](https://imgbb.com) API)
-   - `NEXT_PUBLIC_POLLINATIONS_API_KEY` (AI Sepet için — [enter.pollinations.ai](https://enter.pollinations.ai) ücretsiz key)
 
 4. GitHub repo → **Settings** → **Pages** → Source: **GitHub Actions** seç
 

@@ -40,9 +40,7 @@ Maksimum 5 farklı ürün öner. Sadece mevcut ürün ID'lerini kullan. Başka m
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
-  if (apiKey) {
-    headers['Authorization'] = `Bearer ${apiKey}`;
-  }
+  if (apiKey) headers['Authorization'] = `Bearer ${apiKey}`;
 
   const res = await fetch(POLLINATIONS_URL, {
     method: 'POST',
@@ -50,10 +48,6 @@ Maksimum 5 farklı ürün öner. Sadece mevcut ürün ID'lerini kullan. Başka m
     body: JSON.stringify(body),
     signal: AbortSignal.timeout(15000),
   });
-
-  if (res.status === 401) {
-    throw new Error('AI Sepet için Pollinations API key gerekli. GitHub Secrets\'a NEXT_PUBLIC_POLLINATIONS_API_KEY ekleyin (enter.pollinations.ai).');
-  }
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
