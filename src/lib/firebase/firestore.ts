@@ -321,11 +321,11 @@ export async function deleteBlogPost(id: string): Promise<void> {
 // ─── Reviews ──────────────────────────────────────────────────────────────
 
 export async function getReviews(visibleOnly = true): Promise<Review[]> {
-  const constraints: QueryConstraint[] = visibleOnly
-    ? [where('isVisible', '==', true), orderBy('order', 'asc')]
-    : [orderBy('order', 'asc')];
-  const snap = await getDocs(query(collection(getDb(), 'reviews'), ...constraints));
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Review);
+  const snap = await getDocs(collection(getDb(), 'reviews'));
+  let items = snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Review);
+  if (visibleOnly) items = items.filter((r) => r.isVisible !== false);
+  items.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  return items;
 }
 
 export async function createReview(data: Omit<Review, 'id'>): Promise<string> {
