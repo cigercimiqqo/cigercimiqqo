@@ -43,7 +43,7 @@ export function ReviewsManager() {
   function handleParseHtml() {
     const parsed = parseGoogleReviewHtml(htmlPaste);
     if (!parsed) {
-      toast.error('HTML\'den veri çıkarılamadı. Google Maps yorum HTML\'ini yapıştırdığınızdan emin olun.');
+      toast.error('HTML\'den veri çıkarılamadı. Google Maps\'te yorumun üzerine sağ tık > Öğeyi İncele > ilgili div\'e sağ tık > Copy > Copy outerHTML. Alternatif: Manuel Ekle ile girebilirsiniz.');
       return;
     }
     setParsedPreview(parsed);

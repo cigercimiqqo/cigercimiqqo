@@ -43,8 +43,7 @@ export function ReviewsSection() {
   const next = () => setCurrent((p) => (p + 1) % reviews.length);
   const prev = () => setCurrent((p) => (p - 1 + reviews.length) % reviews.length);
 
-  if (!reviews.length) return null;
-
+  const hasReviews = reviews.length > 0;
   const dateStr = item?.createdAt ? formatReviewDate(item.createdAt) : '';
 
   return (
@@ -53,6 +52,16 @@ export function ReviewsSection() {
         <SectionHeading title="Misafirlerimizden" subtitle="Yorumlar" />
 
         <div className="relative">
+          {!hasReviews ? (
+            <div className="bg-surface-900 border border-surface-800/50 rounded-2xl p-8 md:p-12 text-center">
+              <div className="text-4xl mb-4">⭐</div>
+              <h3 className="text-lg font-heading font-semibold text-surface-200 mb-2">Henüz yorum yok</h3>
+              <p className="text-surface-400 text-sm max-w-md mx-auto">
+                Müşteri yorumları burada görünecek. Admin panelinden yorum ekleyebilirsiniz.
+              </p>
+            </div>
+          ) : (
+          <>
           <AnimatePresence mode="wait">
             <motion.div
               key={current}
@@ -142,6 +151,8 @@ export function ReviewsSection() {
               <ChevronRight size={18} />
             </button>
           </div>
+          </>
+          )}
         </div>
       </div>
     </section>

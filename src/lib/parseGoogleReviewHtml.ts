@@ -91,82 +91,132 @@ function parseRating(html: string): number {
   return 5;
 }
 
-export function parseGoogleReviewHtml(html: string): ParsedGoogleReview | null {
-  if (!html || typeof html !== 'string') return null;
+/** Yorum metni benzeri uzun metin bloklarını bulur (50+ karakter) */
+function extractLongTextBlocks(html: string): string[] {
+  const stripped = html.replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '');
+  const matches = stripped.matchAll(/>([^<]{50,500})</g);
+  const results: string[] = [];
+  for (const m of matches) {
+    const t = m[1].replace(/\s+/g, ' ').trim();
+    if (t && !t.startsWith('http') && /[a-zA-ZğüşıöçĞÜŞİÖÇ]/.test(t)) results.push(t);
+  }
+  return results;
+}
 
-  // Author name: Vpc5Fe veya aria-label="X tarafından..." veya benzeri
+export function parseGoogleReviewHtml(html: string): ParsedGoogleReview | null {
+  if (!html || typeof html !== 'string' || html.length < 50) return null;
+
+  const cleanHtml = html.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+
+  // ─── Author name ───
   let authorName = '';
-  const vpcMatch = html.match(/class="[^"]*Vpc5Fe[^"]*"[^>]*>([^<]+)</);
+  const vpcMatch = cleanHtml.match(/class="[^"]*Vpc5Fe[^"]*"[^>]*>([^<]+)/);
   if (vpcMatch) authorName = vpcMatch[1].trim();
   if (!authorName) {
-    const ariaMatch = html.match(/aria-label="([^"]+)\s+tarafından/);
+    const ariaMatch = cleanHtml.match(/aria-label="([^"]+?)\s+tarafından/);
     if (ariaMatch) authorName = ariaMatch[1].trim();
   }
-
-  // Avatar: background-image: url("...")
-  let authorAvatar = '';
-  const urlMatch = html.match(/background-image:\s*url\s*\(\s*["']?([^"')]+)["']?\s*\)/);
-  if (urlMatch) authorAvatar = urlMatch[1].replace(/&quot;/g, '"').trim();
-
-  // Badge: Yerel Rehber · 48 yorum · 4 fotoğraf (GSM50 vb.)
-  let badge: string | undefined;
-  const gsmMatch = html.match(/class="[^"]*GSM50[^"]*"[^>]*>([^<]+(?:<[^>]+>[^<]*)*)/);
-  if (gsmMatch) {
-    badge = gsmMatch[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!authorName && cleanHtml.includes('Yerel Rehber')) {
+    const beforeBadge = cleanHtml.split('Yerel Rehber')[0];
+    const nameMatch = beforeBadge.match(/>([A-Za-zğüşıöçĞÜŞİÖÇ\s]{2,30})</);
+    if (nameMatch) authorName = nameMatch[1].trim();
+  }
+  if (!authorName) {
+    const contribMatch = cleanHtml.match(/maps\/contrib\/[^/]+\/reviews[^"]*"[^>]*>[\s\S]*?<div[^>]*>([^<]{2,40})</);
+    if (contribMatch) authorName = contribMatch[1].trim();
   }
 
-  // Date: y3Ibjb veya "bir gün önce"
+  // ─── Avatar ───
+  let authorAvatar = '';
+  const urlMatch = cleanHtml.match(/background-image:\s*url\s*\(\s*["']?([^"')]+)["']?\s*\)/);
+  if (urlMatch) authorAvatar = urlMatch[1].trim();
+  if (!authorAvatar && cleanHtml.includes('googleusercontent.com')) {
+    const gMatch = cleanHtml.match(/https:\/\/[^"'\s]+googleusercontent\.com[^"'\s]*/);
+    if (gMatch) authorAvatar = gMatch[0];
+  }
+
+  // ─── Badge ───
+  let badge: string | undefined;
+  const gsmMatch = cleanHtml.match(/class="[^"]*GSM50[^"]*"[^>]*>([^<]+(?:<[^>]+>[^<]*)*)/);
+  if (gsmMatch) badge = gsmMatch[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!badge && /Yerel Rehber|yorum|fotoğraf/.test(cleanHtml)) {
+    const badgeBlock = cleanHtml.match(/(Yerel Rehber[^<]*\d+\s*yorum[^<]*\d+\s*fotoğraf)/);
+    if (badgeBlock) badge = badgeBlock[1].replace(/\s+/g, ' ').trim();
+  }
+
+  // ─── Date ───
   let dateText = '';
-  const dateMatch = html.match(/class="[^"]*y3Ibjb[^"]*"[^>]*>([^<]+)/);
+  const dateMatch = cleanHtml.match(/class="[^"]*y3Ibjb[^"]*"[^>]*>([^<]+)/);
   if (dateMatch) dateText = dateMatch[1].trim();
   if (!dateText) {
-    const altDate = html.match(/>\s*(bir\s+gün\s+önce|\d+\s+gün\s+önce|dün|bugün|bir\s+hafta\s+önce|\d+\s+hafta\s+önce|bir\s+ay\s+önce|\d+\s+ay\s+önce|bir\s+yıl\s+önce|\d+\s+yıl\s+önce)\s*</);
+    const relDates = ['bir gün önce', 'dün', 'bugün', 'bir hafta önce', '2 hafta önce', 'bir ay önce', '2 ay önce', 'bir yıl önce', '2 yıl önce', '1 gün önce', '3 gün önce'];
+    for (const rd of relDates) {
+      if (cleanHtml.includes(rd)) { dateText = rd; break; }
+    }
+  }
+  if (!dateText) {
+    const altDate = cleanHtml.match(/>\s*(bir\s+gün\s+önce|\d+\s+gün\s+önce|dün|bugün|bir\s+hafta\s+önce|\d+\s+hafta\s+önce|bir\s+ay\s+önce|\d+\s+ay\s+önce|bir\s+yıl\s+önce|\d+\s+yıl\s+önce)\s*</);
     if (altDate) dateText = altDate[1].trim();
   }
 
-  // Price: ME0dBc veya aria-label="₺400-₺600" veya ₺400–₺600
+  // ─── Price ───
   let priceRange: string | undefined;
-  const priceAria = html.match(/aria-label="(₺[\d,\-–]+)"/);
-  if (priceAria) priceRange = priceAria[1];
-  if (!priceRange && html.includes('₺')) {
-    const tlMatch = html.match(/₺[\d,]+[–\-]\s*₺[\d,]+/);
-    if (tlMatch) priceRange = tlMatch[0];
+  const priceAria = cleanHtml.match(/aria-label="(₺[^"]+)"/);
+  if (priceAria && priceAria[1].length < 30) priceRange = priceAria[1];
+  if (!priceRange && cleanHtml.includes('₺')) {
+    const tlMatch = cleanHtml.match(/₺[\d,\s]+[–\-]\s*₺[\d,\s]+/);
+    if (tlMatch) priceRange = tlMatch[0].trim();
   }
 
-  // Tags: t5YfZe "Yeni" vb.
+  // ─── Tags ───
   const tags: string[] = [];
-  const tagMatches = html.matchAll(/class="[^"]*t5YfZe[^"]*"[^>]*>\s*<span[^>]*>([^<]+)</g);
+  const tagMatches = cleanHtml.matchAll(/class="[^"]*t5YfZe[^"]*"[^>]*>\s*<span[^>]*>([^<]+)</g);
   for (const m of tagMatches) {
     const t = m[1].trim();
-    if (t && !tags.includes(t)) tags.push(t);
+    if (t && t.length < 20 && !tags.includes(t)) tags.push(t);
   }
+  if (tags.length === 0 && cleanHtml.includes('>Yeni<')) tags.push('Yeni');
 
-  // Review text: OA1nbd - içindeki metin (önce <a> gelene kadar)
+  // ─── Review text (öncelik: OA1nbd, sonra uzun metin blokları) ───
   let text = '';
-  const textBlock = html.match(/class="[^"]*OA1nbd[^"]*"[^>]*>([\s\S]*?)<\/div>/);
+  const textBlock = cleanHtml.match(/class="[^"]*OA1nbd[^"]*"[^>]*>([\s\S]*?)<\/div>/);
   if (textBlock) {
     const raw = textBlock[1]
       .replace(/<a[\s\S]*?<\/a>/g, '')
       .replace(/<[^>]+>/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
-    if (raw) text = raw;
+    if (raw.length > 20) text = raw;
   }
   if (!text) {
-    const fallback = html.match(/class="[^"]*OA1nbd[^"]*"[^>]*>([^<]+)/);
+    const fallback = cleanHtml.match(/class="[^"]*OA1nbd[^"]*"[^>]*>([^<]{20,})/);
     if (fallback) text = fallback[1].trim();
   }
+  if (!text) {
+    const blocks = extractLongTextBlocks(cleanHtml);
+    const best = blocks.find((b) => b.length > 30 && (b.includes('.') || b.includes('!') || b.includes('?')));
+    if (best) text = best;
+  }
+  if (!text) {
+    const generic = cleanHtml.match(/Ciğer[^<]{20,200}|lezzetli[^<]{20,200}|çorba[^<]{20,200}/);
+    if (generic) text = generic[0].replace(/\s+/g, ' ').trim();
+  }
+  if (!text) {
+    const anySentence = cleanHtml.match(/>([^<]{40,300}[.!?])</);
+    if (anySentence) text = anySentence[1].replace(/\s+/g, ' ').trim();
+  }
 
-  if (!authorName && !text) return null;
+  // En az metin veya isim olmalı (metin öncelikli, çünkü yorumun özü)
+  if (!text && !authorName) return null;
 
-  const rating = parseRating(html);
+  const rating = parseRating(cleanHtml);
   const createdAt = parseRelativeDateTR(dateText || 'bugün');
 
   return {
     authorName: authorName || 'Anonim',
     authorAvatar,
     rating,
-    text: text || '(Yorum metni bulunamadı)',
+    text: text || '(Yorum metni bulunamadı - lütfen manuel girin)',
     badge: badge || undefined,
     priceRange: priceRange || undefined,
     tags,
