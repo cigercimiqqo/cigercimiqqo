@@ -109,6 +109,88 @@ export interface IntegrationSettings {
   mediaProvider: MediaUploadProvider;
 }
 
+export interface HeroContentSettings {
+  tagline: string;
+  headline: string;
+  headlineAccent: string;
+  description: string;
+  buttonMenu: string;
+  buttonReservation: string;
+}
+
+export interface StoryContentSettings {
+  sectionLabel: string;
+  title: string;
+  titleAccent: string;
+  paragraph1: string;
+  paragraph2: string;
+  yearsValue: string;
+  yearsLabel: string;
+  signature: string;
+  linkText: string;
+}
+
+export interface StatItem {
+  value: number;
+  suffix: string;
+  label: string;
+  min: number;
+  max: number;
+  decimal: boolean;
+}
+
+export interface StatsContentSettings {
+  sectionLabel: string;
+  items: StatItem[];
+}
+
+export interface CtaContentSettings {
+  tagline: string;
+  title: string;
+  description: string;
+  buttonCall: string;
+  buttonOrder: string;
+}
+
+export interface FooterContentSettings {
+  tagline: string;
+  description: string;
+  quickLinksLabel: string;
+  supportLabel: string;
+  newsletterLabel: string;
+  newsletterPlaceholder: string;
+  copyrightText: string;
+}
+
+export interface AboutPageContent {
+  tagline: string;
+  title: string;
+  sectionLabel: string;
+  sectionTitle: string;
+  sectionTitleAccent: string;
+  valuesLabel: string;
+  values: { title: string; desc: string }[];
+}
+
+export interface ContactPageContent {
+  tagline: string;
+  title: string;
+  infoLabel: string;
+  formTitle: string;
+  formSuccessTitle: string;
+  formSuccessMessage: string;
+}
+
+export interface ContentSettings {
+  hero: HeroContentSettings;
+  story: StoryContentSettings;
+  stats: StatsContentSettings;
+  cta: CtaContentSettings;
+  footer: FooterContentSettings;
+  aboutPage?: AboutPageContent;
+  contactPage?: ContactPageContent;
+}
+
 /** Ana sayfa bölüm ID’leri – sıra ve görünürlük için */
 export type HomeSectionId =
   | 'hero'
@@ -145,6 +227,7 @@ export interface SiteSettings {
   notifications: NotificationSettings;
   integrations?: IntegrationSettings;
   layout?: LayoutSettings;
+  content?: ContentSettings;
 }
 
 // ─── Category ──────────────────────────────────────────────────────────────

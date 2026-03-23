@@ -8,6 +8,7 @@ import { SiteFooter } from '@/components/site/SiteFooter';
 import AnimateOnScroll from '@/components/ui/AnimateOnScroll';
 import { useSettingsStore } from '@/store/settingsStore';
 import { addContact } from '@/lib/firebase/firestore';
+import { getDefaultContent } from '@/lib/defaultContent';
 import { toast } from 'sonner';
 
 function formatWh(wh: { open: string; close: string; isClosed: boolean } | undefined): string {
@@ -19,6 +20,8 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { settings } = useSettingsStore();
+  const content = settings?.content ?? getDefaultContent();
+  const contact = content.contactPage ?? getDefaultContent().contactPage!;
 
   const phones = settings?.general?.phone || [];
   const address = settings?.general?.address || '';
@@ -63,10 +66,10 @@ export default function ContactPage() {
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <span className="text-brand-500 text-sm tracking-[0.3em] uppercase font-medium">
-                Bize Ulaşın
+                {contact.tagline}
               </span>
               <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-surface-100 mt-3">
-                İletişim
+                {contact.title}
               </h1>
               <div className="mt-4 flex justify-center">
                 <div className="h-1 w-16 bg-gradient-to-r from-brand-500 to-gold-400 rounded-full" />
@@ -81,7 +84,7 @@ export default function ContactPage() {
               <div className="lg:col-span-2 space-y-6">
                 <AnimateOnScroll>
                   <h2 className="font-heading text-2xl font-bold text-surface-100 mb-6">
-                    İletişim Bilgileri
+                    {contact.infoLabel}
                   </h2>
                 </AnimateOnScroll>
                 {contactInfo.map((info, i) => (
@@ -113,7 +116,7 @@ export default function ContactPage() {
               <AnimateOnScroll variant="fadeRight" className="lg:col-span-3">
                 <div className="bg-surface-900 rounded-2xl border border-surface-800/50 p-6 md:p-8">
                   <h2 className="font-heading text-2xl font-bold text-surface-100 mb-6">
-                    Bize Yazın
+                    {contact.formTitle}
                   </h2>
 
                   {submitted ? (
@@ -124,9 +127,9 @@ export default function ContactPage() {
                     >
                       <CheckCircle size={48} className="text-green-500 mx-auto mb-4" />
                       <h3 className="text-surface-100 font-heading text-xl font-semibold mb-2">
-                        Mesajınız Alındı
+                        {contact.formSuccessTitle}
                       </h3>
-                      <p className="text-surface-400">En kısa sürede size dönüş yapacağız.</p>
+                      <p className="text-surface-400">{contact.formSuccessMessage}</p>
                     </motion.div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-5">

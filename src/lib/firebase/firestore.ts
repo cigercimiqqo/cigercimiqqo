@@ -35,13 +35,59 @@ import type {
 
 // ─── Settings ──────────────────────────────────────────────────────────────
 
-export async function getSettings(): Promise<SiteSettings | null> {
-  const snap = await getDoc(doc(getDb(), 'settings', 'config'));
-  return snap.exists() ? (snap.data() as SiteSettings) : null;
+const SETTINGS_META_KEY = 'meta';
+const SETTINGS_CONFIG_KEY = 'config';
+
+export interface SettingsMeta {
+  version: number;
+  updatedAt: ReturnType<typeof Date.now>;
 }
 
+/** Sadece versiyonu okur – cache karşılaştırması için (1 read) */
+export async function getSettingsMeta(): Promise<SettingsMeta | null> {
+  const metaRef = doc(getDb(), 'settings', SETTINGS_META_KEY);
+  const snap = await getDoc(metaRef);
+  if (snap.exists()) {
+    const d = snap.data();
+    return {
+      version: Number(d?.version ?? 0),
+      updatedAt: d?.updatedAt?.toMillis?.() ?? 0,
+    };
+  }
+  const configSnap = await getDoc(doc(getDb(), 'settings', SETTINGS_CONFIG_KEY));
+  if (configSnap.exists()) {
+    await setDoc(metaRef, { version: 1, updatedAt: Timestamp.now() });
+    return { version: 1, updatedAt: Date.now() };
+  }
+  return null;
+}
+
+/** Tam ayarları okur */
+export async function getSettings(): Promise<(SiteSettings & { _version?: number }) | null> {
+  const snap = await getDoc(doc(getDb(), 'settings', SETTINGS_CONFIG_KEY));
+  if (!snap.exists()) return null;
+  const data = snap.data() as SiteSettings & { _version?: number };
+  const meta = await getSettingsMeta();
+  if (meta) data._version = meta.version;
+  return data;
+}
+
+/** Ayarları günceller ve meta version’ı artırır */
 export async function updateSettings(data: Partial<SiteSettings>): Promise<void> {
-  await setDoc(doc(getDb(), 'settings', 'config'), data, { merge: true });
+  const batch = writeBatch(getDb());
+  const configRef = doc(getDb(), 'settings', SETTINGS_CONFIG_KEY);
+  const metaRef = doc(getDb(), 'settings', SETTINGS_META_KEY);
+
+  const metaSnap = await getDoc(metaRef);
+  const currentVersion = metaSnap.exists() ? Number((metaSnap.data() as { version?: number })?.version ?? 0) : 0;
+  const newVersion = currentVersion + 1;
+
+  batch.set(configRef, data, { merge: true });
+  batch.set(metaRef, {
+    version: newVersion,
+    updatedAt: Timestamp.now(),
+  });
+  await batch.commit();
 }
 
 export function subscribeToSettings(cb: (settings: SiteSettings) => void) {

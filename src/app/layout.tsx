@@ -1,16 +1,18 @@
 import type { Metadata } from 'next';
-import { Playfair_Display, Inter } from 'next/font/google';
+import { Noto_Serif, Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 
-const playfair = Playfair_Display({
+const notoSerif = Noto_Serif({
   subsets: ['latin'],
+  weight: ['400', '700', '800'],
   variable: '--font-heading',
   display: 'swap',
 });
 
 const inter = Inter({
   subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
   variable: '--font-body',
   display: 'swap',
 });
@@ -34,7 +36,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr" className="light" suppressHydrationWarning>
-      <body className={`${playfair.variable} ${inter.variable} grain font-body antialiased`}>
+      <body className={`${notoSerif.variable} ${inter.variable} grain font-body antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>

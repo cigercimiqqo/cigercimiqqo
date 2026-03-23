@@ -2,16 +2,22 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Phone, MapPin, Clock, Instagram, Facebook, ArrowUp } from 'lucide-react';
+import { Phone, MapPin, Clock, Instagram, Facebook, ArrowUp, Send } from 'lucide-react';
 import { useSettingsStore } from '@/store/settingsStore';
+import { getDefaultContent } from '@/lib/defaultContent';
 
 const FOOTER_LINKS = [
   { href: '/', label: 'Ana Sayfa' },
-  { href: '/menu', label: 'Menümüz' },
+  { href: '/menu', label: 'Menü' },
   { href: '/hakkimizda', label: 'Hakkımızda' },
   { href: '/galeri', label: 'Galeri' },
+];
+
+const SUPPORT_LINKS = [
   { href: '/iletisim', label: 'İletişim' },
-  { href: '/blog', label: 'Blog' },
+  { href: '/iletisim#adres', label: 'Adres' },
+  { href: '/iletisim#calisma', label: 'Çalışma Saatleri' },
+  { href: '/gizlilik', label: 'Gizlilik Politikası' },
 ];
 
 function formatWh(wh: { open: string; close: string; isClosed: boolean } | undefined): string {
@@ -21,8 +27,10 @@ function formatWh(wh: { open: string; close: string; isClosed: boolean } | undef
 
 export function SiteFooter() {
   const { settings } = useSettingsStore();
+  const content = settings?.content ?? getDefaultContent();
+  const footer = content.footer;
   const siteName = settings?.general?.siteName || 'Restoran';
-  const description = settings?.general?.siteDescription || '';
+  const description = footer.description || settings?.general?.siteDescription || '';
   const phones = settings?.general?.phone || [];
   const address = settings?.general?.address || '';
   const social = settings?.general?.socialMedia || {};
@@ -40,130 +48,96 @@ export function SiteFooter() {
   ].filter((s) => s.href);
 
   return (
-    <footer className="bg-surface-950 border-t border-surface-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div
-          className={`grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-8 ${
-            footerColumns === 4 ? 'lg:grid-cols-4' : footerColumns === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'
-          }`}
-        >
-          <div className="lg:col-span-1">
-            <div className="flex items-center gap-3 mb-5">
-              {logo ? (
-                <Image src={logo} alt={siteName} width={40} height={40} className="object-contain rounded-full" />
-              ) : (
-                <div className="w-10 h-10 rounded-full bg-brand-500 flex items-center justify-center">
-                  <span className="text-white font-heading font-bold text-lg">{siteName[0]}</span>
-                </div>
-              )}
-              <div>
-                <h3 className="text-surface-100 font-heading text-lg font-bold">{siteName}</h3>
-                <p className="text-gold-400 text-[10px] tracking-[0.2em] uppercase">Lezzet</p>
-              </div>
+    <footer className="w-full mt-20 bg-stone-100 dark:bg-stone-950 border-t border-stone-200 dark:border-stone-800">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-12 px-4 sm:px-6 lg:px-8 py-16 max-w-7xl mx-auto">
+        <div className="md:col-span-1">
+          <span className="text-xl font-bold text-brand-700 dark:text-brand-500 mb-4 block font-heading">
+            {footer.tagline || siteName}
+          </span>
+          {description && (
+            <p className="text-stone-500 dark:text-stone-400 text-sm leading-relaxed">{description}</p>
+          )}
+          {socialLinks.length > 0 && (
+            <div className="flex gap-4 mt-6">
+              {socialLinks.map(({ icon: Icon, href }) => (
+                <a
+                  key={href}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full border border-stone-300 dark:border-stone-700 flex items-center justify-center text-stone-600 dark:text-stone-400 hover:border-brand-500 hover:text-brand-600 transition-colors"
+                >
+                  <Icon size={16} />
+                </a>
+              ))}
             </div>
-            {description && (
-              <p className="text-surface-400 text-sm leading-relaxed mb-6">{description}</p>
-            )}
-            {socialLinks.length > 0 && (
-              <div className="flex gap-3">
-                {socialLinks.map(({ icon: Icon, href }) => (
-                  <a
-                    key={href}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-surface-900 border border-surface-800 flex items-center justify-center text-surface-400 hover:bg-brand-500 hover:border-brand-500 hover:text-white transition-all"
-                  >
-                    <Icon size={16} />
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
+          )}
+        </div>
 
-          <div>
-            <h4 className="text-surface-100 font-heading text-base font-semibold mb-5 flex items-center gap-2">
-              <span className="h-px w-4 bg-brand-500" />
-              Hızlı Erişim
-            </h4>
-            <ul className="space-y-3">
-              {FOOTER_LINKS.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-surface-400 hover:text-brand-400 text-sm transition-colors inline-flex items-center gap-2 group"
-                  >
-                    <span className="w-0 group-hover:w-3 h-px bg-brand-500 transition-all" />
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-surface-100 font-heading text-base font-semibold mb-5 flex items-center gap-2">
-              <span className="h-px w-4 bg-brand-500" />
-              İletişim
-            </h4>
-            <ul className="space-y-4">
-              {phones.map((phone, i) => (
-                <li key={i}>
-                  <a
-                    href={`tel:${phone}`}
-                    className="flex items-center gap-3 text-surface-400 hover:text-brand-400 text-sm transition-colors"
-                  >
-                    <Phone size={15} className="text-brand-500 shrink-0" />
-                    {phone}
-                  </a>
-                </li>
-              ))}
-              {address && (
-                <li className="flex items-start gap-3 text-surface-400 text-sm">
-                  <MapPin size={15} className="text-brand-500 shrink-0 mt-0.5" />
-                  {address}
-                </li>
-              )}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-surface-100 font-heading text-base font-semibold mb-5 flex items-center gap-2">
-              <span className="h-px w-4 bg-brand-500" />
-              Çalışma Saatleri
-            </h4>
-            <ul className="space-y-3">
-              <li className="flex items-center gap-3 text-sm">
-                <Clock size={15} className="text-brand-500 shrink-0" />
-                <div>
-                  <p className="text-surface-300 font-medium">Hafta İçi</p>
-                  <p className="text-surface-500">{weekdays}</p>
-                </div>
+        <div>
+          <h4 className="font-bold text-stone-900 dark:text-stone-100 mb-6 uppercase tracking-widest text-xs">
+            {footer.quickLinksLabel}
+          </h4>
+          <ul className="space-y-4">
+            {FOOTER_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className="text-stone-500 dark:text-stone-400 hover:text-brand-600 dark:hover:text-brand-500 transition-colors text-sm"
+                >
+                  {link.label}
+                </Link>
               </li>
-              <li className="flex items-center gap-3 text-sm">
-                <Clock size={15} className="text-brand-500 shrink-0" />
-                <div>
-                  <p className="text-surface-300 font-medium">Hafta Sonu</p>
-                  <p className="text-surface-500">{weekend}</p>
-                </div>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-bold text-stone-900 dark:text-stone-100 mb-6 uppercase tracking-widest text-xs">
+            {footer.supportLabel}
+          </h4>
+          <ul className="space-y-4">
+            {phones.map((phone, i) => (
+              <li key={i}>
+                <a href={`tel:${phone}`} className="text-stone-500 dark:text-stone-400 hover:text-brand-600 text-sm flex items-center gap-2">
+                  <Phone size={14} />
+                  {phone}
+                </a>
               </li>
-            </ul>
-            <button
-              onClick={scrollToTop}
-              className="mt-8 w-10 h-10 rounded-full border border-surface-700 flex items-center justify-center text-surface-400 hover:bg-brand-500 hover:border-brand-500 hover:text-white transition-all"
-              aria-label="Yukarı çık"
-            >
-              <ArrowUp size={16} />
+            ))}
+            {address && (
+              <li className="text-stone-500 dark:text-stone-400 text-sm flex items-start gap-2">
+                <MapPin size={14} className="shrink-0 mt-0.5" />
+                {address}
+              </li>
+            )}
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-bold text-stone-900 dark:text-stone-100 mb-6 uppercase tracking-widest text-xs">
+            {footer.newsletterLabel}
+          </h4>
+          <p className="text-stone-500 dark:text-stone-400 text-sm mb-4">
+            Yeni tatlar ve özel indirimlerden haberdar olun.
+          </p>
+          <form className="flex" onSubmit={(e) => e.preventDefault()}>
+            <input
+              type="email"
+              placeholder={footer.newsletterPlaceholder}
+              className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-l-lg px-4 py-2 w-full text-sm focus:ring-1 focus:ring-brand-500 outline-none"
+            />
+            <button type="submit" className="bg-brand-500 text-white px-4 py-2 rounded-r-lg hover:bg-brand-600 transition-colors">
+              <Send size={16} />
             </button>
-          </div>
+          </form>
         </div>
       </div>
 
-      <div className="border-t border-surface-800/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-surface-500">
-          <p>&copy; {new Date().getFullYear()} {siteName}. Tüm hakları saklıdır.</p>
-          <p>Sevgiyle tasarlandı.</p>
-        </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-stone-200/50 dark:border-stone-800/50 text-center">
+        <p className="font-heading text-sm text-stone-500 dark:text-stone-400">
+          {footer.copyrightText.replace('2024', String(new Date().getFullYear()))}
+        </p>
       </div>
     </footer>
   );

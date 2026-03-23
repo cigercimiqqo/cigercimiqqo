@@ -20,7 +20,7 @@ import {
   Tag,
   ChevronDown,
   ChevronRight,
-  Image,
+  Type,
   Palette,
   Plug,
   Truck,
@@ -45,6 +45,7 @@ const navItems = [
 
 const settingsItems = [
   { label: 'Genel', href: '/admin/settings/general', icon: Settings, desc: 'Site adı, logo, iletişim' },
+  { label: 'İçerik', href: '/admin/settings/content', icon: Type, desc: 'Hero, hikaye, stats, CTA, footer metinleri' },
   { label: 'Görünüm', href: '/admin/settings/appearance', icon: Palette, desc: 'Tema, renkler, hero' },
   { label: 'Entegrasyonlar', href: '/admin/settings/integrations', icon: Plug, desc: 'Medya sağlayıcı (Cloudinary/ImgBB)' },
   { label: 'Düzen', href: '/admin/settings/layout', icon: LayoutGrid, desc: 'Mobil/Tablet/Masaüstü özelleştirme' },

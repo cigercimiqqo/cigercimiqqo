@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { subscribeToSettings } from '@/lib/firebase/firestore';
+import { loadSettingsForSite } from '@/lib/settingsLoader';
 import { useSettingsStore } from '@/store/settingsStore';
 import type { SiteSettings } from '@/types';
 
@@ -9,15 +9,21 @@ export function useSettings() {
   const { settings, isLoading, setSettings } = useSettingsStore();
 
   useEffect(() => {
-    const unsubscribe = subscribeToSettings((s) => {
-      setSettings(s);
-      applyThemeCssVariables(s);
-      // Medya sağlayıcı tercihini localStorage ile senkronize et
-      if (s?.integrations?.mediaProvider && typeof window !== 'undefined') {
-        localStorage.setItem('miqqo_upload_provider', s.integrations.mediaProvider);
+    let mounted = true;
+    const { setLoading } = useSettingsStore.getState();
+    loadSettingsForSite().then((s) => {
+      if (!mounted) return;
+      if (s) {
+        setSettings(s);
+        applyThemeCssVariables(s);
+        if (s.integrations?.mediaProvider && typeof window !== 'undefined') {
+          localStorage.setItem('miqqo_upload_provider', s.integrations.mediaProvider);
+        }
+      } else {
+        setLoading(false);
       }
     });
-    return () => unsubscribe();
+    return () => { mounted = false; };
   }, [setSettings]);
 
   return { settings, isLoading };

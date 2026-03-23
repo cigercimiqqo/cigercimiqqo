@@ -28,6 +28,11 @@ export function SiteHeader() {
   const { settings } = useSettingsStore();
   const openCart = useCartStore((s) => s.openCart);
   const count = useCartStore((s) => s.itemCount());
+  const siteName = settings?.general?.siteName || 'Restoran';
+  const logo = settings?.general?.logo;
+  const phone = settings?.general?.phone?.[0];
+  const { preferences } = useVisitorPreferences();
+  const isLight = preferences.theme === 'light';
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -35,31 +40,24 @@ export function SiteHeader() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
-
-  const siteName = settings?.general?.siteName || 'Restoran';
-  const logo = settings?.general?.logo;
-  const phones = settings?.general?.phone || [];
-  const phone = phones[0];
-  const { preferences } = useVisitorPreferences();
-  const isLight = preferences.theme === 'light';
+  useEffect(() => setMobileOpen(false), [pathname]);
 
   const headerBg = scrolled
     ? isLight
-      ? 'bg-white/95 backdrop-blur-xl shadow-lg shadow-black/5 py-3'
-      : 'bg-surface-950/90 backdrop-blur-xl shadow-2xl shadow-black/20 py-3'
+      ? 'bg-white/80 backdrop-blur-md shadow-sm py-3'
+      : 'bg-stone-900/80 backdrop-blur-md shadow-sm py-3'
     : 'bg-transparent py-5';
 
-  const navLinkClass = (isActive: boolean) =>
-    isActive
-      ? 'text-brand-500'
-      : scrolled && isLight
-        ? 'text-surface-700 hover:text-surface-900'
-        : 'text-surface-200 hover:text-white';
+  const textClass = scrolled && isLight
+    ? 'text-stone-900'
+    : 'text-white';
 
-  const siteNameClass = scrolled && isLight ? 'text-surface-900' : 'text-white';
+  const linkClass = (isActive: boolean) =>
+    isActive
+      ? 'text-brand-600 font-bold border-b-2 border-brand-600 pb-1'
+      : scrolled && isLight
+        ? 'text-stone-600 hover:text-brand-600 transition-colors'
+        : 'text-stone-200 hover:text-white transition-colors';
 
   return (
     <>
@@ -70,45 +68,32 @@ export function SiteHeader() {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${headerBg}`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="group flex items-center gap-3">
+          <div className="flex justify-between items-center">
+            <Link href="/" className="flex items-center gap-2">
               {logo ? (
-                <Image src={logo} alt={siteName} width={40} height={40} className="object-contain rounded-full" />
+                <Image src={logo} alt={siteName} width={36} height={36} className="object-contain rounded-lg" />
               ) : (
-                <div className="relative">
-                  <div className="w-10 h-10 rounded-full bg-brand-500 flex items-center justify-center group-hover:bg-brand-600 transition-colors">
-                    <span className="text-white font-heading font-bold text-lg">{siteName[0]}</span>
-                  </div>
-                  <div className="absolute -inset-1 rounded-full bg-brand-500/20 group-hover:bg-brand-500/30 transition-colors -z-10" />
-                </div>
-              )}
-              <div className="flex flex-col">
-                <span className={`font-heading text-xl font-bold leading-tight tracking-wide ${siteNameClass}`}>
+                <span className={`text-2xl font-bold font-heading ${textClass}`}>
                   {siteName}
                 </span>
-                <span className="text-gold-400 text-[10px] tracking-[0.25em] uppercase font-medium leading-none">
-                  Lezzet
+              )}
+              {logo && (
+                <span className={`text-xl font-bold font-heading ${textClass}`}>
+                  {siteName}
                 </span>
-              </div>
+              )}
             </Link>
 
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden md:flex items-center gap-8">
               {NAV_LINKS.map((link) => {
                 const isActive = pathname === link.href;
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`relative px-4 py-2 text-sm font-medium tracking-wide transition-colors ${navLinkClass(isActive)}`}
+                    className={`text-sm ${linkClass(isActive)}`}
                   >
                     {link.label}
-                    {isActive && (
-                      <motion.span
-                        layoutId="nav-indicator"
-                        className="absolute bottom-0 left-4 right-4 h-0.5 bg-brand-500 rounded-full"
-                        transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                      />
-                    )}
                   </Link>
                 );
               })}
@@ -118,30 +103,28 @@ export function SiteHeader() {
               {phone && (
                 <a
                   href={`tel:${phone}`}
-                  className="hidden sm:flex items-center gap-2 px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white text-sm font-medium rounded-full transition-all hover:shadow-lg hover:shadow-brand-500/25"
+                  className="hidden sm:flex items-center gap-2 px-6 py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-sm font-medium transition-all shadow-lg shadow-brand-500/20"
                 >
                   <Phone size={14} />
-                  <span>Sipariş Ver</span>
+                  Sipariş Ver
                 </a>
               )}
               <button
                 onClick={openCart}
-                className="relative p-2.5 rounded-full bg-brand-500 hover:bg-brand-600 text-white transition-colors"
+                className="relative p-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white transition-colors"
                 aria-label="Sepet"
               >
                 <ShoppingCart size={18} />
                 {count > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-gold-500 text-surface-950 text-xs rounded-full flex items-center justify-center font-bold">
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-gold-500 text-stone-950 text-xs rounded-full flex items-center justify-center font-bold">
                     {count > 9 ? '9+' : count}
                   </span>
                 )}
               </button>
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className={`lg:hidden w-10 h-10 flex items-center justify-center transition-colors ${
-                  scrolled && isLight ? 'text-surface-700 hover:text-surface-900' : 'text-surface-200 hover:text-white'
-                }`}
-                aria-label="Menüyü aç"
+                className={`lg:hidden w-10 h-10 flex items-center justify-center ${textClass}`}
+                aria-label="Menü"
               >
                 {mobileOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
