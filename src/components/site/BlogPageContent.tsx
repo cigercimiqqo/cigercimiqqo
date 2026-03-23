@@ -49,15 +49,20 @@ export function BlogPageContent() {
   }, [slug]);
 
   if (loading) {
-    return <div className="max-w-3xl mx-auto px-4 py-16 text-center text-gray-400">Yükleniyor...</div>;
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-16 flex flex-col items-center gap-4">
+        <div className="w-8 h-8 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
+        <p className="text-surface-400 text-sm">Yükleniyor...</p>
+      </div>
+    );
   }
 
   if (slug) {
     if (!post) {
       return (
         <div className="max-w-3xl mx-auto px-4 py-16 text-center">
-          <p className="text-gray-600 mb-4">Yazı bulunamadı.</p>
-          <Link href="/blog" className="text-orange-500 font-medium hover:text-orange-600">
+          <p className="text-surface-400 mb-4">Yazı bulunamadı.</p>
+          <Link href="/blog" className="text-brand-500 font-medium hover:text-brand-400">
             ← Tüm yazılar
           </Link>
         </div>
@@ -68,7 +73,7 @@ export function BlogPageContent() {
       <article className="max-w-3xl mx-auto px-4 py-12">
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 text-sm text-orange-500 mb-8 hover:text-orange-600"
+          className="inline-flex items-center gap-2 text-sm text-brand-500 mb-8 hover:text-brand-400"
         >
           <ArrowLeft size={16} />
           Tüm yazılar
@@ -85,16 +90,16 @@ export function BlogPageContent() {
             />
           </div>
         )}
-        <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+        <div className="flex items-center gap-2 text-sm text-surface-400 mb-4">
           <Calendar size={14} />
           {formatDate(post.publishedAt)}
           <span>·</span>
           <span>{estimateReadingTime(post.content)} dk okuma</span>
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">{post.title}</h1>
-        {post.excerpt ? <p className="text-lg text-gray-600 mb-8">{post.excerpt}</p> : null}
+        <h1 className="text-3xl md:text-4xl font-bold text-surface-100 mb-6">{post.title}</h1>
+        {post.excerpt ? <p className="text-lg text-surface-400 mb-8">{post.excerpt}</p> : null}
         <div
-          className="prose prose-gray max-w-none text-gray-800"
+          className="prose prose-invert prose-gray max-w-none text-surface-300 [&_strong]:text-surface-100"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </article>
@@ -103,19 +108,21 @@ export function BlogPageContent() {
 
   if (!posts.length) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-16 text-center text-gray-500">
-        Henüz yayınlanmış yazı yok.
+      <div className="max-w-3xl mx-auto px-4 py-20 text-center">
+        <div className="text-5xl mb-4">📝</div>
+        <h2 className="text-xl font-heading font-bold text-surface-200 mb-2">Henüz yayınlanmış yazı yok</h2>
+        <p className="text-surface-400 text-sm">Admin panelinden blog yazıları ekleyebilirsiniz.</p>
       </div>
     );
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Blog</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-surface-100 mb-8">Blog</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {posts.map((item) => (
           <Link key={item.id} href={`/blog?slug=${item.slug}`} className="group">
-            <article className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+            <article className="bg-surface-900 rounded-2xl overflow-hidden border border-surface-800/50 shadow-sm hover:border-brand-500/30 hover:shadow-md transition-all">
               {item.coverImage && (
                 <div className="relative h-48 overflow-hidden">
                   <Image
@@ -128,16 +135,16 @@ export function BlogPageContent() {
                 </div>
               )}
               <div className="p-5">
-                <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
+                <div className="flex items-center gap-2 text-xs text-surface-400 mb-2">
                   <Calendar size={12} />
                   {formatDate(item.publishedAt)}
                   <span>·</span>
                   <span>{estimateReadingTime(item.content)} dk okuma</span>
                 </div>
-                <h2 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-orange-500 transition-colors">
+                <h2 className="font-semibold text-surface-100 mb-2 line-clamp-2 group-hover:text-brand-500 transition-colors">
                   {item.title}
                 </h2>
-                <p className="text-sm text-gray-500 line-clamp-2">{truncateText(item.excerpt, 100)}</p>
+                <p className="text-sm text-surface-400 line-clamp-2">{truncateText(item.excerpt, 100)}</p>
               </div>
             </article>
           </Link>

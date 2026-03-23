@@ -7,15 +7,19 @@ import { getDefaultContent } from '@/lib/defaultContent';
 import type { StatItem } from '@/types';
 
 function Counter({ item }: { item: StatItem }) {
+  const target = typeof item.value === 'number' && !Number.isNaN(item.value) ? Math.max(0, item.value) : 0;
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true });
-  const target = item.value;
   const min = item.min ?? 0;
   const max = item.max ?? target;
 
   useEffect(() => {
     if (!inView) return;
+    if (target <= 0) {
+      setCount(0);
+      return;
+    }
     const duration = 2000;
     const steps = 60;
     const range = Math.min(max, Math.max(min, target));
@@ -35,10 +39,11 @@ function Counter({ item }: { item: StatItem }) {
     return () => clearInterval(timer);
   }, [inView, target, min, max]);
 
+  const displayValue = item.decimal ? count.toFixed(1) : Math.floor(count);
   return (
     <span ref={ref} className="font-heading text-4xl md:text-5xl font-bold text-white">
-      {item.decimal ? count.toFixed(1) : Math.floor(count)}
-      {item.suffix}
+      {displayValue}
+      {item.suffix ?? ''}
     </span>
   );
 }

@@ -23,6 +23,7 @@ import { toast } from 'sonner';
 import { Loader2, Smartphone, Tablet, Monitor, Eye, EyeOff, GripVertical } from 'lucide-react';
 import {
   mergeLayoutWithDefaults,
+  getDefaultLayoutSettings,
   HOME_SECTION_IDS,
   HOME_SECTION_LABELS,
 } from '@/lib/defaultLayout';
@@ -200,10 +201,24 @@ export function LayoutSettings() {
         </div>
 
         <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <h3 className="font-bold text-gray-900 mb-2">{DEVICE_LABELS[activeDevice]} Düzeni</h3>
-          <p className="text-xs text-gray-500 mb-4">
-            Bölümleri sürükleyip bırakarak sıralayın. Göz ikonu ile göster/gizle.
-          </p>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="font-bold text-gray-900 mb-2">{DEVICE_LABELS[activeDevice]} Düzeni</h3>
+              <p className="text-xs text-gray-500">
+                Bölümleri sürükleyip bırakarak sıralayın. Göz ikonu ile göster/gizle.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                updateLayout(() => getDefaultLayoutSettings());
+                toast.info('Varsayılana sıfırlandı. Kaydet\'e basarak uygulayın.');
+              }}
+              className="text-sm text-gray-500 hover:text-gray-700 underline"
+            >
+              Sıfırla
+            </button>
+          </div>
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={sortedSections.map((s) => s.id)} strategy={verticalListSortingStrategy}>
               <div className="space-y-2">
