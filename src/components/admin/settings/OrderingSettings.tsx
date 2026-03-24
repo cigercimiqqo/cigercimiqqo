@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { getSettings, updateSettings } from '@/lib/firebase/firestore';
 import { toast } from 'sonner';
 import { Loader2, Plus, X, Clock, Calendar } from 'lucide-react';
-import type { SiteSettings, OrderingSettings, WorkingHours } from '@/types';
+import type { SiteSettings, OrderingSettings, WorkingHours, SpecialDate } from '@/types';
 import { mergeOrderingWithDefaults } from '@/lib/defaultOrdering';
 
 const DAY_LABELS: Record<keyof OrderingSettings['workingHours'], string> = {
@@ -21,7 +21,10 @@ export function OrderingSettings() {
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [newClosedDate, setNewClosedDate] = useState('');
+  const [newDate, setNewDate] = useState('');
+  const [newIsClosed, setNewIsClosed] = useState(true);
+  const [newOpen, setNewOpen] = useState('10:00');
+  const [newClose, setNewClose] = useState('14:00');
 
   useEffect(() => {
     getSettings().then((s) => {
@@ -58,25 +61,32 @@ export function OrderingSettings() {
     updateOrdering({ workingHours: hours });
   }
 
-  function addClosedDate() {
-    if (!newClosedDate) {
+  function addSpecialDate() {
+    if (!newDate) {
       toast.error('Tarih seçin');
       return;
     }
     const ordering = mergeOrderingWithDefaults(settings?.ordering);
-    const dates = [...(ordering.closedDates ?? []), newClosedDate].sort();
-    if (ordering.closedDates?.includes(newClosedDate)) {
+    const existing = ordering.specialDates ?? [];
+    if (existing.some((s) => s.date === newDate)) {
       toast.error('Bu tarih zaten ekli');
       return;
     }
-    updateOrdering({ closedDates: dates });
-    setNewClosedDate('');
+    const entry: SpecialDate = newIsClosed
+      ? { date: newDate, isClosed: true }
+      : { date: newDate, isClosed: false, open: newOpen, close: newClose };
+    const updated = [...existing, entry].sort((a, b) => a.date.localeCompare(b.date));
+    updateOrdering({ specialDates: updated });
+    setNewDate('');
+    setNewIsClosed(true);
+    setNewOpen('10:00');
+    setNewClose('14:00');
   }
 
-  function removeClosedDate(date: string) {
+  function removeSpecialDate(date: string) {
     const ordering = mergeOrderingWithDefaults(settings?.ordering);
-    const dates = (ordering.closedDates ?? []).filter((d) => d !== date);
-    updateOrdering({ closedDates: dates });
+    const updated = (ordering.specialDates ?? []).filter((s) => s.date !== date);
+    updateOrdering({ specialDates: updated });
   }
 
   if (isLoading) {
@@ -88,7 +98,7 @@ export function OrderingSettings() {
   }
 
   const ordering = mergeOrderingWithDefaults(settings?.ordering);
-  const closedDates = ordering.closedDates ?? [];
+  const specialDates = ordering.specialDates ?? [];
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -153,44 +163,83 @@ export function OrderingSettings() {
         </div>
       </div>
 
-      {/* Özel tatil günleri */}
+      {/* Özel tatil / özel saat günleri */}
       <div className="bg-white rounded-2xl border border-gray-100 p-6">
         <h3 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
           <Calendar size={18} />
-          Özel Tatil Günleri
+          Özel Tarihler
         </h3>
         <p className="text-sm text-gray-500 mb-4">
-          Eklediğiniz tarihlerde restoran otomatik olarak kapalı sayılır; sipariş alınmaz.
+          Tarih ekleyerek tam tatil (kapalı) veya yarım gün gibi farklı çalışma saatleri tanımlayabilirsiniz.
         </p>
 
-        <div className="flex gap-2 mb-4">
-          <input
-            type="date"
-            value={newClosedDate}
-            onChange={(e) => setNewClosedDate(e.target.value)}
-            className="px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-orange-500/30 bg-white"
-          />
-          <button
-            onClick={addClosedDate}
-            className="flex items-center gap-1.5 px-3 py-2.5 bg-orange-500 text-white rounded-xl text-sm font-semibold hover:bg-orange-600"
-          >
-            <Plus size={15} />
-            Ekle
-          </button>
+        <div className="space-y-3 mb-4 p-4 bg-gray-50 rounded-xl">
+          <div className="flex flex-wrap items-center gap-2">
+            <input
+              type="date"
+              value={newDate}
+              onChange={(e) => setNewDate(e.target.value)}
+              className="px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-orange-500/30 bg-white"
+            />
+            <label className="flex items-center gap-1.5 text-sm cursor-pointer">
+              <input
+                type="checkbox"
+                checked={newIsClosed}
+                onChange={(e) => setNewIsClosed(e.target.checked)}
+                className="rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+              />
+              Kapalı
+            </label>
+            {!newIsClosed && (
+              <>
+                <input
+                  type="time"
+                  value={newOpen}
+                  onChange={(e) => setNewOpen(e.target.value)}
+                  className="px-3 py-2 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-orange-500/30 bg-white"
+                />
+                <span className="text-gray-400">-</span>
+                <input
+                  type="time"
+                  value={newClose}
+                  onChange={(e) => setNewClose(e.target.value)}
+                  className="px-3 py-2 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-orange-500/30 bg-white"
+                />
+              </>
+            )}
+            <button
+              onClick={addSpecialDate}
+              className="flex items-center gap-1.5 px-3 py-2.5 bg-orange-500 text-white rounded-xl text-sm font-semibold hover:bg-orange-600"
+            >
+              <Plus size={15} />
+              Ekle
+            </button>
+          </div>
         </div>
 
-        {closedDates.length === 0 ? (
-          <p className="text-sm text-gray-400 py-4">Henüz özel tatil eklenmedi</p>
+        {specialDates.length === 0 ? (
+          <p className="text-sm text-gray-400 py-4">Henüz özel tarih eklenmedi</p>
         ) : (
           <div className="space-y-2">
-            {closedDates.map((d) => (
+            {specialDates.map((s) => (
               <div
-                key={d}
-                className="flex items-center justify-between bg-amber-50 border border-amber-100 rounded-xl px-4 py-3"
+                key={s.date}
+                className={`flex items-center justify-between rounded-xl px-4 py-3 ${
+                  s.isClosed ? 'bg-amber-50 border border-amber-100' : 'bg-sky-50 border border-sky-100'
+                }`}
               >
-                <span className="text-sm font-medium text-gray-900">{d}</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-medium text-gray-900">{s.date}</span>
+                  {s.isClosed ? (
+                    <span className="text-xs font-medium text-amber-700 bg-amber-200/60 px-2 py-0.5 rounded">Kapalı</span>
+                  ) : (
+                    <span className="text-xs font-medium text-sky-700 bg-sky-200/60 px-2 py-0.5 rounded">
+                      {s.open} – {s.close}
+                    </span>
+                  )}
+                </div>
                 <button
-                  onClick={() => removeClosedDate(d)}
+                  onClick={() => removeSpecialDate(s.date)}
                   className="text-gray-400 hover:text-red-500 transition-colors"
                 >
                   <X size={16} />

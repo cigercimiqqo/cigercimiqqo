@@ -55,6 +55,14 @@ export interface AppearanceSettings {
   showGallery?: boolean;
 }
 
+/** Özel tarih: tam tatil (kapalı) veya farklı çalışma saatleri (yarım gün vb.) */
+export interface SpecialDate {
+  date: string; // YYYY-MM-DD
+  isClosed: boolean; // true = tam tatil, false = özel saat kullan
+  open?: string; // isClosed false ise (örn. "10:00")
+  close?: string; // isClosed false ise (örn. "14:00")
+}
+
 export interface OrderingSettings {
   isOnline: boolean;
   workingHours: {
@@ -66,7 +74,10 @@ export interface OrderingSettings {
     sat: WorkingHours;
     sun: WorkingHours;
   };
-  closedDates: string[];
+  /** @deprecated closedDates yerine specialDates kullan. Geriye uyumluluk için okunur. */
+  closedDates?: string[];
+  /** Özel tarihler: kapalı günler veya farklı çalışma saatleri */
+  specialDates?: SpecialDate[];
   minOrderAmount: number;
   busyMessage: string;
 }

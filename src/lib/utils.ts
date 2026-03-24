@@ -75,14 +75,27 @@ export async function hashIP(ip: string): Promise<string> {
   return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
+import type { SpecialDate } from '@/types';
+
 export function isRestaurantOpen(
   workingHours: Record<string, { open: string; close: string; isClosed: boolean }>,
-  closedDates: string[]
+  specialDates?: SpecialDate[]
 ): boolean {
   const now = new Date();
   const todayStr = now.toISOString().split('T')[0];
 
-  if (closedDates.includes(todayStr)) return false;
+  const special = specialDates?.find((s) => s.date === todayStr);
+  if (special) {
+    if (special.isClosed) return false;
+    if (special.open && special.close) {
+      const [openH, openM] = special.open.split(':').map(Number);
+      const [closeH, closeM] = special.close.split(':').map(Number);
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      const openMinutes = openH * 60 + openM;
+      const closeMinutes = closeH * 60 + closeM;
+      return currentMinutes >= openMinutes && currentMinutes < closeMinutes;
+    }
+  }
 
   const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
   const dayKey = dayKeys[now.getDay()];
