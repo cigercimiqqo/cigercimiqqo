@@ -1,6 +1,7 @@
 import { getSettings, getSettingsMeta } from '@/lib/firebase/firestore';
 import { mergeContentWithDefaults } from '@/lib/defaultContent';
 import { mergeLayoutWithDefaults } from '@/lib/defaultLayout';
+import { mergeOrderingWithDefaults } from '@/lib/defaultOrdering';
 import type { SiteSettings } from '@/types';
 
 const CACHE_KEY = 'miqqo_settings_cache';
@@ -46,6 +47,7 @@ export function normalizeSettings(raw: SiteSettings | null): SiteSettings | null
     ...rest,
     content: mergeContentWithDefaults(rest.content, rest.general?.siteName),
     layout: mergeLayoutWithDefaults(rest.layout),
+    ordering: mergeOrderingWithDefaults(rest.ordering),
   };
   return merged as SiteSettings;
 }

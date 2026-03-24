@@ -22,6 +22,7 @@ import {
   ChevronRight,
   Type,
   Palette,
+  Clock,
   Plug,
   Truck,
   Bell,
@@ -45,6 +46,7 @@ const navItems = [
 
 const settingsItems = [
   { label: 'Genel', href: '/admin/settings/general', icon: Settings, desc: 'Site adı, logo, iletişim' },
+  { label: 'Sipariş', href: '/admin/settings/ordering', icon: Clock, desc: 'Çalışma saatleri, özel tatiller' },
   { label: 'İçerik', href: '/admin/settings/content', icon: Type, desc: 'Hero, hikaye, stats, CTA, footer metinleri' },
   { label: 'Görünüm', href: '/admin/settings/appearance', icon: Palette, desc: 'Tema, renkler, hero' },
   { label: 'Entegrasyonlar', href: '/admin/settings/integrations', icon: Plug, desc: 'Medya sağlayıcı (Cloudinary/ImgBB)' },
