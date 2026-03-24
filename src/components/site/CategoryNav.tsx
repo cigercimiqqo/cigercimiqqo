@@ -11,7 +11,13 @@ export function CategoryNav() {
 
   useEffect(() => {
     getCategories()
-      .then((cats) => setCategories(cats.filter((c) => c.isActive)))
+      .then((cats) =>
+        setCategories(
+          cats
+            .filter((c) => c.isActive)
+            .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        )
+      )
       .catch(() => {});
   }, []);
 

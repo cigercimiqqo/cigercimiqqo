@@ -58,7 +58,11 @@ export function MenuPageContent() {
           cleared = true;
           clearTimeout(timeout);
           setError(null);
-          setCategories((cats || []).filter((c) => c?.isActive));
+          setCategories(
+            (cats || [])
+              .filter((c) => c?.isActive)
+              .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+          );
           setProducts(prods || []);
         })
         .catch(() => {

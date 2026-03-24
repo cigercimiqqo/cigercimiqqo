@@ -21,7 +21,7 @@ export function IntegrationSettings() {
     });
   }, []);
 
-  const mediaProvider = (settings?.integrations?.mediaProvider ?? 'cloudinary') as UploadProvider;
+  const mediaProvider = (settings?.integrations?.mediaProvider ?? 'imgbb') as UploadProvider;
 
   const toggle = (key: SectionKey) => setExpanded((p) => (p === key ? ('' as SectionKey) : key));
 

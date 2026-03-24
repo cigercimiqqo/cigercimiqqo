@@ -35,10 +35,10 @@ export function getActiveProvider(): UploadProvider {
   const cloudinaryName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
   const cloudinaryPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
-  if (cloudinaryName && cloudinaryPreset) return 'cloudinary';
   if (imgbbKey) return 'imgbb';
+  if (cloudinaryName && cloudinaryPreset) return 'cloudinary';
 
-  return 'cloudinary';
+  return 'imgbb';
 }
 
 // ─── Cloudinary Upload ─────────────────────────────────────────────────────
