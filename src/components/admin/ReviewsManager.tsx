@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { getReviews, createReview, updateReview, deleteReview } from '@/lib/firebase/firestore';
-import toast from 'react-hot-toast';
+import { toast } from '@/lib/toast';
 import { Plus, Pencil, Trash2, Eye, EyeOff, Loader2, Star, FileCode, UserPlus } from 'lucide-react';
 import { Timestamp } from 'firebase/firestore';
 import { parseGoogleReviewHtml } from '@/lib/parseGoogleReviewHtml';

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getSettings, updateSettings } from '@/lib/firebase/firestore';
-import toast from 'react-hot-toast';
+import { toast } from '@/lib/toast';
 import { Loader2 } from 'lucide-react';
 import type { SiteSettings } from '@/types';
 

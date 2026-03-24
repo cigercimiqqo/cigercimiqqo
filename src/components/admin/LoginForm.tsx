@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import { Eye, EyeOff, Loader2, UtensilsCrossed } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { toast } from '@/lib/toast';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');

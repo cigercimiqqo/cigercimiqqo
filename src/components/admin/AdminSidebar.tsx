@@ -29,7 +29,7 @@ import {
   LayoutGrid,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import toast from 'react-hot-toast';
+import { toast } from '@/lib/toast';
 
 const navItems = [
   { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },

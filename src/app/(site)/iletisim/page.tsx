@@ -10,7 +10,7 @@ import { useSettingsStore } from '@/store/settingsStore';
 import { addContact } from '@/lib/firebase/firestore';
 import { getDefaultContent } from '@/lib/defaultContent';
 import { getGoogleMapsEmbedSrc } from '@/lib/googleMapsEmbed';
-import toast from 'react-hot-toast';
+import { toast } from '@/lib/toast';
 
 function formatWh(wh: { open: string; close: string; isClosed: boolean } | undefined): string {
   if (!wh || wh.isClosed) return 'Kapalı';

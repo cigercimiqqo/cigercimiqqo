@@ -28,7 +28,7 @@ import {
 } from '@/lib/firebase/firestore';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { slugify } from '@/lib/utils';
-import toast from 'react-hot-toast';
+import { toast } from '@/lib/toast';
 import { Plus, GripVertical, Pencil, Trash2, Loader2, Eye, EyeOff, ImagePlus } from 'lucide-react';
 import type { Category } from '@/types';
 import { Timestamp } from 'firebase/firestore';

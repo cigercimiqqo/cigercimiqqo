@@ -8,7 +8,7 @@ import { getPublicUrl } from '@/lib/publicPath';
 import { DISTRICTS_FALLBACK } from '@/lib/districtsFallback';
 import { formatPrice } from '@/lib/utils';
 import { ArrowLeft, Loader2, Tag, X } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { toast } from '@/lib/toast';
 import type { DistrictData } from '@/types';
 
 interface OrderFormProps {

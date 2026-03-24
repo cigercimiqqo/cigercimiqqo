@@ -8,7 +8,7 @@ import { ShoppingCart, Flame, Star, Sparkles, TrendingUp } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
 import { cn, formatPrice, getEffectivePrice } from '@/lib/utils';
 import { getCloudinaryBlurUrl } from '@/lib/cloudinary';
-import toast from 'react-hot-toast';
+import { toast } from '@/lib/toast';
 import type { Product } from '@/types';
 
 const badgeConfig = {

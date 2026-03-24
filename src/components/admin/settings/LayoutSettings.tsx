@@ -19,7 +19,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { getSettings, updateSettings } from '@/lib/firebase/firestore';
-import toast from 'react-hot-toast';
+import { toast } from '@/lib/toast';
 import { Loader2, Smartphone, Tablet, Monitor, Eye, EyeOff, GripVertical } from 'lucide-react';
 import {
   mergeLayoutWithDefaults,

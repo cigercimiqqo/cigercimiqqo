@@ -6,7 +6,7 @@ import { Bell, CheckCircle2, XCircle, ChefHat, Truck, Package, Clock } from 'luc
 import { useActiveOrders } from '@/hooks/useOrders';
 import { updateOrderStatus } from '@/lib/firebase/firestore';
 import { updateActiveOrderStatus, removeActiveOrder } from '@/lib/firebase/realtime';
-import toast from 'react-hot-toast';
+import { toast } from '@/lib/toast';
 import { formatPrice } from '@/lib/utils';
 import type { OrderStatus } from '@/types';
 
