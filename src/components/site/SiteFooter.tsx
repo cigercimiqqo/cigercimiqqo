@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Phone, MapPin, Clock, Instagram, Facebook, ArrowUp, Send } from 'lucide-react';
@@ -26,7 +27,10 @@ function formatWh(wh: { open: string; close: string; isClosed: boolean } | undef
 }
 
 export function SiteFooter() {
+  const [year, setYear] = useState('2024');
   const { settings } = useSettingsStore();
+
+  useEffect(() => setYear(String(new Date().getFullYear())), []);
   const content = settings?.content ?? getDefaultContent();
   const footer = content.footer;
   const siteName = settings?.general?.siteName || 'Restoran';
@@ -136,7 +140,7 @@ export function SiteFooter() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-stone-200/50 dark:border-stone-800/50 text-center">
         <p className="font-heading text-sm text-stone-500 dark:text-stone-400">
-          {footer.copyrightText.replace('2024', String(new Date().getFullYear()))}
+          {footer.copyrightText.replace('2024', year)}
         </p>
       </div>
     </footer>

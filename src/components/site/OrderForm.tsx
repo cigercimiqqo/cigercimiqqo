@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/cartStore';
 import { getOrCreateVisitorId } from '@/lib/visitor';
 import { getPublicUrl } from '@/lib/publicPath';
+import { DISTRICTS_FALLBACK } from '@/lib/districtsFallback';
 import { formatPrice } from '@/lib/utils';
 import { ArrowLeft, Loader2, Tag, X } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -51,9 +52,9 @@ export function OrderForm({ onBack }: OrderFormProps) {
 
   useEffect(() => {
     fetch(getPublicUrl('/districts/tr-districts.json'))
-      .then((r) => r.json())
-      .then(setDistricts)
-      .catch(() => {});
+      .then((r) => (r.ok ? r.json() : []))
+      .then((d) => setDistricts(Array.isArray(d) && d.length ? d : DISTRICTS_FALLBACK))
+      .catch(() => setDistricts(DISTRICTS_FALLBACK));
   }, []);
 
   const selectedIl = districts.find((d) => d.il === form.il);

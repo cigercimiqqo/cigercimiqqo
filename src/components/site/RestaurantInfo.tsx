@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { MapPin, Phone, Clock, Navigation } from 'lucide-react';
 import { useSettingsStore } from '@/store/settingsStore';
 import { getGoogleMapsEmbedSrc } from '@/lib/googleMapsEmbed';
@@ -10,6 +11,7 @@ function formatWh(wh: { open: string; close: string; isClosed: boolean } | undef
 }
 
 export function RestaurantInfo() {
+  const [todayKey, setTodayKey] = useState('mon');
   const { settings } = useSettingsStore();
   const address = settings?.general?.address;
   const phones = settings?.general?.phone || [];
@@ -17,9 +19,11 @@ export function RestaurantInfo() {
   const mapsLink = settings?.general?.googleMapsLink;
   const embedSrc = getGoogleMapsEmbedSrc(mapsLink);
 
-  if (!address && !phones.length && !embedSrc) return null;
+  useEffect(() => {
+    setTodayKey(['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][new Date().getDay()]);
+  }, []);
 
-  const todayKey = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][new Date().getDay()];
+  if (!address && !phones.length && !embedSrc) return null;
   const todayHours = workingHours?.[todayKey as keyof typeof workingHours];
   const weekdays = workingHours?.mon ? formatWh(workingHours.mon) : '11:00 - 23:00';
   const weekend = workingHours?.sat ? formatWh(workingHours.sat) : '10:00 - 00:00';

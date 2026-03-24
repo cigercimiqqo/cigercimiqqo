@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { getSettings, updateSettings } from '@/lib/firebase/firestore';
 import { getPublicUrl } from '@/lib/publicPath';
+import { DISTRICTS_FALLBACK } from '@/lib/districtsFallback';
 import toast from 'react-hot-toast';
 import { Loader2, Plus, X } from 'lucide-react';
 import type { SiteSettings, DeliveryDistrict } from '@/types';
@@ -18,7 +19,10 @@ export function DeliverySettings() {
   useEffect(() => {
     Promise.all([
       getSettings(),
-      fetch(getPublicUrl('/districts/tr-districts.json')).then((r) => r.json()).catch(() => []),
+      fetch(getPublicUrl('/districts/tr-districts.json'))
+        .then((r) => (r.ok ? r.json() : []))
+        .then((d) => (Array.isArray(d) && d.length ? d : DISTRICTS_FALLBACK))
+        .catch(() => DISTRICTS_FALLBACK),
     ]).then(([s, d]) => {
       setSettings(s);
       setDistricts(d);
