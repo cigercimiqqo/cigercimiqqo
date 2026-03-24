@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, CheckCircle2, XCircle, ChefHat, Truck, Package, Clock } from 'lucide-react';
 import { useActiveOrders } from '@/hooks/useOrders';
 import { updateOrderStatus } from '@/lib/firebase/firestore';
@@ -97,14 +96,10 @@ export function LiveOrdersPanel() {
             <p className="text-gray-400 text-sm">Aktif sipariş yok</p>
           </div>
         ) : (
-          <AnimatePresence>
-            <div className="space-y-4">
+          <div className="space-y-4">
               {orders.map(([orderId, order]) => (
-                <motion.div
+                <div
                   key={orderId}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
                   className="border border-gray-100 rounded-xl p-4"
                 >
                   <div className="flex items-start justify-between mb-3">
@@ -165,10 +160,9 @@ export function LiveOrdersPanel() {
                       </button>
                     )}
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
-          </AnimatePresence>
         )}
       </div>
     </div>

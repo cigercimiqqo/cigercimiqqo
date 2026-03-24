@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Send, X, Loader2, RefreshCw } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
 import { buildAiCartItems } from '@/lib/pollinations';
@@ -60,16 +59,10 @@ export function AiCartButton({ products }: AiCartButtonProps) {
         <span className="hidden sm:inline">AI Sepet</span>
       </button>
 
-      <AnimatePresence>
-        {isOpen && (
+      {isOpen && (
           <>
-            <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: -10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: -10 }}
-              className="absolute right-0 top-12 z-50 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 p-4"
-            >
+            <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} aria-hidden />
+            <div className="absolute right-0 top-12 z-50 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center">
@@ -104,11 +97,7 @@ export function AiCartButton({ products }: AiCartButtonProps) {
               </div>
 
               {suggestion && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-3 space-y-2"
-                >
+                <div className="mt-3 space-y-2">
                   <p className="text-xs text-green-600 font-medium">{suggestion.length} ürün önerildi ✓</p>
                   <div className="flex gap-2">
                     <button
@@ -124,12 +113,11 @@ export function AiCartButton({ products }: AiCartButtonProps) {
                       <RefreshCw size={14} />
                     </button>
                   </div>
-                </motion.div>
+                </div>
               )}
-            </motion.div>
+            </div>
           </>
         )}
-      </AnimatePresence>
     </div>
   );
 }

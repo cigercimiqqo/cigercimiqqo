@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { SiteHeader } from '@/components/site/SiteHeader';
 import { SiteFooter } from '@/components/site/SiteFooter';
@@ -82,12 +82,8 @@ export default function GalleryPage() {
       </main>
       <SiteFooter />
 
-      <AnimatePresence>
-        {selected && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+      {selected && (
+          <div
             className="fixed inset-0 z-[60] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
             onClick={() => setSelected(null)}
           >
@@ -98,10 +94,7 @@ export default function GalleryPage() {
             >
               <X size={28} />
             </button>
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+            <div
               className="max-w-5xl w-full max-h-[85vh]"
               onClick={(e) => e.stopPropagation()}
             >
@@ -109,10 +102,9 @@ export default function GalleryPage() {
                 className="w-full h-[70vh] bg-contain bg-center bg-no-repeat rounded-xl"
                 style={{ backgroundImage: `url(${selected})` }}
               />
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
-      </AnimatePresence>
     </>
   );
 }

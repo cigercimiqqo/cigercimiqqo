@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Phone, MapPin, Clock } from 'lucide-react';
@@ -36,36 +35,21 @@ export function MobileNav({
   const weekend = wh?.sat ? formatWorkingHours(wh.sat) : '10:00 - 00:00';
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
-      className="fixed inset-0 z-40 lg:hidden"
-    >
+    <div className="fixed inset-0 z-40 lg:hidden">
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden
       />
-      <motion.nav
-        initial={{ x: '100%' }}
-        animate={{ x: 0 }}
-        exit={{ x: '100%' }}
-        transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+      <nav
         className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-surface-950 border-l border-surface-800 flex flex-col"
       >
         <div className="flex-1 pt-24 px-6 overflow-y-auto">
           <div className="space-y-1">
-            {links.map((link, i) => {
+            {links.map((link) => {
               const isActive = pathname === link.href;
               return (
-                <motion.div
-                  key={link.href}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 + 0.1 }}
-                >
+                <div key={link.href}>
                   <Link
                     href={link.href}
                     onClick={onClose}
@@ -77,17 +61,12 @@ export function MobileNav({
                   >
                     {link.label}
                   </Link>
-                </motion.div>
+                </div>
               );
             })}
           </div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="mt-10 pt-8 border-t border-surface-800 space-y-4"
-          >
+          <div className="mt-10 pt-8 border-t border-surface-800 space-y-4">
             {phone && (
               <a
                 href={`tel:${phone}`}
@@ -107,7 +86,7 @@ export function MobileNav({
               <Clock size={16} className="text-brand-500 shrink-0" />
               <span className="text-sm">Hafta içi: {weekdays} / Hafta sonu: {weekend}</span>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {phone && (
@@ -121,7 +100,7 @@ export function MobileNav({
             </a>
           </div>
         )}
-      </motion.nav>
-    </motion.div>
+      </nav>
+    </div>
   );
 }

@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { ShoppingCart, Menu, X, Phone } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
@@ -57,10 +56,7 @@ export function SiteHeader() {
 
   return (
     <>
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
+      <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${headerBg}`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -127,11 +123,9 @@ export function SiteHeader() {
             </div>
           </div>
         </div>
-      </motion.header>
+      </header>
 
-      <AnimatePresence>
-        {mobileOpen && <MobileNav onClose={() => setMobileOpen(false)} />}
-      </AnimatePresence>
+      {mobileOpen && <MobileNav onClose={() => setMobileOpen(false)} />}
 
       <div className="h-[72px]" />
       <CartDrawer />
