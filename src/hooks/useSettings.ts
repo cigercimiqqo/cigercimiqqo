@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import { loadSettingsForSite, readCache, normalizeSettings } from '@/lib/settingsLoader';
 import { useSettingsStore } from '@/store/settingsStore';
 import type { SiteSettings } from '@/types';
@@ -8,8 +8,9 @@ import type { SiteSettings } from '@/types';
 export function useSettings() {
   const { settings, isLoading, setSettings } = useSettingsStore();
 
-  // Cache'ten sync hydrate – ilk paint öncesi, default flash önlenir
-  useLayoutEffect(() => {
+  // Cache'ten asenkron hydrate – useLayoutEffect yerine useEffect kullanılarak
+  // React'ın hidrasyon commit aşamasında senkron re-render tetiklenmesi önlenir.
+  useEffect(() => {
     const cached = readCache();
     if (cached?.data) {
       const normalized = normalizeSettings(cached.data);

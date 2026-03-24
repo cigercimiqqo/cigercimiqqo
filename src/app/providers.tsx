@@ -1,13 +1,17 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, startTransition } from 'react';
 import { ToastProvider } from '@/lib/toast';
 import { useCartStore } from '@/store/cartStore';
 
 function CartStoreHydrator() {
   useEffect(() => {
-    useCartStore.persist.rehydrate();
+    // startTransition ile düşük öncelikli güncelleme olarak işaretle
+    // React'ın hidrasyon işlemine müdahale etmesini önler
+    startTransition(() => {
+      useCartStore.persist.rehydrate();
+    });
   }, []);
   return null;
 }
