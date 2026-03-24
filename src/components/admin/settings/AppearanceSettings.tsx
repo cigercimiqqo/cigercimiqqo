@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { getSettings, updateSettings } from '@/lib/firebase/firestore';
 import { uploadFile } from '@/lib/upload';
+import { addToRecentUploads } from '@/lib/mediaLibrary';
+import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
 import { toast } from 'sonner';
 import { Loader2, ImagePlus, X, Plus, Sun, Moon, LayoutGrid, List } from 'lucide-react';
 import { SitePreview } from '@/components/admin/SitePreview';
@@ -29,6 +31,7 @@ export function AppearanceSettings() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [heroUploading, setHeroUploading] = useState(false);
+  const [pickerTarget, setPickerTarget] = useState<'hero' | 'storyImage' | 'statsImage' | 'ctaImage' | 'gallery' | null>(null);
 
   useEffect(() => {
     getSettings().then((s) => { setSettings(s); setIsLoading(false); });
@@ -59,6 +62,7 @@ export function AppearanceSettings() {
     setHeroUploading(true);
     try {
       const result = await uploadFile(file, 'hero');
+      addToRecentUploads(result.url, 'hero');
       const current = settings?.appearance?.heroImages || [];
       updateAppearance('heroImages', [...current, result.url]);
     } catch {
@@ -66,6 +70,18 @@ export function AppearanceSettings() {
     } finally {
       setHeroUploading(false);
     }
+  }
+
+  function handlePickerSelect(url: string) {
+    if (!pickerTarget) return;
+    if (pickerTarget === 'hero') {
+      updateAppearance('heroImages', [...(appearance.heroImages || []), url]);
+    } else if (pickerTarget === 'gallery') {
+      updateAppearance('galleryImages', [...(appearance.galleryImages || []), url]);
+    } else {
+      updateAppearance(pickerTarget, url);
+    }
+    setPickerTarget(null);
   }
 
   if (isLoading) return <div className="flex justify-center py-12"><Loader2 size={24} className="animate-spin text-gray-300" /></div>;
@@ -241,6 +257,13 @@ export function AppearanceSettings() {
               <span className="text-xs text-gray-400">Ekle</span>
               <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleHeroUpload(e.target.files[0])} />
             </label>
+            <button
+              type="button"
+              onClick={() => setPickerTarget('hero')}
+              className="w-28 h-20 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-1 hover:border-orange-400 text-xs text-gray-500"
+            >
+              Yüklü olanlardan seç
+            </button>
           </div>
           <div className="flex gap-2">
             <input
@@ -289,24 +312,34 @@ export function AppearanceSettings() {
                     <Image src={appearance[key] as string} alt="" fill className="object-cover" />
                   </div>
                 )}
-                <label className="border-2 border-dashed border-gray-200 rounded-lg px-4 py-2 text-sm cursor-pointer hover:border-orange-400">
-                  {appearance[key] ? 'Değiştir' : 'Yükle'}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-                      try {
-                        const result = await uploadFile(file, 'general');
-                        updateAppearance(key, result.url);
-                      } catch {
-                        toast.error('Yükleme başarısız');
-                      }
-                    }}
-                  />
-                </label>
+                <div className="flex gap-2">
+                  <label className="border-2 border-dashed border-gray-200 rounded-lg px-4 py-2 text-sm cursor-pointer hover:border-orange-400">
+                    {appearance[key] ? 'Değiştir' : 'Yükle'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        try {
+                          const result = await uploadFile(file, 'general');
+                          addToRecentUploads(result.url, 'general');
+                          updateAppearance(key, result.url);
+                        } catch {
+                          toast.error('Yükleme başarısız');
+                        }
+                      }}
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setPickerTarget(key)}
+                    className="border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-600 hover:border-orange-400"
+                  >
+                    Yüklü olanlardan seç
+                  </button>
+                </div>
                 {appearance[key] && (
                   <button
                     onClick={() => updateAppearance(key, '')}
@@ -357,6 +390,7 @@ export function AppearanceSettings() {
                     if (!file) return;
                     try {
                       const result = await uploadFile(file, 'general');
+                      addToRecentUploads(result.url, 'general');
                       updateAppearance('galleryImages', [...(appearance.galleryImages || []), result.url]);
                     } catch {
                       toast.error('Yükleme başarısız');
@@ -364,6 +398,13 @@ export function AppearanceSettings() {
                   }}
                 />
               </label>
+              <button
+                type="button"
+                onClick={() => setPickerTarget('gallery')}
+                className="w-20 h-16 border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center gap-0.5 hover:border-orange-400 text-[10px] text-gray-500 leading-tight px-1 text-center"
+              >
+                Yüklü olanlardan seç
+              </button>
             </div>
             <div className="flex gap-2">
               <input
@@ -419,6 +460,13 @@ export function AppearanceSettings() {
       <div className="xl:col-span-1">
         <SitePreview />
       </div>
+
+      <MediaPickerModal
+        isOpen={pickerTarget !== null}
+        onClose={() => setPickerTarget(null)}
+        onSelect={handlePickerSelect}
+        title={pickerTarget ? `Görsel seç${pickerTarget === 'hero' ? ' (Hero)' : pickerTarget === 'gallery' ? ' (Galeri)' : ''}` : 'Görsel seç'}
+      />
     </div>
   );
 }

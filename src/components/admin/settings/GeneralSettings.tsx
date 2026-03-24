@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { getSettings, updateSettings } from '@/lib/firebase/firestore';
 import { uploadFile } from '@/lib/upload';
+import { addToRecentUploads } from '@/lib/mediaLibrary';
+import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
 import { toast } from 'sonner';
 import { Loader2, Plus, X, ImagePlus } from 'lucide-react';
 import type { SiteSettings } from '@/types';
@@ -16,6 +18,7 @@ export function GeneralSettings() {
   const [isSaving, setIsSaving] = useState(false);
   const [logoUploading, setLogoUploading] = useState(false);
   const [faviconUploading, setFaviconUploading] = useState(false);
+  const [pickerFor, setPickerFor] = useState<'logo' | 'favicon' | null>(null);
   const [newPhone, setNewPhone] = useState('');
   const [newKeyword, setNewKeyword] = useState('');
 
@@ -63,6 +66,7 @@ export function GeneralSettings() {
     type === 'logo' ? setLogoUploading(true) : setFaviconUploading(true);
     try {
       const result = await uploadFile(file, 'logo');
+      addToRecentUploads(result.url, 'logo');
       updateGeneral(type, result.url);
       toast.success('Görsel yüklendi');
     } catch (err) {
@@ -164,11 +168,20 @@ export function GeneralSettings() {
                 </div>
               )}
               <div className="flex flex-col gap-1.5">
-                <label className="flex items-center gap-1.5 px-3 py-2 w-fit border border-dashed border-gray-300 rounded-xl text-xs text-gray-500 cursor-pointer hover:border-orange-400 hover:text-orange-500 transition-colors">
-                  {logoUploading ? <Loader2 size={14} className="animate-spin" /> : <ImagePlus size={14} />}
-                  {logoUploading ? 'Yükleniyor...' : 'Dosya seç'}
-                  <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleLogoUpload(e.target.files[0], 'logo')} />
-                </label>
+                <div className="flex gap-2 flex-wrap">
+                  <label className="flex items-center gap-1.5 px-3 py-2 w-fit border border-dashed border-gray-300 rounded-xl text-xs text-gray-500 cursor-pointer hover:border-orange-400 hover:text-orange-500 transition-colors">
+                    {logoUploading ? <Loader2 size={14} className="animate-spin" /> : <ImagePlus size={14} />}
+                    {logoUploading ? 'Yükleniyor...' : 'Dosya seç'}
+                    <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleLogoUpload(e.target.files[0], 'logo')} />
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setPickerFor('logo')}
+                    className="px-3 py-2 border border-gray-200 rounded-xl text-xs text-gray-600 hover:border-orange-400 hover:text-orange-500 transition-colors"
+                  >
+                    Yüklü olanlardan seç
+                  </button>
+                </div>
                 <input
                   type="url"
                   placeholder="veya URL yapıştır"
@@ -188,11 +201,20 @@ export function GeneralSettings() {
                 </div>
               )}
               <div className="flex flex-col gap-1.5">
-                <label className="flex items-center gap-1.5 px-3 py-2 w-fit border border-dashed border-gray-300 rounded-xl text-xs text-gray-500 cursor-pointer hover:border-orange-400 hover:text-orange-500 transition-colors">
-                  {faviconUploading ? <Loader2 size={14} className="animate-spin" /> : <ImagePlus size={14} />}
-                  {faviconUploading ? 'Yükleniyor...' : 'Dosya seç'}
-                  <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleLogoUpload(e.target.files[0], 'favicon')} />
-                </label>
+                <div className="flex gap-2 flex-wrap">
+                  <label className="flex items-center gap-1.5 px-3 py-2 w-fit border border-dashed border-gray-300 rounded-xl text-xs text-gray-500 cursor-pointer hover:border-orange-400 hover:text-orange-500 transition-colors">
+                    {faviconUploading ? <Loader2 size={14} className="animate-spin" /> : <ImagePlus size={14} />}
+                    {faviconUploading ? 'Yükleniyor...' : 'Dosya seç'}
+                    <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleLogoUpload(e.target.files[0], 'favicon')} />
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setPickerFor('favicon')}
+                    className="px-3 py-2 border border-gray-200 rounded-xl text-xs text-gray-600 hover:border-orange-400 hover:text-orange-500 transition-colors"
+                  >
+                    Yüklü olanlardan seç
+                  </button>
+                </div>
                 <input
                   type="url"
                   placeholder="veya URL yapıştır"
@@ -314,6 +336,13 @@ export function GeneralSettings() {
         {isSaving && <Loader2 size={16} className="animate-spin" />}
         Kaydet
       </button>
+
+      <MediaPickerModal
+        isOpen={pickerFor !== null}
+        onClose={() => setPickerFor(null)}
+        onSelect={(url) => pickerFor && updateGeneral(pickerFor, url)}
+        title={pickerFor === 'logo' ? 'Logo seç' : 'Favicon seç'}
+      />
     </div>
   );
 }
