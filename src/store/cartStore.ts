@@ -110,6 +110,7 @@ export const useCartStore = create<CartStore>()(
     }),
     {
       name: 'miqqo-cart',
+      skipHydration: true,
       partialize: (state) => ({
         items: state.items,
         couponCode: state.couponCode,
