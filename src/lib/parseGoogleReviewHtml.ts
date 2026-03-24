@@ -182,10 +182,14 @@ export function parseGoogleReviewHtml(html: string): ParsedGoogleReview | null {
     if (gMatch) authorAvatar = gMatch[0];
   }
 
-  // ─── Badge (sadece Yerel Rehber · X yorum · X fotoğraf) ───
+  // ─── Badge (Yerel Rehber · X yorum · X fotoğraf VEYA sadece X yorum) ───
   let badge: string | undefined;
   const badgeMatch = cleanHtml.match(/(Yerel Rehber\s*·\s*\d+\s*yorum\s*·\s*\d+\s*fotoğraf)/);
   if (badgeMatch) badge = badgeMatch[1].replace(/\s+/g, ' ').trim();
+  else {
+    const gsmMatch = cleanHtml.match(/class="[^"]*GSM50[^"]*"[^>]*>(\d+\s*yorum)/);
+    if (gsmMatch) badge = gsmMatch[1].trim();
+  }
 
   // ─── Date ───
   let dateText = '';
@@ -204,11 +208,11 @@ export function parseGoogleReviewHtml(html: string): ParsedGoogleReview | null {
 
   // ─── Price ───
   let priceRange: string | undefined;
-  const priceAria = cleanHtml.match(/aria-label="(₺[^"]+)"/);
-  if (priceAria && priceAria[1].length < 30) priceRange = priceAria[1];
+  const priceAria = cleanHtml.match(/aria-label="(₺[^"]{1,25})"/);
+  if (priceAria) priceRange = priceAria[1].trim();
   if (!priceRange && cleanHtml.includes('₺')) {
-    const tlMatch = cleanHtml.match(/₺[\d,\s]+[–\-]\s*₺[\d,\s]+/);
-    if (tlMatch) priceRange = tlMatch[0].trim();
+    const tlMatch = cleanHtml.match(/₺[\d,.\s]+[–\-]\s*₺?[\d,.\s]+/u);
+    if (tlMatch) priceRange = tlMatch[0].replace(/\s+/g, '').trim();
   }
 
   // ─── Tags ───

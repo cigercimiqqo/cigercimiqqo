@@ -63,17 +63,22 @@ export function ReviewsManager() {
     toast.success('Veriler ayrıştırıldı. Gerekirse düzenleyip kaydedin.');
   }
 
+  function sanitizePayload<T extends Record<string, unknown>>(obj: T): Record<string, unknown> {
+    return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined));
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const payload = {
+      const raw = {
         ...form,
         badge: form.badge || undefined,
         priceRange: form.priceRange || undefined,
         tags: form.tags?.length ? form.tags : undefined,
         detailsBlock: form.detailsBlock || undefined,
       };
+      const payload = sanitizePayload(raw) as typeof form;
 
       if (editingId) {
         await updateReview(editingId, payload);
@@ -83,7 +88,7 @@ export function ReviewsManager() {
         const createdAt = parsedPreview?.createdAt
           ? Timestamp.fromDate(parsedPreview.createdAt)
           : Timestamp.now();
-        const id = await createReview({ ...payload, createdAt });
+        const id = await createReview({ ...payload, createdAt } as Parameters<typeof createReview>[0]);
         setReviews((prev) => [...prev, { id, ...payload, createdAt }]);
         toast.success('Yorum eklendi');
       }
@@ -92,7 +97,10 @@ export function ReviewsManager() {
       setShowForm(false);
       setParsedPreview(null);
       setHtmlPaste('');
-    } catch { toast.error('İşlem başarısız'); } finally { setIsSubmitting(false); }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'İşlem başarısız';
+      toast.error(msg);
+    } finally { setIsSubmitting(false); }
   }
 
   function openManualForm() {

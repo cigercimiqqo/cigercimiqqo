@@ -333,7 +333,8 @@ export async function getReviews(visibleOnly = true): Promise<Review[]> {
 }
 
 export async function createReview(data: Omit<Review, 'id'>): Promise<string> {
-  const ref = await addDoc(collection(getDb(), 'reviews'), data);
+  const clean = Object.fromEntries(Object.entries(data).filter(([, v]) => v !== undefined)) as Omit<Review, 'id'>;
+  const ref = await addDoc(collection(getDb(), 'reviews'), clean);
   return ref.id;
 }
 
