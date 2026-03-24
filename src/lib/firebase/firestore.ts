@@ -199,8 +199,15 @@ export async function incrementProductOrderCount(id: string): Promise<void> {
 
 // ─── Orders ────────────────────────────────────────────────────────────────
 
+function stripUndefined<T extends Record<string, unknown>>(obj: T): T {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, v]) => v !== undefined)
+  ) as T;
+}
+
 export async function createOrder(data: Omit<Order, 'id'>): Promise<string> {
-  const ref = await addDoc(collection(getDb(), 'orders'), data);
+  const clean = stripUndefined(data as Record<string, unknown>);
+  const ref = await addDoc(collection(getDb(), 'orders'), clean);
   return ref.id;
 }
 

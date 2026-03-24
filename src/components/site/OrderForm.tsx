@@ -110,7 +110,7 @@ export function OrderForm({ onBack }: OrderFormProps) {
       const fullText = `${form.mahalle}, ${form.ilce}, ${form.il} - ${form.detay}`;
       const orderNumber = generateOrderNumber();
 
-      const orderId = await createOrder({
+      const orderData: Record<string, unknown> = {
         orderNumber,
         customer: {
           name: form.name,
@@ -120,16 +120,20 @@ export function OrderForm({ onBack }: OrderFormProps) {
         items,
         subtotal: subTotal,
         total: totalAmount,
-        discountAmount,
-        couponCode: couponCode || undefined,
+        discountAmount: discountAmount ?? 0,
         paymentMethod: form.paymentMethod,
-        note: form.note,
+        note: form.note || '',
         status: 'new',
         statusHistory: [{ status: 'new', timestamp: Timestamp.now(), note: '' }],
         visitorId,
         isBlacklisted: false,
         createdAt: Timestamp.now(),
-      });
+      };
+      if (couponCode != null && couponCode !== '') {
+        orderData.couponCode = couponCode;
+      }
+
+      const orderId = await createOrder(orderData as Omit<import('@/types').Order, 'id'>);
 
       items.forEach((item) => incrementProductOrderCount(item.productId).catch(() => {}));
       if (couponCode) {
