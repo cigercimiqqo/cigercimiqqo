@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/cartStore';
 import { getOrCreateVisitorId } from '@/lib/visitor';
+import { getPublicUrl } from '@/lib/publicPath';
 import { formatPrice } from '@/lib/utils';
 import { ArrowLeft, Loader2, Tag, X } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -49,7 +50,7 @@ export function OrderForm({ onBack }: OrderFormProps) {
   });
 
   useEffect(() => {
-    fetch('/districts/tr-districts.json')
+    fetch(getPublicUrl('/districts/tr-districts.json'))
       .then((r) => r.json())
       .then(setDistricts)
       .catch(() => {});

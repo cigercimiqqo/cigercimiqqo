@@ -37,7 +37,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr" className="light" suppressHydrationWarning>
-      <body className={`${notoSerif.variable} ${inter.variable} grain font-body antialiased`}>
+      <body className={`${notoSerif.variable} ${inter.variable} grain font-body antialiased`} suppressHydrationWarning>
         <Providers>
           <FaviconUpdater />
           {children}
