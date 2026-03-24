@@ -5,19 +5,21 @@ import { useRouter } from 'next/navigation';
 import { SiteHeader } from '@/components/site/SiteHeader';
 import { OrderForm } from '@/components/site/OrderForm';
 import { useCartStore } from '@/store/cartStore';
+import { useHydrated } from '@/hooks/useHydrated';
 import { formatPrice } from '@/lib/utils';
 import Image from 'next/image';
 import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CartPage() {
+  const hydrated = useHydrated();
   const { items, removeItem, updateQuantity, clearCart } = useCartStore();
   const subtotal = useCartStore((s) => s.subtotal());
   const total = useCartStore((s) => s.total());
   const discountAmount = useCartStore((s) => s.discountAmount);
   const [step, setStep] = useState<'cart' | 'checkout'>('cart');
 
-  if (items.length === 0) {
+  if (!hydrated || items.length === 0) {
     return (
       <>
         <SiteHeader />

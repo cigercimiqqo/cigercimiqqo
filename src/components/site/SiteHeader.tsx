@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { ShoppingCart, Menu, X, Phone } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
 import { useSettingsStore } from '@/store/settingsStore';
+import { useHydrated } from '@/hooks/useHydrated';
 import { CartDrawer } from './CartDrawer';
 import { MobileNav } from './MobileNav';
 
@@ -20,6 +21,7 @@ const NAV_LINKS = [
 ];
 
 export function SiteHeader() {
+  const hydrated = useHydrated();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
@@ -107,7 +109,7 @@ export function SiteHeader() {
                 aria-label="Sepet"
               >
                 <ShoppingCart size={18} />
-                {count > 0 && (
+                {hydrated && count > 0 && (
                   <span className="absolute -top-1 -right-1 w-5 h-5 bg-gold-500 text-stone-950 text-xs rounded-full flex items-center justify-center font-bold">
                     {count > 9 ? '9+' : count}
                   </span>
