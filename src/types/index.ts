@@ -24,6 +24,8 @@ export interface GeneralSettings {
   logo: string;
   phone: string[];
   address: string;
+  /** Google Maps embed URL — Mekan Paylaş > Haritayı yerleştir > iframe src */
+  googleMapsLink?: string;
   socialMedia: SocialMedia;
   ga4TrackingId: string;
   maintenanceMode: boolean;

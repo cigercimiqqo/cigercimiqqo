@@ -258,6 +258,19 @@ export function GeneralSettings() {
             className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-orange-500/30 resize-none"
           />
         </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">Google Harita Linki</label>
+          <input
+            type="url"
+            value={general.googleMapsLink || ''}
+            onChange={(e) => updateGeneral('googleMapsLink', e.target.value)}
+            placeholder="https://www.google.com/maps/embed?pb=..."
+            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-orange-500/30"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Google Maps&apos;te mekanınızı bulun → Paylaş → Haritayı yerleştir → iframe src linkini kopyalayın
+          </p>
+        </div>
       </div>
 
       {/* Social Media */}

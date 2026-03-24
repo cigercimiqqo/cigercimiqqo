@@ -9,6 +9,7 @@ import AnimateOnScroll from '@/components/ui/AnimateOnScroll';
 import { useSettingsStore } from '@/store/settingsStore';
 import { addContact } from '@/lib/firebase/firestore';
 import { getDefaultContent } from '@/lib/defaultContent';
+import { getGoogleMapsEmbedSrc } from '@/lib/googleMapsEmbed';
 import { toast } from 'sonner';
 
 function formatWh(wh: { open: string; close: string; isClosed: boolean } | undefined): string {
@@ -25,6 +26,7 @@ export default function ContactPage() {
 
   const phones = settings?.general?.phone || [];
   const address = settings?.general?.address || '';
+  const mapsEmbedSrc = getGoogleMapsEmbedSrc(settings?.general?.googleMapsLink);
   const wh = settings?.ordering?.workingHours;
   const weekdays = wh?.mon ? formatWh(wh.mon) : '11:00 - 23:00';
   const weekend = wh?.sat ? formatWh(wh.sat) : '10:00 - 00:00';
@@ -206,16 +208,25 @@ export default function ContactPage() {
             </div>
 
             <AnimateOnScroll className="mt-12">
-              <div className="h-80 md:h-96 rounded-2xl overflow-hidden bg-surface-900 border border-surface-800/50 flex items-center justify-center">
-                <div className="text-center text-surface-500">
-                  <MapPin size={32} className="mx-auto mb-3 text-surface-600" />
-                  <p className="text-sm">
-                    Buraya Google Maps embed kodu eklenecek
-                  </p>
-                  <p className="text-xs mt-1 text-surface-600">
-                    iframe src=&quot;https://maps.google.com/maps?q=...&quot;
-                  </p>
-                </div>
+              <div id="harita" className="h-80 md:h-96 rounded-2xl overflow-hidden bg-surface-900 border border-surface-800/50 relative">
+                {mapsEmbedSrc ? (
+                  <iframe
+                    src={mapsEmbedSrc}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0, minHeight: 320 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Konum"
+                    className="absolute inset-0 w-full h-full"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-surface-500 p-6 text-center">
+                    <MapPin size={32} className="mb-3 text-surface-600" />
+                    <p className="text-sm">Admin → Ayarlar → Genel → Google Harita Linki alanına mekan linkinizi girin</p>
+                  </div>
+                )}
               </div>
             </AnimateOnScroll>
           </div>
