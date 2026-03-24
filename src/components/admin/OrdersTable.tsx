@@ -6,7 +6,7 @@ import { updateOrderStatus } from '@/lib/firebase/firestore';
 import { updateActiveOrderStatus, removeActiveOrder } from '@/lib/firebase/realtime';
 import { addToBlacklist } from '@/lib/firebase/firestore';
 import { formatPrice } from '@/lib/utils';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { Search, Filter, Eye, Ban, ChevronDown } from 'lucide-react';
 import type { Order, OrderStatus } from '@/types';
 import { Timestamp } from 'firebase/firestore';

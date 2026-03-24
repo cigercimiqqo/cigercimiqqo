@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import { ShoppingCart, ChevronLeft, Minus, Plus, Flame, Star, Sparkles, TrendingUp, X } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
 import { formatPrice, getEffectivePrice, cn } from '@/lib/utils';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { ProductCard } from './ProductCard';
 import type { Product, CartItemVariantSelection } from '@/types';
 

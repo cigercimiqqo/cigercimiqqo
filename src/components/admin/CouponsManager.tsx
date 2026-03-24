@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { getCoupons, createCoupon, updateCoupon, deleteCoupon } from '@/lib/firebase/firestore';
 import { formatPrice } from '@/lib/utils';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { Plus, Pencil, Trash2, Loader2, Tag } from 'lucide-react';
 import { Timestamp } from 'firebase/firestore';
 import type { Coupon } from '@/types';

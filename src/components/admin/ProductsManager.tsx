@@ -13,7 +13,7 @@ import {
 import { uploadMultipleFiles } from '@/lib/upload';
 import { parseVideoUrl } from '@/lib/video';
 import { slugify, formatPrice, getEffectivePrice } from '@/lib/utils';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import {
   Plus,
   Pencil,

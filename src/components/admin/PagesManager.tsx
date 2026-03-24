@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { getPages, createPage, updatePage, deletePage } from '@/lib/firebase/firestore';
 import { slugify } from '@/lib/utils';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { Plus, Pencil, Trash2, Eye, EyeOff, Loader2, ArrowLeft } from 'lucide-react';
 import type { DynamicPage } from '@/types';
 

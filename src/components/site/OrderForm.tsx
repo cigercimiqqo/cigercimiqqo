@@ -6,7 +6,7 @@ import { useCartStore } from '@/store/cartStore';
 import { getOrCreateVisitorId } from '@/lib/visitor';
 import { formatPrice } from '@/lib/utils';
 import { ArrowLeft, Loader2, Tag, X } from 'lucide-react';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import type { DistrictData } from '@/types';
 
 interface OrderFormProps {

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Send, X, Loader2, RefreshCw } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
 import { buildAiCartItems } from '@/lib/pollinations';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import type { Product } from '@/types';
 
 interface AiCartButtonProps {

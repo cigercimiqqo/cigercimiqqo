@@ -6,7 +6,7 @@ import { getSettings, updateSettings } from '@/lib/firebase/firestore';
 import { uploadFile } from '@/lib/upload';
 import { addToRecentUploads } from '@/lib/mediaLibrary';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { Loader2, Plus, X, ImagePlus } from 'lucide-react';
 import type { SiteSettings } from '@/types';
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getSettings, updateSettings } from '@/lib/firebase/firestore';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { Loader2, Plus, X } from 'lucide-react';
 import type { SiteSettings, DeliveryDistrict } from '@/types';
 import type { DistrictData } from '@/types';

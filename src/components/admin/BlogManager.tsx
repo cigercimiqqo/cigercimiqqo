@@ -11,7 +11,7 @@ import {
 } from '@/lib/firebase/firestore';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { slugify, estimateReadingTime } from '@/lib/utils';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { Plus, Pencil, Trash2, Eye, EyeOff, Loader2, ImagePlus, ArrowLeft } from 'lucide-react';
 import { Timestamp } from 'firebase/firestore';
 import type { BlogPost } from '@/types';

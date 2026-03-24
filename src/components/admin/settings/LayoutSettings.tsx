@@ -19,7 +19,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { getSettings, updateSettings } from '@/lib/firebase/firestore';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import { Loader2, Smartphone, Tablet, Monitor, Eye, EyeOff, GripVertical } from 'lucide-react';
 import {
   mergeLayoutWithDefaults,
@@ -212,7 +212,7 @@ export function LayoutSettings() {
               type="button"
               onClick={() => {
                 updateLayout(() => getDefaultLayoutSettings());
-                toast.info('Varsayılana sıfırlandı. Kaydet\'e basarak uygulayın.');
+                toast('Varsayılana sıfırlandı. Kaydet\'e basarak uygulayın.');
               }}
               className="text-sm text-gray-500 hover:text-gray-700 underline"
             >

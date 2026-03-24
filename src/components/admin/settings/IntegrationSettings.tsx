@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { getSettings, updateSettings } from '@/lib/firebase/firestore';
 import { CheckCircle2, ExternalLink, Image, Video, Map, MessageSquare, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 import { PROVIDER_INFO, type UploadProvider } from '@/lib/upload';
-import { toast } from 'sonner';
+import toast from 'react-hot-toast';
 import type { SiteSettings } from '@/types';
 
 type SectionKey = 'media' | 'maps' | 'sms' | 'video';
