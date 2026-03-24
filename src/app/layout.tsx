@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Noto_Serif, Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
+import { FaviconUpdater } from '@/components/site/FaviconUpdater';
 
 const notoSerif = Noto_Serif({
   subsets: ['latin'],
@@ -37,7 +38,10 @@ export default function RootLayout({
   return (
     <html lang="tr" className="light" suppressHydrationWarning>
       <body className={`${notoSerif.variable} ${inter.variable} grain font-body antialiased`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <FaviconUpdater />
+          {children}
+        </Providers>
       </body>
     </html>
   );

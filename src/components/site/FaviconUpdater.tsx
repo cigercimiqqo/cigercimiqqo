@@ -1,28 +1,36 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useSettingsStore } from '@/store/settingsStore';
+import { usePathname } from 'next/navigation';
+import { loadSettingsForSite, readCache } from '@/lib/settingsLoader';
 
-/** Admin ayarlarındaki favicon URL'ini document.head'e yazar. */
+/** Admin ayarlarındaki favicon URL'ini document.head'e yazar. Tüm sayfalarda çalışır. */
+function applyFavicon(url: string | undefined) {
+  if (typeof document === 'undefined') return;
+
+  document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]').forEach((el) => el.remove());
+
+  if (!url || !url.startsWith('http')) return;
+
+  const link = document.createElement('link');
+  link.rel = 'icon';
+  link.href = url;
+  link.setAttribute('data-miqqo-favicon', 'true');
+  document.head.insertBefore(link, document.head.firstChild);
+}
+
 export function FaviconUpdater() {
-  const favicon = useSettingsStore((s) => s.settings?.general?.favicon);
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (typeof document === 'undefined') return;
-
-    let link = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
-    if (favicon) {
-      if (!link) {
-        link = document.createElement('link');
-        link.rel = 'icon';
-        link.setAttribute('data-miqqo-dynamic', 'true');
-        document.head.appendChild(link);
-      }
-      if (link.href !== favicon) link.href = favicon;
-    } else if (link?.getAttribute('data-miqqo-dynamic') === 'true') {
-      link.remove();
+    const cached = readCache();
+    if (cached?.data?.general?.favicon) {
+      applyFavicon(cached.data.general.favicon);
     }
-  }, [favicon]);
+    loadSettingsForSite().then((s) => {
+      if (s?.general?.favicon) applyFavicon(s.general.favicon);
+    });
+  }, [pathname]);
 
   return null;
 }
